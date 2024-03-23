@@ -4,3 +4,12 @@
 
 layout: home
 ---
+### Welcome to my blog!
+This site is currently under maintenance. To see some more completed projects, check out my githup repositories here! [my repo][d3-repos]
+
+
+
+
+[d3-repos]: https://github.com/delster1
+
+
