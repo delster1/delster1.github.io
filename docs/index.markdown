@@ -3,8 +3,9 @@
 # To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 
 layout: home
+title: d3's webite
 ---
-This site is currently under maintenance. To see some more completed projects, check out my githup repositories here! [my repo][d3-repos]
+This site is currently under maintenance. To see some more completed (and in progress) projects, check out my github repositories here! [my repo][d3-repos]
 
 
 
