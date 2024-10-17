@@ -1,0 +1,30 @@
+/* tslint:disable */
+/* eslint-disable */
+export const memory: WebAssembly.Memory;
+export function __wbg_universe_free(a: number): void;
+export function universe_is_within_bounds(a: number, b: number, c: number): number;
+export function universe_get_cell(a: number, b: number, c: number): number;
+export function universe_new_ant(a: number): void;
+export function universe_tick(a: number): void;
+export function universe_ants_positions_flat(a: number): number;
+export function universe_ants_count(a: number): number;
+export function universe_width(a: number): number;
+export function universe_height(a: number): number;
+export function universe_cells(a: number): number;
+export function universe_render(a: number, b: number): void;
+export function universe_new(): number;
+export function __wbg_cell_free(a: number): void;
+export function __wbg_get_cell_cell_type(a: number): number;
+export function __wbg_set_cell_cell_type(a: number, b: number): void;
+export function __wbg_get_cell_pheromone_level(a: number): number;
+export function __wbg_set_cell_pheromone_level(a: number, b: number): void;
+export function cell_to_u8(a: number): number;
+export function cell_get_pheromone_level(a: number): number;
+export function cell_build_pheremone_cell(a: number): number;
+export function cell_build_empty_cell(): number;
+export function cell_build_searched_cell(): number;
+export function cell_build_food_cell(): number;
+export function __wbindgen_add_to_stack_pointer(a: number): number;
+export function __wbindgen_free(a: number, b: number, c: number): void;
+export function __wbindgen_malloc(a: number, b: number): number;
+export function __wbindgen_realloc(a: number, b: number, c: number, d: number): number;
