@@ -1,0 +1,20 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog", ({ data }) => data.published))
+  .sort((a, b) => +b.data.date - +a.data.date);
+---
+
+<BaseLayout title="Blogs">
+  <h1>Blogs</h1>
+  <ul>
+    {posts.map((p) => (
+      <li>
+        <a href={`/blog/${p.slug}/`}>{p.data.title}</a>
+        <small> — {p.data.date.toDateString()}</small>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>
+
