@@ -1,0 +1,69 @@
+---
+export interface Props {
+  title?: string;
+  description?: string;
+}
+const { title = "Astro TS Starter", description = "Learn Astro basics" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.svg" />
+    <style>
+      :root {
+        --bg: #0b0c10;
+        --panel: #121319;
+        --text: #e5e7eb;
+        --muted: #9aa1ac;
+        --accent: #50A689;
+        --radius: 14px;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        color: var(--text);
+        background: radial-gradient(1200px 800px at 15% -20%, #305D4F 0%, transparent 60%), var(--bg);
+      }
+      a { color: var(--accent); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+      .wrap { max-width: 860px; margin: 0 auto; padding: 32px 20px 56px; }
+      header, footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+      header { margin-bottom: 28px; }
+      .card {
+        background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: var(--radius);
+        padding: 18px 18px;
+      }
+      nav a { margin-right: 12px; }
+      .muted { color: var(--muted); }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <a href="/" aria-label="Home"><strong>DW</strong></a>
+        <nav>
+          <a href="/about">About</a>
+          <a href="/learn">Learn Astro</a>
+        </nav>
+      </header>
+
+      <main class="card">
+        <slot />
+      </main>
+
+      <footer class="muted" style="margin-top: 28px;">
+        <span>Built with Astro • TypeScript</span>
+        <a href="https://astro.build" rel="noopener">astro.build</a>
+      </footer>
+    </div>
+  </body>
+</html>
+

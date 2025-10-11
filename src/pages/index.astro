@@ -1,0 +1,23 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Counter from "../components/Counter.tsx"; // React island demo
+---
+
+<BaseLayout title="Home — Astro TS Starter" description="A tiny site to learn Astro">
+  <h1 style="margin-top:0">hello, astro 👋</h1>
+  <p>this starter shows:</p>
+  <ul>
+    <li>Pages (<code>src/pages/*</code>)</li>
+    <li>Layouts (<code>src/layouts/BaseLayout.astro</code>)</li>
+    <li>Components (<code>src/components/*</code>)</li>
+    <li>Client-side islands (<code>Counter.tsx</code>)</li>
+    <li>TypeScript props in <code>.astro</code></li>
+  </ul>
+
+  <hr />
+
+  <h2>interactive island</h2>
+  <p class="muted">This counter is a React component, hydrated on <code>client:idle</code>.</p>
+  <Counter client:idle />
+</BaseLayout>
+

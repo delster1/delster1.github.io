@@ -1,0 +1,39 @@
+{
+  "name": "delster1.github.io",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Personal site built with Astro + TypeScript",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.17.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "format": "prettier --write ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/delster1/delster1.github.io.git"
+  },
+  "bugs": {
+    "url": "https://github.com/delster1/delster1.github.io/issues"
+  },
+  "homepage": "https://delster1.github.io",
+  "dependencies": {
+    "@astrojs/mdx": "^4.3.7",
+    "@astrojs/react": "^4.0.0",
+    "astro": "^5.14.4",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.7.2",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "prettier": "^3.3.3",
+    "typescript": "^5.9.3"
+  }
+}
