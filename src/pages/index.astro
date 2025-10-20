@@ -4,20 +4,18 @@ import Counter from "../components/Counter.tsx"; // React island demo
 ---
 
 <BaseLayout title="Home — Astro TS Starter" description="A tiny site to learn Astro">
-  <h1 style="margin-top:0">hello, astro 👋</h1>
-  <p>this starter shows:</p>
+  <h1 style="margin-top:0">hello there! 👋</h1>
+  <p>Welcome to my personal website!</p>
   <ul>
-    <li>Pages (<code>src/pages/*</code>)</li>
-    <li>Layouts (<code>src/layouts/BaseLayout.astro</code>)</li>
-    <li>Components (<code>src/components/*</code>)</li>
-    <li>Client-side islands (<code>Counter.tsx</code>)</li>
-    <li>TypeScript props in <code>.astro</code></li>
+    <li>Learn more about me <a href="/about/">here</a>!</li>
+    <li>Check out some of my <a href="/about/">projects</a>!</li>
+    <li>For more projects, check out my <a href="https://github.com/delster1">github</a>!</li>
   </ul>
 
   <hr />
 
   <h2>interactive island</h2>
-  <p class="muted">This counter is a React component, hydrated on <code>client:idle</code>.</p>
+  <p class="muted">For now, here's my anthill project!<code>client:idle</code>.</p>
   <Counter client:idle />
 </BaseLayout>
 

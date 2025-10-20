@@ -1,16 +1,30 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+const identity = {
+firstName: "Dellie",
+lastName : "Wright",
+occupation: "Developer",
+hobbies: ["Snowboarding", "Golf", "Music", "Reading"]
+}
+
+const skills = ["Communication","Presntation","Teaching","Technical Writing","Management","Leadership","Organization","Collaboration", "Cybersecurity"]
+const languages = ["HTML","CSS","Rust","C","C++","Javascript","Typescript","Go","C#","Haskell","Python","Lua"]
 ---
 
 <BaseLayout title="About">
-  <h1>about this site</h1>
+  <h1>About Me :)</h1>
   <p>
-    Astro ships zero JS by default. You opt-in to interactivity by hydrating a component (“island”).
-    Files in <code>src/pages</code> become routes automatically.
+    I'm Delroy (Dellie) Wright, a senior at KU and someone who loves writing cool code.
   </p>
-  <ul>
-    <li>Edit <code>BaseLayout.astro</code> to change global UI</li>
-    <li>Add images to <code>public/</code> and reference them as <code>/filename</code></li>
-  </ul>
+<h3>My skills are:</h3>
+<ul>
+  {skills.map((skill) => <li>{skill}</li>)}
+</ul>
+
+<h3>Here're some of my favorite / most-used languages!</h3>
+<ul>
+  {languages.map((language) => <li>{language}</li>)}
+</ul>
+
 </BaseLayout>
 
