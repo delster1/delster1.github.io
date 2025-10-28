@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Counter from "../components/Counter.tsx"; // React island demo
+import AnthillIsland from "../components/anthill/AntHillIsland.tsx";
 ---
 
 <BaseLayout title="Home — Astro TS Starter" description="A tiny site to learn Astro">
@@ -14,8 +14,15 @@ import Counter from "../components/Counter.tsx"; // React island demo
 
   <hr />
 
+    <button id="login">Login</button>
+  <button id="logout">Logout</button>
+
+  <script>
+    const { signIn } = await import("../lib/auth-client")
+    document.querySelector("#login").onclick = () => signIn()
+  </script>
   <h2>interactive island</h2>
   <p class="muted">For now, here's my anthill project!<code>client:idle</code>.</p>
-  <Counter client:idle />
+    <AnthillIsland client:load/>
 </BaseLayout>
 

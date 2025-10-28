@@ -1,0 +1,12 @@
+---
+export const prerender = false;
+---
+<html><body>
+  <h1>Login</h1>
+    <button id="login">Login with github</button>
+  <script>
+    const { signIn } = await import("../../lib/auth-client")
+    document.querySelector("#login").onclick = () => signIn()
+  </script>
+</body></html>
+
