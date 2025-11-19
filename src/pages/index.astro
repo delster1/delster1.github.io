@@ -1,28 +1,50 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import AnthillIsland from "../components/anthill/AntHillIsland.tsx";
+import TerminalLayout from "../layouts/TerminalLayout.astro";
+import TuiBox from "../components/TuiBox.astro";
 ---
 
-<BaseLayout title="Home — Astro TS Starter" description="A tiny site to learn Astro">
-  <h1 style="margin-top:0">hello there! 👋</h1>
-  <p>Welcome to my personal website!</p>
-  <ul>
-    <li>Learn more about me <a href="/about/">here</a>!</li>
-    <li>Check out some of my <a href="/about/">projects</a>!</li>
-    <li>For more projects, check out my <a href="https://github.com/delster1">github</a>!</li>
-  </ul>
+<TerminalLayout title="d3llie terminal">
+	<div class="text-green-400">
+		<span class="text-yellow-300">d3llie@website</span>
+		<span class="text-blue-400"> ~ </span>
+		<span>$</span>
+		&nbsp;./website-tui
+	</div>
 
-  <hr />
 
-    <button id="login">Login</button>
-  <button id="logout">Logout</button>
+	<div class="flex justify-center items-center">
+		<TuiBox title="header" class="w-[80%]">
+			<pre
+				class="whitespace-pre leading-tight text-xs text-center">
+<code>				                                                                                                                                                         
 
-  <script>
-    const { signIn } = await import("../lib/auth-client")
-    document.querySelector("#login").onclick = () => signIn()
-  </script>
-  <h2>interactive island</h2>
-  <p class="muted">For now, here's my anthill project!<code>client:idle</code>.</p>
-    <AnthillIsland client:load/>
-</BaseLayout>
 
+							 ,`--.' |                                                                                              
+    ,---,                ,--,    ,--,                    |   :  :                            .---.                                           ___               
+  .'  .' `\            ,--.'|  ,--.'|     ,--,           |   |  '                           /. ./|            ,---,                 ,--,   ,--.'|_             
+,---.'     \           |  | :  |  | :   ,--.'|           '   :  |                       .--'.  ' ;          ,---.'|               ,--.'|   |  | :,'            
+|   |  .`\  |          :  : '  :  : '   |  |,            ;   |.'.--.--.                /__./ \ : |          |   | :     .--.--.   |  |,    :  : ' :            
+:   : |  '  |   ,---.  |  ' |  |  ' |   `--'_       ,---.'---' /  /    '           .--'.  '   \' .   ,---.  :   : :    /  /    '  `--'_  .;__,'  /     ,---.   
+|   ' '  ;  :  /     \ '  | |  '  | |   ,' ,'|     /     \    |  :  /`./          /___/ \ |    ' '  /     \ :     |,-.|  :  /`./  ,' ,'| |  |   |     /     \  
+'   | ;  .  | /    /  ||  | :  |  | :   '  | |    /    /  |   |  :  ;_            ;   \  \;      : /    /  ||   : '  ||  :  ;_    '  | | :__,'| :    /    /  | 
+|   | :  |  '.    ' / |'  : |__'  : |__ |  | :   .    ' / |    \  \    `.          \   ;  `      |.    ' / ||   |  / : \  \    `. |  | :   '  : |__ .    ' / | 
+'   : | /  ; '   ;   /||  | '.'|  | '.'|'  : |__ '   ;   /|     `----.   \          .   \    .\  ;'   ;   /|'   : |: |  `----.   \'  : |__ |  | '.'|'   ;   /| 
+|   | '` ,/  '   |  / |;  :    ;  :    ;|  | '.'|'   |  / |    /  /`--'  /           \   \   ' \ |'   |  / ||   | '/ : /  /`--'  /|  | '.'|;  :    ;'   |  / | 
+;   :  .'    |   :    ||  ,   /|  ,   / ;  :    ;|   :    |   '--'.     /             :   '  |--" |   :    ||   :    |'--'.     / ;  :    ;|  ,   / |   :    | 
+|   ,.'       \   \  /  ---`-'  ---`-'  |  ,   /  \   \  /      `--'---'               \   \ ;     \   \  / /    \  /   `--'---'  |  ,   /  ---`-'   \   \  /  
+'---'          `----'                    ---`-'    `----'                               '---"       `----'  `-'----'               ---`-'             `----'   
+
+</code>
+			</pre>
+		</TuiBox>
+	</div>
+	<br>
+	<div class="flex justify-center items-center">
+	<TuiBox class="w-[50%]">
+		<div class="mt-4 text-terminal-text px-10 text-center">
+			Hey 👋 I'm Dellie — CS student, nerd, and HackKU Director.<br />
+			Welcome to my personal terminal-style website powered by Astro + Tailwind.
+		</div>
+	</TuiBox>
+	</div>
+</TerminalLayout>

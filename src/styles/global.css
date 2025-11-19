@@ -1,0 +1,14 @@
+@import "./fonts.css";
+
+/* Tailwind base */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom terminal defaults */
+html, body {
+  font-family: "Comic Mono", "Comic Sans MS", monospace;
+  background-color: #0a0b0d;
+  color: #d0d0d0;
+}
+

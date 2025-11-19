@@ -1,4 +1,4 @@
-import { createAuthClient } from "better-auth/client";
+import { createAuthClient  } from "better-auth/client";
 
 export const authClient = createAuthClient({
   // IMPORTANT: Include the full path to the auth route
@@ -11,4 +11,16 @@ export const signIn = async () => {
   });
   console.log(res);
 };
+
+export const signOut = async () => {
+  const res = await authClient.signOut({
+    fetchOptions : {
+      onSuccess : () => {
+        window.location.href = "/";
+      },
+    },
+  });
+  console.log(res);
+}
+
 

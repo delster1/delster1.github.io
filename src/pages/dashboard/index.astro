@@ -3,6 +3,7 @@ import { auth } from "../../auth"; // import your Better Auth instance
 
 import { defineMiddleware } from "astro:middleware";
 
+console.log("IS AUTHED")
 export const onRequest = defineMiddleware(async (context, next) => {
   const isAuthed = await auth.api
     .getSession({
@@ -13,10 +14,21 @@ export const onRequest = defineMiddleware(async (context, next) => {
   }
   return next();
   });
+  const session = Astro.locals.session
+  const user = Astro.locals.user
+  console.log(session)
 ---
 <html>
   <body>
-    <a href="/api/auth/signout">Sign out</a>
+    Welcome {user}
+    <br>
+    session {session}
+    <br>
+    <button id="logout">Sign out</button>
   </body>
+<script>
+  const { signOut } = await import("../../lib/auth-client")
+  document.querySelector("#logout").onclick = () => signOut()
+</script>
 </html>
 
