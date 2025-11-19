@@ -4,18 +4,17 @@ import TuiBox from "../components/TuiBox.astro";
 ---
 
 <TerminalLayout title="d3llie terminal">
-	<div class="text-green-400">
-		<span class="text-yellow-300">d3llie@website</span>
-		<span class="text-blue-400"> ~ </span>
-		<span>$</span>
-		&nbsp;./website-tui
-	</div>
+  <div class="text-green-400">
+    <span class="text-yellow-300">d3llie@website</span>
+    <span class="text-blue-400"> ~ </span>
+    <span>$</span>
+    &nbsp;./website-tui
+  </div>
 
-
-	<div class="flex justify-center items-center">
-		<TuiBox title="header" class="w-[80%]">
-			<pre
-				class="whitespace-pre leading-tight text-xs text-center">
+  <div class="flex justify-center items-center">
+    <TuiBox title="header" class="w-[80%]">
+      <pre
+        class="whitespace-pre leading-tight text-xs text-center">
 <code>				                                                                                                                                                         
 
 
@@ -36,15 +35,27 @@ import TuiBox from "../components/TuiBox.astro";
 
 </code>
 			</pre>
-		</TuiBox>
-	</div>
-	<br>
-	<div class="flex justify-center items-center">
-	<TuiBox class="w-[50%]">
-		<div class="mt-4 text-terminal-text px-10 text-center">
-			Hey 👋 I'm Dellie — CS student, nerd, and HackKU Director.<br />
-			Welcome to my personal terminal-style website powered by Astro + Tailwind.
-		</div>
-	</TuiBox>
-	</div>
+    </TuiBox>
+  </div>
+  <br />
+  <div class="flex justify-center items-center">
+    <TuiBox class="w-[50%]">
+      <div class="mt-4 text-terminal-text px-10 text-center">
+        Hey 👋 I'm Dellie — CS student, nerd, and HackKU Director.<br />
+        Welcome to my personal terminal-style website powered by Astro + Tailwind.
+      </div>
+    </TuiBox>
+  </div>
+  <br/>
+  <div class="flex justify-center items-center w-[80%]">
+    <TuiBox class="w-[25%]">
+      Check out my:
+      <ul>
+        <li><a href="https://github.com/delster1">Github</a></li>
+        <li><a href="https://www.linkedin.com/in/delroy-wright-440b35210/">LinkedIn</a></li>
+<li><a href=Blog</li>
+        <li>Projects</li>
+      </ul>
+    </TuiBox>
+  </div>
 </TerminalLayout>
