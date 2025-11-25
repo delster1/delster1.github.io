@@ -2,8 +2,8 @@
 const { title, class: className = "" } = Astro.props;
 ---
 
-<div class={`inline-block border border-[#999] rounded-[0.9rem] bg-[#111] ${className}`}>
-  <div class="p-2">
+<div box-="round"  class={`tui-box inline-block ${className}`}>
+  <div class="p-2 text-terminal-text">
     <slot />
   </div>
 </div>
