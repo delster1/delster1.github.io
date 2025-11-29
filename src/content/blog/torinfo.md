@@ -83,21 +83,3 @@ Just click and watch.
 * Plex updates itself automatically as new content finishes downloading.
 * If something doesn’t show up right away, refresh Plex or wait a few minutes.
 * Please try to avoid adding dozens of downloads at once so the server doesn't get overloaded.
-
----
-
-## 🆘 Need Help?
-
-Message me anytime — I can troubleshoot Plex, help find shows, fix the downloader, or add content manually.
-
----
-
-If you'd like, I can also generate:
-
-* a PDF version
-* a minimal one-page “grandparent mode” version
-* a version with screenshots
-* or a styled HTML page for your site (`d3llie.tech`).
-
-Just say the word.
-
