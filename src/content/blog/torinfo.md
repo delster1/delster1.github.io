@@ -26,19 +26,19 @@ Everything automatically gets sorted into the correct folder.
 * **Movies:** `/mnt/mdot2/plex/media/movies/`
 * **TV Shows:** `/mnt/mdot2/plex/media/tv/`
 
-**To add to the right folder, just add /tv or /movies to the end of the default download link!**
+**To add to the right folder, just add `/tv` or `/movies` to the end of the default download link!**
 
 ### 🔗 Popular Magnet Link Websites
 
 Here are some sites that provide the magnet links:
 
-* **ext.to** — Movies + tv
-* **1337x.to** — Movies + TV
-* **The Pirate Bay** — Movies + TV + Misc
+* **[ext.to](https://ext.to)** — Movies + tv
+* **[1337x.to](https://1337x.to)** — Movies + TV (use an adblocker)
+* **[The Pirate Bay](https://thepiratebay.org/index.html)** — Movies + TV + Misc
 
-*Check out* **(freemediaheckyeah)[https://fmhy.net** for more good sites
+*Check out* **(freemediaheckyeah)[https://fmhy.net]** for more good sites
 
-**VVVVVVVVV!! IMPORTANT !! VVVVVVVVV**
+*!! IMPORTANT !!*
 ***(You never download files directly from these sites — only copy the magnet link into tor.d3llie.tech.)***
 
 ---
