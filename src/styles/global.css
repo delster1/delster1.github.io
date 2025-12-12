@@ -23,6 +23,7 @@
         justify-content: space-between;
     }
 
+
     .header span,
     [box-="round"] .header span,
     #tuibox .header span {
@@ -31,18 +32,10 @@
     }
 
     .links {
-        background-color: white;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
         padding: 0 1ch;
-    }
-
-    .links span {
-        background-color: white;
-        padding: 0 1ch;
-    }
-    
-    .links a {
-        background-color: white;
-        color: black;
     }
 
     #tuibox {
@@ -50,5 +43,10 @@
         --box-rounded-radius: 8px;
         --box-border-width: 1px;
         --box-double-border-width: 1px;
+    }
+
+    #listbadge {
+        --badge-color: #ffffff;
+        --badge-text: #000000;
     }
 }
