@@ -1,12 +1,50 @@
 ---
 export const prerender = false;
+const session = Astro.locals.session ?? null;
+import { auth } from "../../auth"; // import your Better Auth instance
+
+import { defineMiddleware } from "astro:middleware";
+console.log(session)
 ---
-<html><body>
-  <h1>Login</h1>
-    <button id="login">Login with github</button>
-  <script>
-    const { signIn } = await import("../../lib/auth-client")
-    document.querySelector("#login").onclick = () => signIn()
-  </script>
-</body></html>
+
+<html>
+  <body>
+    <h1>Login</h1>
+
+    {session ? (
+    <div id="loggedInStatus">Logged in {}</div>
+    ) : (
+      <button id="login">Login with GitHub</button>
+    )}
+
+    {session && (
+  <>
+    <div id="loggedInStatus">
+      Logged in as {session.userId ?? "unknown user"}
+    </div>
+
+    {session.userId === auth.d3_ID && (
+      <div class="admin">
+        You are Dellie 😎
+      </div>
+    )}
+  </>
+)}
+
+
+    <button id="logout">Sign out</button>
+
+    <script >
+  import { signIn, signOut } from "../../lib/auth-client";
+      const loginBtn = document.querySelector("#login");
+      if (loginBtn) loginBtn.addEventListener("click", () => signIn());
+
+      document.querySelector("#logout").addEventListener("click", async () => {
+        const res = await signOut();
+        console.log("signOut:", res);
+        window.location.reload(); // force Astro.locals.session to re-evaluate
+      });
+    </script>
+  </body>
+</html>
 
