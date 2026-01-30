@@ -1,31 +1,26 @@
 ---
 export const prerender = false;
 const session = Astro.locals.session ?? null;
-import { auth } from "../../auth"; // import your Better Auth instance
+const user = Astro.locals.user ?? null;
+import { auth, isEmailAdmin } from "../../auth"; // import your Better Auth instance
 
 import { defineMiddleware } from "astro:middleware";
-console.log(session)
 ---
 
 <html>
   <body>
     <h1>Login</h1>
 
-    {session ? (
-    <div id="loggedInStatus">Logged in {}</div>
-    ) : (
-      <button id="login">Login with GitHub</button>
-    )}
 
     {session && (
   <>
     <div id="loggedInStatus">
-      Logged in as {session.userId ?? "unknown user"}
+      Logged in as {user.email ?? "unknown user"}
     </div>
 
-    {session.userId === auth.d3_ID && (
+    {isEmailAdmin && (
       <div class="admin">
-        You are Dellie 😎
+        You are Dellie B)
       </div>
     )}
   </>
@@ -35,16 +30,103 @@ console.log(session)
     <button id="logout">Sign out</button>
 
     <script >
-  import { signIn, signOut } from "../../lib/auth-client";
+  import { githubSignIn, githubSignOut } from "../../lib/auth-client";
       const loginBtn = document.querySelector("#login");
-      if (loginBtn) loginBtn.addEventListener("click", () => signIn());
+      if (loginBtn) loginBtn.addEventListener("click", () => githubSignIn());
 
       document.querySelector("#logout").addEventListener("click", async () => {
-        const res = await signOut();
-        console.log("signOut:", res);
+        const res = await githubSignOut();
+        console.log("githubSignOut:", res);
         window.location.reload(); // force Astro.locals.session to re-evaluate
       });
     </script>
+        <br>
+        <form id="signUpForm">
+          <label for="name">First name:</label>
+          <input type="text" id="name" name="name"><br><br>
+          <label for="email">Email:</label>
+          <input type="text" id="email" name="email"><br><br>
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password"><br><br>
+        </form>
+        <button id="subitSignUp" type="submit">Sign Up</button>
+        <button id="subitSignIn" type="submit">Sign In</button>
+        <button id="subitSignOut" type="submit">Sign Out</button>
+
+        <script>
+            import {authClient} from "../../lib/auth-client"
+            const form = document.getElementById("signUpForm")
+            const signUpButton = document.getElementById("subitSignUp")
+            const signInButton = document.getElementById("subitSignIn")
+            const signOutButton = document.getElementById("subitSignOut")
+            const githubSignInButton = document.getElementById("subitSignIn")
+
+          async function handleSubmitSignUp(e) {
+            e.preventDefault(); // stop page reload
+
+            const signUpData = new FormData(form);
+            const values = Object.fromEntries(signUpData.entries());
+
+
+              const { data, error } = await authClient.signUp.email({
+                email: values.email, // user email address
+                password: values.password, // user password -> min 8 characters by default
+                name: values.name, // user display name
+                  callbackURL: "/"
+            }, {
+                onRequest: (ctx) => {
+                    authClient.verifyEmail(email)
+                },
+                onSuccess: (ctx) => {
+                        window.location.href = "/"
+                    console.log('suc')
+                    //redirect to the dashboard or sign in page
+                },
+                onError: (ctx) => {
+                    // display the error message
+                    alert(ctx.error.message);
+                },
+            });
+          }
+
+            async function handleSubmitSignIn(e) {
+            const signInData = new FormData(form);
+            const values = Object.fromEntries(signInData.entries());
+
+
+              const { data, error } = await authClient.signIn.email({
+                email: values.email, // user email address
+                password: values.password, // user password -> min 8 characters by default
+            }, {
+                onSuccess: (ctx) => {
+                        window.location.href = "/"
+                    console.log('suc')
+                    //redirect to the dashboard or sign in page
+                },
+                onError: (ctx) => {
+                    // display the error message
+                    alert(ctx.error.message);
+                },
+            });
+
+
+            }
+
+            async function handleSignOut(e) {
+                await authClient.signOut({
+                  fetchOptions: {
+                    onSuccess: () => {
+                        window.location.href = "/"
+                    },
+                  },
+                });
+            }
+          signUpButton.addEventListener("click", handleSubmitSignUp);
+          signInButton.addEventListener("click", handleSubmitSignIn);
+          signOutButton.addEventListener("click",handleSignOut );
+
+        </script>
+
   </body>
 </html>
 

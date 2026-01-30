@@ -1,33 +1,40 @@
 ---
-import { auth } from "../../auth"; // import your Better Auth instance
+export const prerender = false;
+const session = Astro.locals.session ?? null;
+const user = Astro.locals.user ?? null;
+import { auth, isEmailAdmin } from "../../auth"; // import your Better Auth instance
 
 import { defineMiddleware } from "astro:middleware";
 
-console.log("IS AUTHED")
-export const onRequest = defineMiddleware(async (context, next) => {
-  const isAuthed = await auth.api
-    .getSession({
-      headers: context.request.headers,
-        fetchOptions: { credentials: "include" }
-    })
-  if (context.url.pathname === "/dashboard" && !isAuthed) {
-    return context.redirect("/");
-  }
-  return next();
-  });
-  const session = Astro.locals.session
-  const user = Astro.locals.user
-  console.log(session)
 ---
 <html>
   <body>
-    Welcome {user}
+      <h1 data-isEmailAdmin={isEmailAdmin}>dashboard</h1>
+      {session && (
+      <>
+      {isEmailAdmin && (
+        <div id="adminWelcome">
+            Welcome Dellie!
+        </div>
+        )}
+
+      {isEmailAdmin == false && (
+        <div id="adminWelcome">
+            User is not allowed, redirecting...
+        </div>
+
+      )}
+
+      </>
+      )}
     <br>
-    session {session}
     <br>
-    <button id="logout">Sign out</button>
-  </body>
 <script>
+    if(!this.dataset.isEmailAdmin){
+        window.location.href = "/"
+    }
 </script>
+
+  </body>
 </html>
 
