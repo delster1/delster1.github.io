@@ -54,6 +54,10 @@
         background-color: var(--bg3) !important;
     }
 
+    #about-btn [box-]:hover:before {
+        background-color: var(--bg3) !important;
+    }
+
     #listbadge {
         --badge-color: #ffffff;
         --badge-text: #000000;

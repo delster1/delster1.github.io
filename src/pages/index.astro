@@ -26,7 +26,7 @@ try {
         </div>
     </div>
     <br />
-    <div class="flex justify-center items-center">
+    <div class="flex justify-center items-center" id="about-btn">
         <div box-="round" shear-="top" class="w-[50%]" style="--box-bg: var(--bg1)" >
             <div class="header">
                  <span is-="badge" variant-="yellow">About Me</span>
@@ -35,8 +35,33 @@ try {
                 Hey 👋 I'm Dellie — CS student, nerd, and HackKU Director.<br />
                 Welcome to my personal terminal-style website powered by Astro + Tailwind.
             </div>
+
+            <div box-="round" shear-="top" class="pl-3 hidden-about hidden" style="--box-bg: var(--bg1)">
+            <div class="header">
+                 <span is-="badge" variant-="blue">quote</span>
+            </div>
+                Here's a quote
+                {quote}
+            </div>
         </div>
     </div>
+    <script>
+        const btn = document.getElementById('about-btn');
+        const btnText = btn?.querySelector('.mt-2');
+        const hiddenLinks = document.querySelectorAll('.hidden-about');
+        
+        btn?.addEventListener('click', () => {
+            const isExpanded = !hiddenLinks[0].classList.contains('hidden');
+            
+            hiddenLinks.forEach(link => {
+                link.classList.toggle('hidden');
+            });
+
+            if (btnText) {
+                btnText.textContent = isExpanded ? 'see more...' : 'hide';
+            }
+        });
+    </script>
     <br />
     <div class="flex justify-center items-center w-[100%]">
         <div box-="round" shear-="top" id="" class="w-[90%]" style="--box-bg: var(--bg1)">
@@ -87,18 +112,6 @@ try {
         </div>
     </div>
 
-    <div is-="separator" direction-="horizontal"></div>
-    <br />
-    <div class="flex justify-center items-center w-[100%]">
-        <div box-="round" shear-="top" class="w-[90%]" style="--box-bg: var(--bg1)">
-            <div class="header">
-                 <span is-="badge" variant-="yellow">Random Quote</span>
-            </div>
-            <div class="p-4 italic text-center text-blue-300" id="quote-container">
-                {quote}
-            </div>
-        </div>
-    </div>
 
     <script>
         const btn = document.getElementById('see-more-btn');
