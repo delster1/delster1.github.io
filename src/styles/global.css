@@ -10,11 +10,10 @@
 @import "@webtui/css/components/input.css";
 
 @import "@webtui/theme-nord";
+@import '@webtui/theme-everforest';
 
 /* Correct variable mapping */
 :root {
-    --terminal-bg: var(--background0, #0a0b0d);
-    --terminal-text: var(--foreground, #d0d0d0);
 }
 
 @layer utils {
@@ -27,7 +26,6 @@
     .header span,
     [box-="round"] .header span,
     #tuibox .header span {
-        background-color: black;
         padding: 0 1ch;
     }
 
@@ -42,6 +40,13 @@
         --box-border-color: white;
         --box-rounded-radius: 8px;
         --box-border-width: 1px;
+        --box-double-border-width: 1px;
+    }
+
+    #thintuibox {
+        --box-border-color: white;
+        --box-rounded-radius: 8px;
+        --box-border-width: 0px;
         --box-double-border-width: 1px;
     }
 

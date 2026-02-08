@@ -3,14 +3,27 @@ import "../styles/global.css";
 const { title } = Astro.props;
 ---
 
-<html lang="en">
+<html lang="en" data-webtui-theme="everforest-dark-medium">
   <head>
     <meta charset="UTF-8" />
     <title>{title ?? "Terminal"}</title>
   </head>
 
-  <body class="bg-black text-[var(--terminal-text)] font-mono min-h-screen p-4">
-    <div class="max-w-4xl mx-auto">
+    <style>
+      body {
+        margin: 0;
+        font: 21px/1.6  "Comic Mono";
+        color: var(--text);
+      }
+      a { color: var(--accent); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+      .wrap { max-width: 860px; margin: 0 auto; padding: 32px 20px 56px; }
+      header, footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+      header { margin-bottom: 28px; }
+      .muted { color: var(--muted); }
+    </style>
+  <body class="text-[var(--terminal-text)] font-mono min-h-screen p-4">
+    <div class=" mx-auto">
       <slot />
     </div>
   </body>
