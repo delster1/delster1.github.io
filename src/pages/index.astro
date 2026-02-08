@@ -1,5 +1,15 @@
 ---
 import TerminalLayout from "../layouts/TerminalLayout.astro";
+
+let quote = "Failed to load quote.";
+try {
+    const response = await fetch('https://minipc.d3llie.tech/quote');
+    if (response.ok) {
+        quote = await response.json();
+    }
+} catch (error) {
+    console.error('Error fetching quote:', error);
+}
 ---
 
 <TerminalLayout title="d3llie terminal">
@@ -11,33 +21,13 @@ import TerminalLayout from "../layouts/TerminalLayout.astro";
     </div>
 
     <div class="flex justify-center items-center">
-        <div box-="round" id="tuibox" title="header" class="" >
-            <pre
-                is:raw
-                class="whitespace-pre leading-tight font-bold text-terminal-text text-base text-center pl-3 pr-3">
-
-
-                                                         ,`--.' |                                                                                              
-    ,---,                ,--,    ,--,                    |   :  :                            .---.                                           ___               
-  .'  .' `\            ,--.'|  ,--.'|     ,--,           |   |  '                           /. ./|            ,---,                 ,--,   ,--.'|_             
-,---.'     \           |  | :  |  | :   ,--.'|           '   :  |                       .--'.  ' ;          ,---.'|               ,--.'|   |  | :,'            
-|   |  .`\  |          :  : '  :  : '   |  |,            ;   |.'.--.--.                /__./ \ : |          |   | :     .--.--.   |  |,    :  : ' :            
-:   : |  '  |   ,---.  |  ' |  |  ' |   `--'_       ,---.'---' /  /    '           .--'.  '   \' .   ,---.  :   : :    /  /    '  `--'_  .;__,'  /     ,---.   
-|   ' '  ;  :  /     \ '  | |  '  | |   ,' ,'|     /     \    |  :  /`./          /___/ \ |    ' '  /     \ :     |,-.|  :  /`./  ,' ,'| |  |   |     /     \  
-'   | ;  .  | /    /  ||  | :  |  | :   '  | |    /    /  |   |  :  ;_            ;   \  \;      : /    /  ||   : '  ||  :  ;_    '  | | :__,'| :    /    /  | 
-|   | :  |  '.    ' / |'  : |__'  : |__ |  | :   .    ' / |    \  \    `.          \   ;  `      |.    ' / ||   |  / : \  \    `. |  | :   '  : |__ .    ' / | 
-'   : | /  ; '   ;   /||  | '.'|  | '.'|'  : |__ '   ;   /|     `----.   \          .   \    .\  ;'   ;   /|'   : |: |  `----.   \'  : |__ |  | '.'|'   ;   /| 
-|   | '` ,/  '   |  / |;  :    ;  :    ;|  | '.'|'   |  / |    /  /`--'  /           \   \   ' \ |'   |  / ||   | '/ : /  /`--'  /|  | '.'|;  :    ;'   |  / | 
-;   :  .'    |   :    ||  ,   /|  ,   / ;  :    ;|   :    |   '--'.     /             :   '  |--" |   :    ||   :    |'--'.     / ;  :    ;|  ,   / |   :    | 
-|   ,.'       \   \  /  ---`-'  ---`-'  |  ,   /  \   \  /      `--'---'               \   \ ;     \   \  / /    \  /   `--'---'  |  ,   /  ---`-'   \   \  /  
-'---'          `----'                    ---`-'    `----'                               '---"       `----'  `-'----'               ---`-'             `----'   
-
-			</pre>
+        <div box-="round" title="header" class="text-2xl" style="--box-bg: var(--bg1)">
+            <h1 class="text-[100px] pl-6 pr-6 text-green-400"># Dellie's Website</h1>
         </div>
     </div>
     <br />
     <div class="flex justify-center items-center">
-        <div box-="round" shear-="top" id="tuibox" class="w-[50%]" >
+        <div box-="round" shear-="top" class="w-[50%]" style="--box-bg: var(--bg1)" >
             <div class="header">
                  <span is-="badge" variant-="yellow">About Me</span>
             </div>
@@ -49,34 +39,85 @@ import TerminalLayout from "../layouts/TerminalLayout.astro";
     </div>
     <br />
     <div class="flex justify-center items-center w-[100%]">
-        <div box-="round" shear-="top" id="tuibox" class="w-[90%]">
+        <div box-="round" shear-="top" id="" class="w-[90%]" style="--box-bg: var(--bg1)">
             <div class="header">
                  <span is-="badge" variant-="yellow">My Links</span>
             </div>
-            <div class="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
-              <div box-="round" shear-="top" class="p-3">
+            <div class="mt-3 grid grid-cols-1 gap-6 sm:grid-cols-3" id="links-grid">
+              <a href="https://github.com/delster1" box-="round" shear-="top" class="p-3 text-center block hover:no-underline" style="--box-bg: var(--bg1)">
+                  <br>
+                  github
+              </a>
+
+              <a href="https://www.linkedin.com/in/delroy-wright-440b35210/" box-="round" shear-="top" class="p-3 block text-center hover:no-underline" style="--box-bg: var(--bg1)">
                 <div class="mt-2">
-                  <a href="https://github.com/delster1" class="underline">delster1</a>
+                    <br>
+                    linkedin
+                  <br>
+                </div>
+              </a>
+
+              <div box-="round" shear-="top" id="see-more-btn" class="p-3 text-center cursor-pointer block hover:no-underline" style="--box-bg: var(--bg1)">
+                  <br>
+                <div class="mt-2">
+                    see more...
                 </div>
               </div>
 
-              <div box-="round" shear-="top" id="thintuibox" class="p-3">
-                <div class="mt-2">
-                  <a href="https://www.linkedin.com/in/delroy-wright-440b35210/" class="underline">
-                    Profile
-                  </a>
-                </div>
-              </div>
-
-              <div box-="round" shear-="top" class="p-3">
-                <div class="mt-2">
-                  <a href="/blog" class="underline">/blog</a>
-                </div>
-              </div>
+              <!-- Hidden initially -->
+              <a href="/blog" class="hidden-link hidden p-3 text-center block hover:no-underline" box-="round" shear-="top" style="--box-bg: var(--bg1)">
+                <br>blog
+              </a>
+              <a href="#" class="hidden-link hidden p-3 text-center block hover:no-underline" box-="round" shear-="top" style="--box-bg: var(--bg1)">
+                <br>projects
+              </a>
+              <a href="#" class="hidden-link hidden p-3 text-center block hover:no-underline" box-="round" shear-="top" style="--box-bg: var(--bg1)">
+                <br>resume
+              </a>
+              <a href="#" class="hidden-link hidden p-3 text-center block hover:no-underline" box-="round" shear-="top" style="--box-bg: var(--bg1)">
+                <br>contact
+              </a>
+              <a href="#" class="hidden-link hidden p-3 text-center block hover:no-underline" box-="round" shear-="top" style="--box-bg: var(--bg1)">
+                <br>extra 1
+              </a>
+              <a href="#" class="hidden-link hidden p-3 text-center block hover:no-underline" box-="round" shear-="top" style="--box-bg: var(--bg1)">
+                <br>extra 2
+              </a>
             </div>
         </div>
     </div>
-    <div class="flex justify-center items-center w-[80%]">
-        <a class="btn" href="/login">Click Me</a>
+
+    <div is-="separator" direction-="horizontal"></div>
+    <br />
+    <div class="flex justify-center items-center w-[100%]">
+        <div box-="round" shear-="top" class="w-[90%]" style="--box-bg: var(--bg1)">
+            <div class="header">
+                 <span is-="badge" variant-="yellow">Random Quote</span>
+            </div>
+            <div class="p-4 italic text-center text-blue-300" id="quote-container">
+                {quote}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const btn = document.getElementById('see-more-btn');
+        const btnText = btn?.querySelector('.mt-2');
+        const hiddenLinks = document.querySelectorAll('.hidden-link');
+        
+        btn?.addEventListener('click', () => {
+            const isExpanded = !hiddenLinks[0].classList.contains('hidden');
+            
+            hiddenLinks.forEach(link => {
+                link.classList.toggle('hidden');
+            });
+
+            if (btnText) {
+                btnText.textContent = isExpanded ? 'see more...' : 'hide';
+            }
+        });
+    </script>
+    <div class="flex justify-center items-center mt-8">
+        <a class="btn" href="/login">/login</a>
     </div>
 </TerminalLayout>

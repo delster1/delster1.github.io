@@ -2,131 +2,130 @@
 export const prerender = false;
 const session = Astro.locals.session ?? null;
 const user = Astro.locals.user ?? null;
-import { auth, isEmailAdmin } from "../../auth"; // import your Better Auth instance
+import TerminalLayout from "../../layouts/TerminalLayout.astro";
 
-import { defineMiddleware } from "astro:middleware";
+// Note: isEmailAdmin is assumed to be available or checked via user session
+const isEmailAdmin = user?.email === "delroy.wright@example.com"; // Placeholder logic, adjust as needed
 ---
 
-<html>
-  <body>
-    <h1>Login</h1>
-
-
-    {session && (
-  <>
-    <div id="loggedInStatus">
-      Logged in as {user.email ?? "unknown user"}
+<TerminalLayout title="d3llie - login">
+    <div class="text-green-400">
+        <span class="text-yellow-300">d3llie@website</span>
+        <span class="text-blue-400"> ~ </span>
+        <span>$</span>
+        &nbsp;./auth --login
     </div>
 
-    {isEmailAdmin && (
-      <div class="admin">
-        You are Dellie B)
-      </div>
-    )}
-  </>
-)}
+    <br />
 
+    <div class="flex flex-col items-center justify-center gap-6">
+        {session ? (
+            <div box-="round" shear-="top" class="w-full max-w-md" style="--box-bg: var(--bg1)">
+                <div class="header">
+                    <span is-="badge" variant-="yellow">Session Info</span>
+                </div>
+                <div class="p-4 space-y-4 text-center">
+                    <p>Logged in as: <span class="text-blue-400">{user?.email}</span></p>
+                    {isEmailAdmin && (
+                        <p class="text-yellow-300">Welcome back, Dellie! B)</p>
+                    )}
+                    <button id="subitSignOut" class="btn w-full" variant-="yellow">Sign Out</button>
+                </div>
+            </div>
+        ) : (
+            <div box-="round" shear-="top" class="w-full max-w-md" style="--box-bg: var(--bg1)">
+                <div class="header">
+                    <span is-="badge" variant-="yellow">Login / Sign Up</span>
+                </div>
+                <div class="p-4">
+                    <form id="signUpForm" class="space-y-4">
+                        <div class="flex flex-col">
+                            <label for="name" class="text-sm opacity-70">First name:</label>
+                            <input type="text" id="name" name="name" class="bg-transparent border-b border-white/20 focus:border-yellow-300 outline-none p-1">
+                        </div>
+                        <div class="flex flex-col">
+                            <label for="email" class="text-sm opacity-70">Email:</label>
+                            <input type="text" id="email" name="email" class="bg-transparent border-b border-white/20 focus:border-yellow-300 outline-none p-1">
+                        </div>
+                        <div class="flex flex-col">
+                            <label for="password" class="text-sm opacity-70">Password:</label>
+                            <input type="password" id="password" name="password" class="bg-transparent border-b border-white/20 focus:border-yellow-300 outline-none p-1">
+                        </div>
+                    </form>
+                    
+                    <div class="mt-6 grid grid-cols-2 gap-4">
+                        <button id="subitSignIn" class="btn" variant-="yellow">Sign In</button>
+                        <button id="subitSignUp" class="btn" variant-="yellow">Sign Up</button>
+                    </div>
+                </div>
+            </div>
+        )}
 
-    <button id="logout">Sign out</button>
+        <div class="text-center opacity-50 text-sm mt-4">
+            <a href="/" class="hover:underline">← back to home</a>
+        </div>
+    </div>
 
-    <script >
-  import { githubSignIn, githubSignOut } from "../../lib/auth-client";
-      const loginBtn = document.querySelector("#login");
-      if (loginBtn) loginBtn.addEventListener("click", () => githubSignIn());
+    <script>
+        import { authClient } from "../../lib/auth-client";
+        
+        const form = document.getElementById("signUpForm") as HTMLFormElement;
+        const signUpButton = document.getElementById("subitSignUp");
+        const signInButton = document.getElementById("subitSignIn");
+        const signOutButton = document.getElementById("subitSignOut");
 
-      document.querySelector("#logout").addEventListener("click", async () => {
-        const res = await githubSignOut();
-        console.log("githubSignOut:", res);
-        window.location.reload(); // force Astro.locals.session to re-evaluate
-      });
-    </script>
-        <br>
-        <form id="signUpForm">
-          <label for="name">First name:</label>
-          <input type="text" id="name" name="name"><br><br>
-          <label for="email">Email:</label>
-          <input type="text" id="email" name="email"><br><br>
-          <label for="password">Password:</label>
-          <input type="password" id="password" name="password"><br><br>
-        </form>
-        <button id="subitSignUp" type="submit">Sign Up</button>
-        <button id="subitSignIn" type="submit">Sign In</button>
-        <button id="subitSignOut" type="submit">Sign Out</button>
+        if (signUpButton && form) {
+            signUpButton.addEventListener("click", async (e) => {
+                e.preventDefault();
+                const formData = new FormData(form);
+                const { email, password, name } = Object.fromEntries(formData.entries()) as Record<string, string>;
 
-        <script>
-            import {authClient} from "../../lib/auth-client"
-            const form = document.getElementById("signUpForm")
-            const signUpButton = document.getElementById("subitSignUp")
-            const signInButton = document.getElementById("subitSignIn")
-            const signOutButton = document.getElementById("subitSignOut")
-            const githubSignInButton = document.getElementById("subitSignIn")
-
-          async function handleSubmitSignUp(e) {
-            e.preventDefault(); // stop page reload
-
-            const signUpData = new FormData(form);
-            const values = Object.fromEntries(signUpData.entries());
-
-
-              const { data, error } = await authClient.signUp.email({
-                email: values.email, // user email address
-                password: values.password, // user password -> min 8 characters by default
-                name: values.name, // user display name
-                  callbackURL: "/"
-            }, {
-                onRequest: (ctx) => {
-                    authClient.verifyEmail(email)
-                },
-                onSuccess: (ctx) => {
-                        window.location.href = "/"
-                    console.log('suc')
-                    //redirect to the dashboard or sign in page
-                },
-                onError: (ctx) => {
-                    // display the error message
-                    alert(ctx.error.message);
-                },
-            });
-          }
-
-            async function handleSubmitSignIn(e) {
-            const signInData = new FormData(form);
-            const values = Object.fromEntries(signInData.entries());
-
-
-              const { data, error } = await authClient.signIn.email({
-                email: values.email, // user email address
-                password: values.password, // user password -> min 8 characters by default
-            }, {
-                onSuccess: (ctx) => {
-                        window.location.href = "/"
-                    console.log('suc')
-                    //redirect to the dashboard or sign in page
-                },
-                onError: (ctx) => {
-                    // display the error message
-                    alert(ctx.error.message);
-                },
-            });
-
-
-            }
-
-            async function handleSignOut(e) {
-                await authClient.signOut({
-                  fetchOptions: {
+                const { data, error } = await authClient.signUp.email({
+                    email,
+                    password,
+                    name,
+                    callbackURL: "/"
+                }, {
                     onSuccess: () => {
-                        window.location.href = "/"
+                        window.location.href = "/";
                     },
-                  },
+                    onError: (ctx) => {
+                        alert(ctx.error.message);
+                    },
                 });
-            }
-          signUpButton.addEventListener("click", handleSubmitSignUp);
-          signInButton.addEventListener("click", handleSubmitSignIn);
-          signOutButton.addEventListener("click",handleSignOut );
+            });
+        }
 
-        </script>
+        if (signInButton && form) {
+            signInButton.addEventListener("click", async (e) => {
+                e.preventDefault();
+                const formData = new FormData(form);
+                const { email, password } = Object.fromEntries(formData.entries()) as Record<string, string>;
 
-  </body>
-</html>
+                const { data, error } = await authClient.signIn.email({
+                    email,
+                    password,
+                }, {
+                    onSuccess: () => {
+                        window.location.href = "/";
+                    },
+                    onError: (ctx) => {
+                        alert(ctx.error.message);
+                    },
+                });
+            });
+        }
 
+        if (signOutButton) {
+            signOutButton.addEventListener("click", async () => {
+                await authClient.signOut({
+                    fetchOptions: {
+                        onSuccess: () => {
+                            window.location.href = "/";
+                        },
+                    },
+                });
+            });
+        }
+    </script>
+</TerminalLayout>

@@ -8,6 +8,8 @@
 @import "@webtui/css/components/button.css";
 @import "@webtui/css/components/badge.css";
 @import "@webtui/css/components/input.css";
+@import "@webtui/css/components/accordion.css";
+@import '@webtui/css/components/separator.css';
 
 @import "@webtui/theme-nord";
 @import '@webtui/theme-everforest';
@@ -24,8 +26,7 @@
 
 
     .header span,
-    [box-="round"] .header span,
-    #tuibox .header span {
+    [box-="round"] .header span {
         padding: 0 1ch;
     }
 
@@ -36,22 +37,27 @@
         padding: 0 1ch;
     }
 
-    #tuibox {
+    [box-] {
         --box-border-color: white;
         --box-rounded-radius: 8px;
         --box-border-width: 1px;
         --box-double-border-width: 1px;
     }
 
-    #thintuibox {
-        --box-border-color: white;
-        --box-rounded-radius: 8px;
-        --box-border-width: 0px;
-        --box-double-border-width: 1px;
+    [box-]:before {
+        background-color: var(--box-bg, transparent);
+        background-clip: padding-box;
+        transition: background-color 0.2s ease;
+    }
+
+    #links-grid [box-]:hover:before {
+        background-color: var(--bg3) !important;
     }
 
     #listbadge {
         --badge-color: #ffffff;
         --badge-text: #000000;
     }
+
+
 }
