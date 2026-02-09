@@ -37,6 +37,7 @@
     "auth": "^1.2.3",
     "better-auth": "^1.4.17",
     "dotenv": "^17.2.3",
+    "fast-xml-parser": "^5.3.5",
     "next-auth": "^4.24.11",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
