@@ -1,6 +1,13 @@
 ---
 import TerminalLayout from "../layouts/TerminalLayout.astro";
 import { XMLParser } from "fast-xml-parser";
+import figlet from "figlet";
+
+const banner = figlet.textSync("Dellie Wright", {
+  font: "ANSI Shadow", // try: "Standard", "Slant", "Big", "ANSI Shadow"
+  horizontalLayout: "default",
+  verticalLayout: "default",
+});
 
 let quote = "Failed to load quote.";
 try {
@@ -36,20 +43,32 @@ try {
         <span>$</span>
         &nbsp;./website-tui
     </div>
-
-    <div class="flex justify-center items-center">
-        <div box-="round" title="header" class="text-2xl" style="--box-bg: var(--bg1)">
-            <h1 class="text-[100px] pl-6 pr-6 text-green-400"># Dellie's Website</h1>
-        </div>
-    </div>
-    <br />
+    <div box-="round">
+<div box-="round" title="header" class="flex justify-center items-center" style="--box-bg: var(--bg1)">
+  <pre class="banner">{banner}</pre>
+</div>
+<style>
+  .banner {
+    font-family: "Comic Mono";
+    font-size: 18px;          /* tune this */
+    line-height: 1.0;         /* key for “Neovim” tightness */
+    letter-spacing: -0.02em;  /* subtle tighten */
+    padding: 18px 22px;
+    margin: 0;
+    white-space: pre;
+    color: var(--terminal-text);
+    background: var(--bg1);
+    border-radius: 12px;
+  }
+</style>
     <div class="flex justify-center items-center" id="about-btn">
         <div box-="round" shear-="top" class="w-[50%]" style="--box-bg: var(--bg1)" >
             <div class="header">
                  <span is-="badge" variant-="yellow">About Me</span>
             </div>
             <div class="pl-3">
-                Hey 👋 I'm Dellie — CS student, nerd, and HackKU Director.<br />
+            <h3 class="text-xl text-yellow-400"> ## Hey 👋 I'm Dellie — </h3>
+                CS student, nerd, and HackKU Director.<br />
                 Welcome to my personal terminal-style website powered by Astro + Tailwind.
             </div>
 
@@ -170,7 +189,21 @@ try {
             }
         });
     </script>
-    <div class="flex justify-center items-center mt-8">
-        <a class="btn" href="/login">/login</a>
+
+    <div class="statusline">
+      <div class="status-left">
+        <a class="seg" style="background: var(--bg-red)" href="/about"> about </a>
+        <a class="seg" style="background: var(--bg-yellow)" href="/projects"> projects </a>
+        <a class="seg" style="background: var(--bg-green)" href="/blog"> blog </a>
+      </div>
+
+      <div class="status-right">
+        <div class="seg" style="background: var(--bg-red)"> admin: </div>
+        <a class="seg" style="background: var(--bg-blue)" href="/login"> login </a>
+        <a class="seg" style="background: var(--bg-yellow)" href="/dashboard"> dashboard </a>
+      </div>
+    </div>
+
+
     </div>
 </TerminalLayout>
