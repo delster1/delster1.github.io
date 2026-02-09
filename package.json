@@ -1,0 +1,55 @@
+{
+  "name": "delster1.github.io",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Personal site built with Astro + TypeScript",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.17.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "format": "prettier --write ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/delster1/delster1.github.io.git"
+  },
+  "bugs": {
+    "url": "https://github.com/delster1/delster1.github.io/issues"
+  },
+  "homepage": "https://delster1.github.io",
+  "dependencies": {
+    "@astrojs/check": "^0.9.5",
+    "@astrojs/mdx": "^4.3.7",
+    "@astrojs/react": "^4.0.0",
+    "@auth/core": "^0.34.2",
+    "@tailwindcss/vite": "^4.1.17",
+    "@webtui/css": "^0.1.5",
+    "@webtui/plugin-nf": "^0.1.1",
+    "@webtui/theme-everforest": "^0.0.3",
+    "@webtui/theme-nord": "^0.0.2",
+    "anthill": "file:../../../../mnt/c/Users/delst/Documents/master/d3/code/rustlab/anthill/pkg",
+    "astro": "^5.14.7",
+    "auth": "^1.2.3",
+    "better-auth": "^1.4.17",
+    "dotenv": "^17.2.3",
+    "fast-xml-parser": "^5.3.5",
+    "figlet": "^1.10.0",
+    "marked": "^17.0.1",
+    "next-auth": "^4.24.11",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tailwindcss": "^4.1.17"
+  },
+  "devDependencies": {
+    "@types/node": "^24.7.2",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "prettier": "^3.3.3",
+    "typescript": "^5.9.3"
+  }
+}

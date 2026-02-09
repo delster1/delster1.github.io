@@ -1,0 +1,122 @@
+@import "tailwindcss";
+@import "./fonts.css";
+
+@import "@webtui/css/base.css";
+@import "@webtui/css/utils/box.css";
+
+@import "@webtui/css/components/typography.css";
+@import "@webtui/css/components/button.css";
+@import "@webtui/css/components/badge.css";
+@import "@webtui/css/components/input.css";
+@import "@webtui/css/components/accordion.css";
+@import "@webtui/css/components/separator.css";
+
+@import "@webtui/theme-nord";
+@import "@webtui/theme-everforest";
+
+/* Correct variable mapping */
+:root {}
+
+@layer utils {
+    .header {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .header span,
+    [box-="round"] .header span {
+        padding: 0 1ch;
+    }
+
+    .links {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        padding: 0 1ch;
+    }
+
+    [box-] {
+        --box-border-color: white;
+        --box-rounded-radius: 8px;
+        --box-border-width: 1px;
+        --box-double-border-width: 1px;
+    }
+
+    [box-]:before {
+        background-color: var(--box-bg, transparent);
+        background-clip: padding-box;
+        transition: background-color 0.2s ease;
+    }
+
+    #links-grid [box-]:hover:before {
+        background-color: var(--bg3) !important;
+    }
+
+    #about-btn [box-]:hover:before {
+        background-color: var(--bg3) !important;
+    }
+
+    #listbadge {
+        --badge-color: #ffffff;
+        --badge-text: #000000;
+    }
+
+    .statusline {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        /* Neovim vibe */
+        font-family:
+            "Comic Mono";
+        line-height: 1;
+        padding: 0px 0px;
+
+        background: var(--bg1);
+        /* border: 1px solid var(--bg2); */
+
+        white-space: nowrap;
+        /* keep it one line */
+        overflow: hidden;
+        /* crop if needed */
+    }
+
+    .status-left,
+    .status-right {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-width: 0;
+        /* allows truncation */
+    }
+
+    .seg {
+        display: inline-block;
+        padding: 10px 10px;
+        /* border-radius: 8px; */
+        text-decoration: none;
+
+        background: var(--bg0, var(--bg2));
+        color: var(--text);
+        /* border: 1px solid var(--bg2); */
+    }
+
+    .seg:hover {
+        filter: brightness(1.1);
+    }
+
+    .pill {
+        padding: 4px 8px;
+        border-radius: 8px;
+        background: var(--bg0, var(--bg2));
+        border: 1px solid var(--bg2);
+        color: var(--text);
+    }
+
+    .muted {
+        color: var(--muted);
+        background: transparent;
+        border-color: transparent;
+    }
+}

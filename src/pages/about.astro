@@ -1,0 +1,30 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+const identity = {
+firstName: "Dellie",
+lastName : "Wright",
+occupation: "Developer",
+hobbies: ["Snowboarding", "Golf", "Music", "Reading"]
+}
+
+const skills = ["Communication","Presntation","Teaching","Technical Writing","Management","Leadership","Organization","Collaboration", "Cybersecurity"]
+const languages = ["HTML","CSS","Rust","C","C++","Javascript","Typescript","Go","C#","Haskell","Python","Lua"]
+---
+
+<BaseLayout title="About">
+  <h1>About Me :)</h1>
+  <p>
+    I'm Delroy (Dellie) Wright, a senior at KU and someone who loves writing cool code.
+  </p>
+<h3>My skills are:</h3>
+<ul>
+  {skills.map((skill) => <li>{skill}</li>)}
+</ul>
+
+<h3>Here're some of my favorite / most-used languages!</h3>
+<ul>
+  {languages.map((language) => <li>{language}</li>)}
+</ul>
+
+</BaseLayout>
+

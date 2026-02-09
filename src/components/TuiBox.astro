@@ -1,0 +1,8 @@
+---
+const { title, class: className = "" } = Astro.props;
+---
+
+<div box-="round"  class={`tui-box inline-block ${className}`}>
+    <slot />
+</div>
+

@@ -1,0 +1,28 @@
+---
+import TerminalLayout from "../../layouts/TerminalLayout.astro";
+---
+
+<TerminalLayout title="d3llie blog">
+    <div class="text-green-400">
+        <span class="text-yellow-300">d3llie@website</span>
+        <span class="text-blue-400"> ~ </span>
+        <span>$</span>
+        &nbsp;cd blog && ls
+    </div>
+
+    <div class="flex justify-center items-center mt-10">
+        <div box-="round" shear-="top" class="w-[80%]" style="--box-bg: var(--bg1)">
+            <div class="header">
+                 <span is-="badge" variant-="yellow">Blog Posts</span>
+            </div>
+            <div class="p-8 text-center">
+                <p class="text-xl text-gray-400 italic">"No blog posts available... yet."</p>
+                <p class="mt-4 text-sm text-gray-500">I'm currently at the Balmer Peak. Check back when I've sobered up or reached enlightenment.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex justify-center items-center mt-8">
+        <a class="text-blue-400 hover:underline" href="/">[ back to home ]</a>
+    </div>
+</TerminalLayout>
