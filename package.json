@@ -39,6 +39,7 @@
     "dotenv": "^17.2.3",
     "fast-xml-parser": "^5.3.5",
     "figlet": "^1.10.0",
+    "marked": "^17.0.1",
     "next-auth": "^4.24.11",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

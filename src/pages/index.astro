@@ -2,6 +2,7 @@
 import TerminalLayout from "../layouts/TerminalLayout.astro";
 import { XMLParser } from "fast-xml-parser";
 import figlet from "figlet";
+import { marked } from "marked";
 
 const banner = figlet.textSync("Dellie Wright", {
   font: "ANSI Shadow", // try: "Standard", "Slant", "Big", "ANSI Shadow"
@@ -17,6 +18,24 @@ try {
     }
 } catch (error) {
     console.error('Error fetching quote:', error);
+}
+
+let nowContent = "Failed to load now content.";
+try {
+    const response = await fetch('https://minipc.d3llie.tech/now');
+    if (response.ok) {
+        let markdown = await response.text();
+        // Remove surrounding quotes if it was returned as a JSON string
+        markdown = markdown.trim();
+        if (markdown.startsWith('"') && markdown.endsWith('"')) {
+            markdown = markdown.slice(1, -1);
+        }
+        // Handle escaped newlines
+        markdown = markdown.replace(/\\n/g, '\n');
+        nowContent = await marked.parse(markdown);
+    }
+} catch (error) {
+    console.error('Error fetching now content:', error);
 }
 
 let books = [];
@@ -62,7 +81,7 @@ try {
   }
 </style>
     <div class="flex justify-center items-center" id="about-btn">
-        <div box-="round" shear-="top" class="w-[50%]" style="--box-bg: var(--bg1)" >
+        <div box-="round" shear-="top" class="w-[40%]" style="--box-bg: var(--bg1)" >
             <div class="header">
                  <span is-="badge" variant-="yellow">About Me</span>
             </div>
@@ -105,6 +124,12 @@ try {
                     <div class="text-gray-500">No books found or failed to load.</div>
                 )}
             </div>
+        </div>
+        <div box-="round" shear-="top" class="w-[60%]" style="--box-bg: var(--bg1)" >
+            <div class="header">
+                 <span is-="badge" variant-="yellow">Now</span>
+            </div>
+            <div class="p-3 now-content" set:html={nowContent} />
         </div>
     </div>
     <script>
