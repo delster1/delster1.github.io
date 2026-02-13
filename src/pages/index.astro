@@ -80,8 +80,8 @@ try {
     border-radius: 12px;
   }
 </style>
-    <div class="flex justify-center items-center" id="about-btn">
-        <div box-="round" shear-="top" class="w-[40%]" style="--box-bg: var(--bg1)" >
+    <div class="flex justify-center items-center">
+        <div box-="round" shear-="top" class="w-[40%]" style="--box-bg: var(--bg1)" id="about-btn">
             <div class="header">
                  <span is-="badge" variant-="yellow">About Me</span>
             </div>
@@ -90,14 +90,13 @@ try {
                 CS student, nerd, and HackKU Director.<br />
                 Welcome to my personal terminal-style website powered by Astro + Tailwind.
             </div>
-
             <div box-="round" shear-="top" class="pl-3 hidden-about hidden" style="--box-bg: var(--bg1)">
                 <div class="header">
                     <span is-="badge" variant-="blue">quote</span>
                 </div>
                 {quote}
             </div>
-            <div box-="round" shear-="top" class="mt-4 hidden-about hidden" style="--box-bg: var(--bg1)">
+            <div box-="round" shear-="both" class="mt-4 hidden-about hidden" style="--box-bg: var(--bg1)">
                 <div class="header">
                     <span is-="badge" variant-="blue">currently reading</span>
                 </div>
@@ -123,15 +122,37 @@ try {
                 ) : (
                     <div class="text-gray-500">No books found or failed to load.</div>
                 )}
+                <div class="header">
+                    <span></span>
+                    <a href="https://www.goodreads.com/user/show/134911869-delroy-wright" style="background: var(--bg-green)" >my goodreads!</a>
+                </div>
             </div>
         </div>
-        <div box-="round" shear-="top" class="w-[60%]" style="--box-bg: var(--bg1)" >
+        <div box-="round" shear-="both" class="w-[60%]" style="--box-bg: var(--bg1)" id="now" >
             <div class="header">
                  <span is-="badge" variant-="yellow">Now</span>
             </div>
-            <div class="p-3 now-content" set:html={nowContent} />
+            <div class="p-3 text-xl now-content" set:html={nowContent} />
+            <div class="header">
+                <span></span>
+                <a style="background: var(--bg-green)" href="https://nownownow.com/about">About now pages </a>
+            </div>
         </div>
     </div>
+<style>
+  .banner {
+    font-family: "Comic Mono";
+    font-size: 18px;          /* tune this */
+    line-height: 1.0;         /* key for “Neovim” tightness */
+    letter-spacing: -0.02em;  /* subtle tighten */
+    padding: 18px 22px;
+    margin: 0;
+    white-space: pre;
+    color: var(--terminal-text);
+    background: var(--bg1);
+    border-radius: 12px;
+  }
+</style>
     <script>
         const btn = document.getElementById('about-btn');
         const btnText = btn?.querySelector('.mt-2');
@@ -146,7 +167,6 @@ try {
 
         });
     </script>
-    <br />
     <div class="flex justify-center items-center w-[100%]">
         <div box-="round" shear-="top" id="" class="w-[90%]" style="--box-bg: var(--bg1)">
             <div class="header">
@@ -159,7 +179,7 @@ try {
               </a>
 
               <a href="https://www.linkedin.com/in/delroy-wright-440b35210/" box-="round" shear-="top" class="p-3 block text-center hover:no-underline" style="--box-bg: var(--bg1)">
-                <div class="mt-2">
+                <div class="mt-2" >
                     <br>
                     linkedin
                   <br>
@@ -168,7 +188,7 @@ try {
 
               <div box-="round" shear-="top" id="see-more-btn" class="p-3 text-center cursor-pointer block hover:no-underline" style="--box-bg: var(--bg1)">
                   <br>
-                <div class="mt-2">
+                <div class="mt-2" >
                     see more...
                 </div>
               </div>

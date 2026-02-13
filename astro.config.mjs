@@ -4,11 +4,13 @@ import mdx from "@astrojs/mdx";
 
 import tailwindcss from "@tailwindcss/vite";
 
+import cloudflare from "@astrojs/cloudflare";
+
 export default defineConfig({
   // if you later use a custom domain, update this
-  site: "https://delster1.github.io",
+  site: "https://d3llie.tech",
 
-  output: "static",
+  output: "server",
   integrations: [react(), mdx()],
 
   markdown: {
@@ -19,5 +21,7 @@ export default defineConfig({
 
   vite: {
     plugins: [tailwindcss()]
-  }
+  },
+
+  adapter: cloudflare()
 });
