@@ -1,6 +1,6 @@
 {
 	"main": "dist/_worker.js/index.js",
-	"name": "delster1.github.io",
+	"name": "delster1-github-io",
   "compatibility_date": "2026-02-13",
   "compatibility_flags": [
     "nodejs_compat",
