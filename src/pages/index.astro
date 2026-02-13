@@ -4,12 +4,6 @@ import { XMLParser } from "fast-xml-parser";
 import figlet from "figlet";
 import { marked } from "marked";
 
-const banner = figlet.textSync("Dellie Wright", {
-  font: "ANSI Shadow", // try: "Standard", "Slant", "Big", "ANSI Shadow"
-  horizontalLayout: "default",
-  verticalLayout: "default",
-});
-
 let quote = "Failed to load quote.";
 try {
     const response = await fetch('https://minipc.d3llie.tech/quote');
@@ -53,6 +47,8 @@ try {
 } catch (error) {
     console.error('Error fetching books:', error);
 }
+
+import banner from "../banner.txt?raw";
 ---
 
 <TerminalLayout title="d3llie terminal">
