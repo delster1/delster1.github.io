@@ -1,8 +1,8 @@
 import { createAuthClient  } from "better-auth/client";
 
 export const authClient = createAuthClient({
-  // IMPORTANT: Include the full path to the auth route
-  baseURL: "http://localhost:4321/api/auth",
+  // Using relative path so it works in both dev and prod
+  baseURL: "/api/auth",
 });
 
 
