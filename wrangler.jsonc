@@ -7,10 +7,18 @@
     "global_fetch_strictly_public"
   ],
 	"assets": {
-		"binding": "ASSETS",
+		"binding": "Assets",
 		"directory": "./dist"
 	},
 	"observability": {
     "enabled": true
-  }
+  },
+  "hyperdrive": [
+    {
+      "binding": "HYPERDRIVE",
+      "id": "79b5426459b74b8ea883f56448f7a90d", // the ID associated with the Hyperdrive you just created
+      "localConnectionString": "postgresql://postgres:R0ck3tL3agu369!@192.168.0.52:5432/betterauth_db"
+    }
+  ],
+    "pages_build_output_dir": "dist"
 }
