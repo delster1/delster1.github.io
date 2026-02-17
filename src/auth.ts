@@ -47,9 +47,10 @@ export const isEmailAdmin = (email) => {
   }
 };
 
-console.log(("CLIENT ID: " + AUTH_GITHUB_ID) as string);
+const pool = new pg.Pool({ connectionString: DATABASE_URL });
+
 export const auth = betterAuth({
-  database: drizzle(DATABASE_URL),
+  database: drizzle(pool),
   emailAndPassword: {
     enabled: true,
   },
