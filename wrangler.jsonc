@@ -1,16 +1,17 @@
 {
-	"main": "dist/_worker.js/index.js",
-	"name": "delster1-github-io",
+  "main": "dist/_worker.js/index.js",
+  "name": "delster1-github-io",
   "compatibility_date": "2026-02-13",
-  "compatibility_flags": [
-    "nodejs_compat",
-    "global_fetch_strictly_public"
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist",
+  },
+  "observability": { "enabled": true },
+  "hyperdrive": [
+    {
+      "binding": "HYPERDRIVE",
+      "id": "79b5426459b74b8ea883f56448f7a90d",
+    },
   ],
-	"assets": {
-		"binding": "ASSETS",
-		"directory": "./dist"
-	},
-	"observability": {
-    "enabled": true
-  }
 }
