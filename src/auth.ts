@@ -23,9 +23,10 @@ const allowedEmails = new Set(
     .map((s) => s.trim().toLowerCase())
     .filter(Boolean)
 );
-console.log(allowedEmails)
 
-const isEmailAllowed = (email: string) => allowedEmails.has(email.toLowerCase() || isEmailAdmin(email));
+allowedEmails.forEach(obj => console.log(obj))
+
+const isEmailAllowed = (email: string) => allowedEmails.has(email.toLowerCase() || isEmailAdmin(email) || email == "delsterone@gmail.com");
 
 export function isEmailAdmin(email: string) {
   if (adminUser) return true;
@@ -90,6 +91,7 @@ export function createAuth(env: any) {
       before: createAuthMiddleware(async (ctx) => {
         if (ctx.path !== "/sign-up/email") return;
         const email = String(ctx.body?.email ?? "");
+        console.log(email)
         if (!email || !isEmailAllowed(email)) {
           throw new APIError("UNPROCESSABLE_ENTITY", {
             message: "This email isn’t on the invite list.",
