@@ -52,7 +52,7 @@ export function createAuth(env: any) {
   let adminUser = false;
 
   const isEmailAllowed = (email: string) => allowedEmails.has(email.toLowerCase());
-  const isEmailAdmin = (email: string) => {
+  export const isEmailAdmin = (email: string) => {
     if (adminUser) return true;
     if (email === adminEmail) {
       adminUser = true;
