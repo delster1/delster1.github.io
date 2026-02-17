@@ -17,13 +17,9 @@ import {
 const adminEmail = D3_EMAIL;
 let adminUser = false;
 
-const allowedEmails = new Set(
-  (ALLOWED_EMAILS ?? "")
-    .split(",")
-    .map((s) => s.trim().toLowerCase())
-    .filter(Boolean)
-);
+const allowedEmails = ALLOWED_EMAILS.split(',');
 
+console.log("ALLOWED:")
 allowedEmails.forEach(obj => console.log(obj))
 
 const isEmailAllowed = (email: string) => allowedEmails.has(email.toLowerCase() || isEmailAdmin(email) || email == "delsterone@gmail.com");
