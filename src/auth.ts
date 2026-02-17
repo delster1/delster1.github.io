@@ -1,5 +1,6 @@
 import { betterAuth } from "better-auth";
 import { createAuthMiddleware, APIError } from "better-auth/api";
+import { drizzle } from "drizzle-orm/d1";
 import {
   ALLOWED_EMAILS,
   AUTH_GITHUB_ID,
@@ -7,6 +8,7 @@ import {
   AUTH_SECRET,
   BETTER_AUTH_URL,
   D3_EMAIL,
+  DATABASE_URL
 } from "astro:env/server";
 
 const allowedEmails = new Set(
@@ -47,9 +49,7 @@ export const isEmailAdmin = (email) => {
 
 console.log(("CLIENT ID: " + AUTH_GITHUB_ID) as string);
 export const auth = betterAuth({
-    database: new Pool({
-    connectionString: "postgres://postgres:R0ck3tL3agu369!@581db.d3llie.tech:5432/betterauth_db",
-  }),
+    database: drizzle(DATABASE_URL),
   emailAndPassword: {
     enabled: true,
   },
