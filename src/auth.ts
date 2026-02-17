@@ -43,13 +43,16 @@ export function createAuth(env: any) {
   const hyper = env.HYPERDRIVE;
 
   const connectionString =
-    typeof hyper === "string"
+    (typeof hyper === "string"
       ? hyper
-      : hyper?.connectionString ?? hyper?.url ?? hyper?.connection_string;
+      : hyper?.connectionString ?? hyper?.url ?? hyper?.connection_string) ||
+    env.DATABASE_URL ||
+    env.BETTER_AUTH_DATABASE_URL ||
+    env.AUTH_DB;
 
   if (!connectionString) {
     throw new Error(
-      "Hyperdrive binding missing. Expected env.HYPERDRIVE to provide a connection string."
+      "Database connection string missing. Expected env.HYPERDRIVE or env.DATABASE_URL."
     );
   }
 
@@ -73,7 +76,7 @@ export function createAuth(env: any) {
       },
     }),
     emailAndPassword: { enabled: true },
-    baseURL: BETTER_AUTH_URL || "http://localhost:4321",
+    baseURL: env?.BETTER_AUTH_URL || BETTER_AUTH_URL || "http://localhost:4321",
     secret: AUTH_SECRET,
     socialProviders: {
       github: {

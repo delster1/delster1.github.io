@@ -1,11 +1,10 @@
 import { createAuthClient  } from "better-auth/client";
 
 export const authClient = createAuthClient({
-  // Using relative path so it works in both dev and prod
-  baseURL: "/api/auth",
+  // Set the baseURL to the application's origin.
+  // Better-auth client will append '/api/auth' by default.
+  baseURL: typeof window !== "undefined" ? window.location.origin : undefined,
 });
-
-
 
 export const githubSignIn = async () => {
   const res = await authClient.signIn.social({
