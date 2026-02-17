@@ -12,7 +12,19 @@ import {
   D3_EMAIL,
 } from "astro:env/server";
 
-// NOTE: no DATABASE_URL import for Workers+Hyperdrive
+
+const adminEmail = D3_EMAIL;
+let adminUser = false;
+
+const isEmailAllowed = (email: string) => allowedEmails.has(email.toLowerCase());
+export function isEmailAdmin = (email: string) => {
+if (adminUser) return true;
+if (email === adminEmail) {
+  adminUser = true;
+  return true;
+}
+return false;
+};
 
 export function createAuth(env: any) {
   // Hyperdrive binding name from wrangler.jsonc is "HYPERDRIVE"
@@ -48,18 +60,6 @@ export function createAuth(env: any) {
       .filter(Boolean)
   );
 
-  const adminEmail = D3_EMAIL;
-  let adminUser = false;
-
-  const isEmailAllowed = (email: string) => allowedEmails.has(email.toLowerCase());
-  export const isEmailAdmin = (email: string) => {
-    if (adminUser) return true;
-    if (email === adminEmail) {
-      adminUser = true;
-      return true;
-    }
-    return false;
-  };
 
   return betterAuth({
     database: db,
