@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { createAuthMiddleware, APIError } from "better-auth/api";
 import "dotenv/config";
+import { Pool } from "pg";
 
 const allowedEmails = new Set(
   (process.env.ALLOWED_EMAILS ?? "")
@@ -40,6 +41,9 @@ export const isEmailAdmin = (email) => {
 
 console.log(("CLIENT ID: " + process.env.AUTH_GITHUB_ID) as string);
 export const auth = betterAuth({
+    database: new Pool({
+    connectionString: "postgres://postgres:R0ck3tL3agu369!@581db.d3llie.tech:5432/betterauth_db",
+  }),
   emailAndPassword: {
     enabled: true,
   },
