@@ -16,8 +16,14 @@ import {
 const adminEmail = D3_EMAIL;
 let adminUser = false;
 
+  const allowedEmails = new Set(
+    (ALLOWED_EMAILS ?? "")
+      .split(",")
+      .map((s) => s.trim().toLowerCase())
+      .filter(Boolean)
+  );
 const isEmailAllowed = (email: string) => allowedEmails.has(email.toLowerCase());
-export function isEmailAdmin = (email: string) => {
+export function isEmailAdmin(email: string)  {
 if (adminUser) return true;
 if (email === adminEmail) {
   adminUser = true;
@@ -53,12 +59,6 @@ export function createAuth(env: any) {
 
   const db = drizzle(pool);
 
-  const allowedEmails = new Set(
-    (ALLOWED_EMAILS ?? "")
-      .split(",")
-      .map((s) => s.trim().toLowerCase())
-      .filter(Boolean)
-  );
 
 
   return betterAuth({
