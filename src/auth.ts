@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { createAuthMiddleware, APIError } from "better-auth/api";
 import { drizzle } from "drizzle-orm/d1";
+
 import {
   ALLOWED_EMAILS,
   AUTH_GITHUB_ID,
