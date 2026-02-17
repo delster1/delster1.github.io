@@ -23,8 +23,9 @@ const allowedEmails = new Set(
     .map((s) => s.trim().toLowerCase())
     .filter(Boolean)
 );
+console.log(allowedEmails)
 
-const isEmailAllowed = (email: string) => allowedEmails.has(email.toLowerCase());
+const isEmailAllowed = (email: string) => allowedEmails.has(email.toLowerCase() || isEmailAdmin(email));
 
 export function isEmailAdmin(email: string) {
   if (adminUser) return true;
