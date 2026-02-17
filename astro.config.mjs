@@ -1,14 +1,16 @@
-import { defineConfig } from "astro/config";
+import { defineConfig, envField } from "astro/config";
 import react from "@astrojs/react";
 import mdx from "@astrojs/mdx";
 
 import tailwindcss from "@tailwindcss/vite";
 
+import cloudflare from "@astrojs/cloudflare";
+
 export default defineConfig({
   // if you later use a custom domain, update this
-  site: "https://delster1.github.io",
+  site: "https://d3llie.tech",
 
-  output: "static",
+  output: "server",
   integrations: [react(), mdx()],
 
   markdown: {
@@ -17,7 +19,23 @@ export default defineConfig({
     rehypePlugins: []
   },
 
+  env: {
+    schema: {
+      BETTER_AUTH_URL: envField.string({ context: "server", access: "public" }),
+      AUTH_SECRET: envField.string({ context: "server", access: "secret" }),
+      AUTH_GITHUB_ID: envField.string({ context: "server", access: "secret" }),
+      AUTH_GITHUB_SECRET: envField.string({ context: "server", access: "secret" }),
+      D3_EMAIL: envField.string({ context: "server", access: "secret", optional: true }),
+      ALLOWED_EMAILS: envField.string({ context: "server", access: "secret", optional: true }),
+      BETTER_AUTH_DATABASE_URL: envField.string({ context: "server", access: "secret", optional: true }),
+      DB_PASSWORD: envField.string({ context: "server", access: "secret", optional: true }),
+      PGPASSWORD: envField.string({ context: "server", access: "secret", optional: true }),
+    },
+  },
+
   vite: {
     plugins: [tailwindcss()]
-  }
+  },
+
+  adapter: cloudflare()
 });

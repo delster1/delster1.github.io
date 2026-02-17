@@ -48,11 +48,11 @@
         transition: background-color 0.2s ease;
     }
 
-    #links-grid [box-]:hover:before {
+    #see-more-btn:hover:before {
         background-color: var(--bg3) !important;
     }
 
-    #about-btn [box-]:hover:before {
+    #about-btn:hover:before {
         background-color: var(--bg3) !important;
     }
 
@@ -118,5 +118,42 @@
         color: var(--muted);
         background: transparent;
         border-color: transparent;
+    }
+
+    /* Now Content Styling */
+    .now-content {
+        font-family: "Comic Mono";
+        font-size: 18px;
+        line-height: 1.5;
+        color: var(--terminal-text, var(--text));
+    }
+
+    .now-content p {
+        margin-bottom: 1rem;
+    }
+
+    .now-content h1, .now-content h2, .now-content h3 {
+        color: var(--yellow);
+        font-weight: bold;
+        margin-top: 1.25rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .now-content a {
+        color: var(--blue);
+        text-decoration: underline;
+    }
+
+    .now-content a:hover {
+        filter: brightness(1.2);
+    }
+
+    .now-content ul, .now-content ol {
+        margin-bottom: 1rem;
+        padding-left: 2ch;
+    }
+
+    .now-content li {
+        margin-bottom: 0.25rem;
     }
 }

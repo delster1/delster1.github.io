@@ -1,10 +1,16 @@
 import { betterAuth } from "better-auth";
 import { createAuthMiddleware, APIError } from "better-auth/api";
-import "dotenv/config";
-import { Pool } from "pg";
+import {
+  ALLOWED_EMAILS,
+  AUTH_GITHUB_ID,
+  AUTH_GITHUB_SECRET,
+  AUTH_SECRET,
+  BETTER_AUTH_URL,
+  D3_EMAIL,
+} from "astro:env/server";
 
 const allowedEmails = new Set(
-  (process.env.ALLOWED_EMAILS ?? "")
+  (ALLOWED_EMAILS ?? "")
     .split(",")
     .map((s) => s.trim().toLowerCase())
     .filter(Boolean),
@@ -23,7 +29,7 @@ export const isEmailAllowed = (email) => {
 };
 
 var adminUser = false
-const adminEmail = process.env.D3_EMAIL
+const adminEmail = D3_EMAIL
 
 export const isEmailAdmin = (email) => {
     console.log("Admin email: " + adminEmail)
@@ -39,7 +45,7 @@ export const isEmailAdmin = (email) => {
 
 }
 
-console.log(("CLIENT ID: " + process.env.AUTH_GITHUB_ID) as string);
+console.log(("CLIENT ID: " + AUTH_GITHUB_ID) as string);
 export const auth = betterAuth({
     database: new Pool({
     connectionString: "postgres://postgres:R0ck3tL3agu369!@581db.d3llie.tech:5432/betterauth_db",
@@ -47,12 +53,12 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
-  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:4321",
-  secret: process.env.AUTH_SECRET!,
+  baseURL: BETTER_AUTH_URL || "http://localhost:4321",
+  secret: AUTH_SECRET,
   socialProviders: {
     github: {
-      clientId: process.env.AUTH_GITHUB_ID,
-      clientSecret: process.env.AUTH_GITHUB_SECRET,
+      clientId: AUTH_GITHUB_ID,
+      clientSecret: AUTH_GITHUB_SECRET,
     },
   },
   emailVerification: {

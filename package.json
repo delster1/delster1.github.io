@@ -24,6 +24,7 @@
   "homepage": "https://delster1.github.io",
   "dependencies": {
     "@astrojs/check": "^0.9.5",
+    "@astrojs/cloudflare": "^12.6.12",
     "@astrojs/mdx": "^4.3.7",
     "@astrojs/react": "^4.0.0",
     "@auth/core": "^0.34.2",
@@ -32,7 +33,6 @@
     "@webtui/plugin-nf": "^0.1.1",
     "@webtui/theme-everforest": "^0.0.3",
     "@webtui/theme-nord": "^0.0.2",
-    "anthill": "file:../../../../mnt/c/Users/delst/Documents/master/d3/code/rustlab/anthill/pkg",
     "astro": "^5.14.7",
     "auth": "^1.2.3",
     "better-auth": "^1.4.17",
