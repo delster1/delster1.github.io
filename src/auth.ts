@@ -1,27 +1,16 @@
 import { betterAuth } from "better-auth";
 import { createAuthMiddleware, APIError } from "better-auth/api";
 import { drizzle } from "drizzle-orm/d1";
-// import {
-//   ALLOWED_EMAILS,
-//   AUTH_GITHUB_ID,
-//   AUTH_GITHUB_SECRET,
-//   AUTH_SECRET,
-//   BETTER_AUTH_URL,
-//   D3_EMAIL,
-// } from "astro:env/server";
-//
-require("dotenv").config();
+import {
+  ALLOWED_EMAILS,
+  AUTH_GITHUB_ID,
+  AUTH_GITHUB_SECRET,
+  AUTH_SECRET,
+  BETTER_AUTH_URL,
+  D3_EMAIL,
+  DATABASE_URL
+} from "astro:env/server";
 
-const ALLOWED_EMAILS = process.env.ALLOWED_EMAILS;
-const AUTH_GITHUB_ID = process.env.AUTH_GITHUB_ID;
-const AUTH_GITHUB_SECRET = process.env.AUTH_GITHUB_SECRET;
-const AUTH_SECRET = process.env.AUTH_SECRET;
-const BETTER_AUTH_URL = process.env.BETTER_AUTH_URL;
-const D3_EMAIL = process.env.D3_EMAIL;
-const DATABASE_URL = process.env.DATABASE_URL;
-
-console.log(BETTER_AUTH_URL);
-console.log(DATABASE_URL);
 
 const allowedEmails = new Set(
   (ALLOWED_EMAILS ?? "")
