@@ -2,35 +2,32 @@
 export const prerender = false;
 const session = Astro.locals.session ?? null;
 const user = Astro.locals.user ?? null;
-import { auth, isEmailAdmin } from "../../auth"; // import your Better Auth instance
+import { isEmailAdmin } from "../../auth";
 
-import { defineMiddleware } from "astro:middleware";
-
+const isAdmin = user ? isEmailAdmin(user.email) : false;
 ---
 <html>
   <body>
-      <h1 data-isEmailAdmin={isEmailAdmin}>dashboard</h1>
+      <h1 data-is-admin={isAdmin}>dashboard</h1>
       {session && (
       <>
-      {isEmailAdmin && (
+      {isAdmin && (
         <div id="adminWelcome">
             Welcome Dellie!
         </div>
         )}
 
-      {isEmailAdmin == false && (
+      {!isAdmin && (
         <div id="adminWelcome">
             User is not allowed, redirecting...
         </div>
-
       )}
-
       </>
       )}
     <br>
     <br>
 <script>
-    if(!this.dataset.isEmailAdmin){
+    if(document.querySelector('h1')?.dataset.isAdmin !== "true"){
         window.location.href = "/"
     }
 </script>

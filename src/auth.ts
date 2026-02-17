@@ -2,6 +2,8 @@ import { betterAuth } from "better-auth";
 import { createAuthMiddleware, APIError } from "better-auth/api";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import * as schema from "./db/schema";
 
 import {
   ALLOWED_EMAILS,
@@ -12,25 +14,26 @@ import {
   D3_EMAIL,
 } from "astro:env/server";
 
-
 const adminEmail = D3_EMAIL;
 let adminUser = false;
 
-  const allowedEmails = new Set(
-    (ALLOWED_EMAILS ?? "")
-      .split(",")
-      .map((s) => s.trim().toLowerCase())
-      .filter(Boolean)
-  );
+const allowedEmails = new Set(
+  (ALLOWED_EMAILS ?? "")
+    .split(",")
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean)
+);
+
 const isEmailAllowed = (email: string) => allowedEmails.has(email.toLowerCase());
-export function isEmailAdmin(email: string)  {
-if (adminUser) return true;
-if (email === adminEmail) {
-  adminUser = true;
-  return true;
+
+export function isEmailAdmin(email: string) {
+  if (adminUser) return true;
+  if (email === adminEmail) {
+    adminUser = true;
+    return true;
+  }
+  return false;
 }
-return false;
-};
 
 export function createAuth(env: any) {
   // Hyperdrive binding name from wrangler.jsonc is "HYPERDRIVE"
@@ -59,10 +62,16 @@ export function createAuth(env: any) {
 
   const db = drizzle(pool);
 
-
-
   return betterAuth({
-    database: db,
+    database: drizzleAdapter(db, {
+      provider: "pg",
+      schema: {
+        user: schema.users,
+        session: schema.sessions,
+        account: schema.accounts,
+        verification: schema.verificationTokens,
+      },
+    }),
     emailAndPassword: { enabled: true },
     baseURL: BETTER_AUTH_URL || "http://localhost:4321",
     secret: AUTH_SECRET,
