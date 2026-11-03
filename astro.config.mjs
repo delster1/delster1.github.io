@@ -8,6 +8,7 @@ import mdx from "@astrojs/mdx";
 import tailwindcss from "@tailwindcss/vite";
 
 import cloudflare from "@astrojs/cloudflare";
+import { fetchGoodreadsCurrentlyReading } from "./src/lib/goodreads-profile.mjs";
 
 const obsidianNotesDir = resolve(
   process.env.OBSIDIAN_NOTES_DIR || "/home/d3/Documents/obsidiannotes"
@@ -28,6 +29,7 @@ function readObsidianContent(relativePath) {
 const siteContent = {
   now: readObsidianContent("global/public/now.md"),
   quotes: readObsidianContent("global/quotes.md"),
+  goodreads: await fetchGoodreadsCurrentlyReading(),
 };
 
 export default defineConfig({

@@ -29,11 +29,13 @@ Obsidian checkout configured by `OBSIDIAN_NOTES_DIR` (default:
 Keep the notes checkout synced before building; restart the dev server or
 rebuild after changing either file.
 
-The home page reads the current book from the public Goodreads profile page.
-The old Goodreads shelf RSS endpoint returns 404, so no RSS/API key is needed.
-Keep the profile public in Goodreads Account Settings → Profile and Settings →
-Privacy. If Goodreads does not expose a current book in its public profile
-metadata, the site falls back to the profile link.
+The build reads the current book from the public Goodreads profile and bundles
+it into the site. Goodreads returns HTTP 403 to Cloudflare Workers, so the
+homepage must not fetch the profile at request time. The old shelf RSS endpoint
+returns 404; no RSS/API key is needed. The displayed book refreshes on each
+build/deploy. Keep the profile public in Goodreads Account Settings → Profile
+and Settings → Privacy. If a build cannot read the profile or its current-book
+metadata, the homepage displays an unavailable message and the profile link.
 
 ## Background appearance
 

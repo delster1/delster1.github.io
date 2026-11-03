@@ -2,7 +2,7 @@
 import TerminalLayout from "../layouts/TerminalLayout.astro";
 import { marked } from "marked";
 import { siteContent } from "../lib/site-content";
-import { fetchGoodreadsCurrentlyReading, goodreadsProfileUrl } from "../lib/goodreads";
+import { goodreadsProfileUrl } from "../lib/goodreads";
 
 const quotes = siteContent.quotes
   .split(/\n\s*\n/)
@@ -14,7 +14,7 @@ const quote = quotes.length
 const nowContent = await marked.parse(
   siteContent.now.trim() || "The Now page is temporarily unavailable. Please check back soon."
 );
-const goodreads = await fetchGoodreadsCurrentlyReading();
+const goodreads = siteContent.goodreads;
 ---
 
 <TerminalLayout title="Dellie | Home">
