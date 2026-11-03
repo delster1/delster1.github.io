@@ -23,6 +23,12 @@ any other local PostgreSQL service. The example credentials and auth secrets
 are for local development only. Stop the container when finished with
 `npm run db:dev:stop`.
 
+The build reads `global/public/now.md` and `global/quotes.md` from the local
+Obsidian checkout configured by `OBSIDIAN_NOTES_DIR` (default:
+`/home/d3/Documents/obsidiannotes`) and bundles that content into the Worker.
+Keep the notes checkout synced before building; restart the dev server or
+rebuild after changing either file.
+
 Useful checks:
 
 ```sh

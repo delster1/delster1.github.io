@@ -3,34 +3,18 @@ import TerminalLayout from "../layouts/TerminalLayout.astro";
 import { XMLParser } from "fast-xml-parser";
 import figlet from "figlet";
 import { marked } from "marked";
+import { siteContent } from "../lib/site-content";
 
-let quote = "Failed to load quote.";
-try {
-    const response = await fetch('https://minipc.d3llie.tech/quote');
-    if (response.ok) {
-        quote = await response.json();
-    }
-} catch (error) {
-    console.error('Error fetching quote:', error);
-}
-
-let nowContent = "Failed to load now content.";
-try {
-    const response = await fetch('https://minipc.d3llie.tech/now');
-    if (response.ok) {
-        let markdown = await response.text();
-        // Remove surrounding quotes if it was returned as a JSON string
-        markdown = markdown.trim();
-        if (markdown.startsWith('"') && markdown.endsWith('"')) {
-            markdown = markdown.slice(1, -1);
-        }
-        // Handle escaped newlines
-        markdown = markdown.replace(/\\n/g, '\n');
-        nowContent = await marked.parse(markdown);
-    }
-} catch (error) {
-    console.error('Error fetching now content:', error);
-}
+const quotes = siteContent.quotes
+.split(/\n\s*\n/)
+.map((item) => item.trim())
+.filter(Boolean);
+const quote = quotes.length
+? quotes[Math.floor(Math.random() * quotes.length)]
+: "Quote temporarily unavailable.";
+const nowContent = await marked.parse(
+siteContent.now.trim() || "The Now page is temporarily unavailable. Please check back soon."
+);
 
 let books = [];
 try {

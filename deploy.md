@@ -19,6 +19,9 @@ GitHub push alone should not be assumed to deploy the site.
 - `npm run build` creates the Worker and its assets. `npx wrangler deploy`
   publishes them.
 - `d3llie.tech` is configured as the production custom domain in Cloudflare.
+- The build reads the current “Now” note and quote list from the local Obsidian
+  checkout and bundles them into the Worker; the deployed site does not call
+  the old `minipc.d3llie.tech` content API.
 
 The old Pages-specific instructions (`Connect to Git`, Pages build settings,
 and `wrangler pages dev`) do not describe the current setup.
@@ -65,6 +68,13 @@ npx wrangler deploy
 already authenticated. Confirm the deployment in the Cloudflare dashboard and
 then visit `https://d3llie.tech`. Use the Worker logs in Cloudflare to diagnose
 runtime errors.
+
+Run the check and build on a machine that has the Obsidian checkout available.
+By default, the build reads `/home/d3/Documents/obsidiannotes`; set
+`OBSIDIAN_NOTES_DIR` in the local environment to use a different checkout.
+The source files are `global/public/now.md` and `global/quotes.md`. A GitHub
+Actions build cannot access this private repository unless a separate secure
+content-sync step is configured.
 
 ## Cloudflare bindings and secrets
 
