@@ -1,22 +1,162 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getCollection, getEntry, type CollectionEntry } from "astro:content";
+import { getCollection, render } from "astro:content";
+import TerminalLayout from "../../layouts/TerminalLayout.astro";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("blog");
-  return posts.map((post) => ({ params: { slug: post.slug } }));
+  const posts = await getCollection("blog", ({ data }) => data.published);
+  return posts.map((post) => ({
+    params: { slug: post.id.replace(/\.(?:md|mdx)$/i, "") },
+  }));
 }
 
-const { slug } = Astro.params;
-const post = await getEntry("blog", slug) as CollectionEntry<"blog">;
-const { Content } = await post.render();
+const slug = Astro.params.slug;
+if (!slug) return Astro.redirect("/blogs");
+
+const posts = await getCollection("blog", ({ data }) => data.published);
+const post = posts.find((entry) => entry.id.replace(/\.(?:md|mdx)$/i, "") === slug);
+if (!post) return Astro.redirect("/blogs");
+
+const { Content } = await render(post);
 ---
 
-<BaseLayout title={post.data.title} description={post.data.description}>
-  <article>
-    <h1 style="margin-top:0">{post.data.title}</h1>
-    <p><small>{post.data.date.toDateString()}</small></p>
-    <Content />
-  </article>
-</BaseLayout>
+<TerminalLayout title={`${post.data.title} | Writing · Dellie Wright`}>
+  <main class="writing-article-shell">
+    <header class="writing-article-header">
+      <a class="writing-back" href="/blogs">← All writing</a>
+      <p class="writing-prompt">~/writing/{slug}</p>
+      <h1>{post.data.title}</h1>
+      <div class="writing-article-meta">
+        <time datetime={post.data.date.toISOString().slice(0, 10)}>
+          {post.data.date.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+        </time>
+        {post.data.tags?.map((tag: string) => <span class="writing-tag">{tag}</span>)}
+      </div>
+    </header>
 
+    <article class="writing-content">
+      <Content />
+    </article>
+
+    <nav class="writing-nav" aria-label="Site navigation">
+      <a href="/blogs">← All writing</a>
+      <a href="/projects">Projects</a>
+      <a href="/resume">Resume</a>
+    </nav>
+  </main>
+</TerminalLayout>
+
+<style>
+  .writing-article-shell {
+    display: grid;
+    gap: 1.25rem;
+    margin-inline: auto;
+    max-width: 60rem;
+    min-width: 0;
+  }
+
+  .writing-article-header {
+    background: var(--bg1);
+    border: 1px solid var(--bg3);
+    border-radius: 0.75rem;
+    padding: clamp(1rem, 3vw, 2rem);
+  }
+
+  .writing-back,
+  .writing-nav a {
+    color: var(--site-accent, var(--green));
+  }
+
+  .writing-prompt {
+    color: var(--muted);
+    font: 0.85rem/1.5 var(--font-terminal, ui-monospace, monospace);
+    margin: 1rem 0 0.35rem;
+  }
+
+  .writing-article-header h1 {
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    line-height: 1.2;
+    margin: 0 0 0.75rem;
+    overflow-wrap: anywhere;
+  }
+
+  .writing-article-meta {
+    align-items: center;
+    color: var(--muted);
+    display: flex;
+    flex-wrap: wrap;
+    font: 0.82rem/1.5 var(--font-terminal, ui-monospace, monospace);
+    gap: 0.5rem;
+  }
+
+  .writing-tag {
+    border: 1px solid var(--bg3);
+    border-radius: 999px;
+    padding: 0.15rem 0.5rem;
+  }
+
+  .writing-content {
+    background: var(--bg1);
+    border: 1px solid var(--bg3);
+    border-radius: 0.75rem;
+    line-height: 1.8;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    padding: clamp(1rem, 3vw, 2rem);
+  }
+
+  :global(.writing-content > :first-child) { margin-top: 0; }
+  :global(.writing-content > :last-child) { margin-bottom: 0; }
+
+  :global(.writing-content h2),
+  :global(.writing-content h3) {
+    color: var(--site-accent, var(--green));
+    line-height: 1.35;
+    margin-top: 1.75em;
+  }
+
+  :global(.writing-content a) {
+    color: var(--site-accent, var(--green));
+    text-underline-offset: 0.18em;
+  }
+
+  :global(.writing-content img) {
+    border-radius: 0.5rem;
+    height: auto;
+    max-width: 100%;
+  }
+
+  :global(.writing-content blockquote) {
+    border-left: 3px solid var(--site-accent, var(--green));
+    color: var(--muted);
+    margin-inline: 0;
+    padding-left: 1rem;
+  }
+
+  :global(.writing-content code) {
+    background: var(--bg2);
+    border-radius: 0.25rem;
+    padding: 0.1em 0.35em;
+  }
+
+  :global(.writing-content pre) {
+    background: var(--bg0);
+    border: 1px solid var(--bg3);
+    border-radius: 0.5rem;
+    max-width: 100%;
+    overflow-x: auto;
+    padding: 1rem;
+  }
+
+  :global(.writing-content pre code) {
+    background: transparent;
+    padding: 0;
+  }
+
+  .writing-nav {
+    border-top: 1px solid var(--bg3);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding-top: 1rem;
+  }
+</style>

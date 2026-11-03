@@ -1,20 +1,169 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
+import TerminalLayout from "../layouts/TerminalLayout.astro";
 import { getCollection } from "astro:content";
 
 const posts = (await getCollection("blog", ({ data }) => data.published))
   .sort((a, b) => +b.data.date - +a.data.date);
+const postSlug = (id: string) => id.replace(/\.(?:md|mdx)$/i, "");
 ---
 
-<BaseLayout title="Blogs">
-  <h1>Blogs</h1>
-  <ul>
-    {posts.map((p) => (
-      <li>
-        <a href={`/blog/${p.slug}/`}>{p.data.title}</a>
-        <small> — {p.data.date.toDateString()}</small>
-      </li>
-    ))}
-  </ul>
-</BaseLayout>
+<TerminalLayout title="Writing | Dellie Wright">
+  <main class="writing-shell">
+    <header class="writing-header">
+      <div>
+        <p class="writing-prompt">d3llie@website ~ $ ls ~/writing</p>
+        <h1>Writing</h1>
+        <p class="writing-intro">I still don’t write much, but when I do, it goes here.</p>
+      </div>
+      <a class="writing-home" href="/">← Home</a>
+    </header>
 
+    {posts.length > 0 ? (
+      <section class="writing-list" aria-label="Published writing">
+        {posts.map((post) => (
+          <article class="writing-card">
+            <div class="writing-post-meta">
+              <time datetime={post.data.date.toISOString().slice(0, 10)}>
+                {post.data.date.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+              </time>
+              {post.data.tags?.map((tag: string) => <span class="writing-tag">{tag}</span>)}
+            </div>
+            <h2><a href={`/blog/${postSlug(post.id)}/`}>{post.data.title}</a></h2>
+            {post.data.description && <p class="writing-description">{post.data.description}</p>}
+            <a class="writing-read-link" href={`/blog/${postSlug(post.id)}/`}>
+              Read entry <span aria-hidden="true">↗</span>
+            </a>
+          </article>
+        ))}
+      </section>
+    ) : (
+      <p class="writing-empty">No published writing yet.</p>
+    )}
+
+    <nav class="writing-nav" aria-label="Site navigation">
+      <a href="/about">About</a>
+      <a href="/projects">Projects</a>
+      <a href="/resume">Resume</a>
+    </nav>
+  </main>
+</TerminalLayout>
+
+<style>
+  .writing-shell {
+    display: grid;
+    gap: 1.5rem;
+    margin-inline: auto;
+    max-width: 68rem;
+    min-width: 0;
+  }
+
+  .writing-header {
+    align-items: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+  }
+
+  .writing-prompt {
+    color: var(--site-accent, var(--green));
+    font: 0.85rem/1.5 var(--font-terminal, ui-monospace, monospace);
+    margin: 0;
+  }
+
+  .writing-header h1 {
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    margin: 0.35rem 0;
+  }
+
+  .writing-intro {
+    color: var(--muted);
+    margin: 0;
+  }
+
+  .writing-home,
+  .writing-nav a {
+    color: var(--site-accent, var(--green));
+  }
+
+  .writing-list {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  }
+
+  .writing-card {
+    background: var(--bg1);
+    border: 1px solid var(--bg3);
+    border-radius: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: clamp(1rem, 2.5vw, 1.5rem);
+    transition: border-color 140ms ease, transform 140ms ease;
+  }
+
+  .writing-card:hover {
+    border-color: var(--site-accent, var(--green));
+    transform: translateY(-2px);
+  }
+
+  .writing-post-meta {
+    align-items: center;
+    color: var(--muted);
+    display: flex;
+    flex-wrap: wrap;
+    font: 0.8rem/1.4 var(--font-terminal, ui-monospace, monospace);
+    gap: 0.5rem;
+  }
+
+  .writing-tag {
+    border: 1px solid var(--bg3);
+    border-radius: 999px;
+    padding: 0.15rem 0.5rem;
+  }
+
+  .writing-card h2 {
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    line-height: 1.3;
+    margin: 1rem 0 0.5rem;
+  }
+
+  .writing-card h2 a {
+    color: var(--text);
+  }
+
+  .writing-description {
+    color: var(--muted);
+    margin: 0 0 1rem;
+  }
+
+  .writing-read-link {
+    color: var(--site-accent, var(--green));
+    font: 0.85rem/1.5 var(--font-terminal, ui-monospace, monospace);
+    margin-top: auto;
+    padding-top: 0.75rem;
+  }
+
+  .writing-empty {
+    background: var(--bg1);
+    border: 1px solid var(--bg3);
+    border-radius: 0.75rem;
+    color: var(--muted);
+    margin: 0;
+    padding: 1.5rem;
+  }
+
+  .writing-nav {
+    border-top: 1px solid var(--bg3);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding-top: 1rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .writing-card { transition: none; }
+    .writing-card:hover { transform: none; }
+  }
+</style>

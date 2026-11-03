@@ -20,7 +20,7 @@ import TerminalLayout from "../../layouts/TerminalLayout.astro";
       <h2 id="education-heading">Education</h2>
       <div class="resume-entry">
         <div>
-          <h3>Bachelor of Science in Computer Science</h3>
+          <h3><a class="resume-text-link resume-row-link" href="https://eecs.ku.edu/undergraduate-programs" rel="noopener noreferrer">Bachelor of Science in Computer Science</a></h3>
           <p>University of Kansas · Lawrence, Kansas</p>
           <p>University Honors Program</p>
         </div>
@@ -33,7 +33,7 @@ import TerminalLayout from "../../layouts/TerminalLayout.astro";
 
       <article class="resume-entry">
         <div>
-          <h3>Associate Software Developer · Commerce Bank</h3>
+          <h3>Associate Software Developer · <a class="resume-company-link resume-row-link" href="https://www.commercebank.com/" rel="noopener noreferrer">Commerce Bank</a></h3>
           <p>DAP Program · Integrations / APIs</p>
           <ul>
             <li>Support the bank's eventing system on the Integrations / APIs team.</li>
@@ -45,7 +45,7 @@ import TerminalLayout from "../../layouts/TerminalLayout.astro";
 
       <article class="resume-entry">
         <div>
-          <h3>Software Engineering Intern · Commerce Bank</h3>
+          <h3>Software Engineering Intern · <a class="resume-company-link resume-row-link" href="https://www.commercebank.com/" rel="noopener noreferrer">Commerce Bank</a></h3>
           <p>Lockbox Team · Kansas City, Missouri</p>
           <ul>
             <li>Developed a section-based healthcare report generation tool in C# using an external healthcare library's type system, allowing developers to include or exclude sections without redundant code while preserving report correctness.</li>
@@ -57,7 +57,7 @@ import TerminalLayout from "../../layouts/TerminalLayout.astro";
 
       <article class="resume-entry">
         <div>
-          <h3>Cyber Security Intern · Monolith Corporation</h3>
+          <h3>Cyber Security Intern · <a class="resume-company-link resume-row-link" href="https://www.monolith-corp.com/" rel="noopener noreferrer">Monolith Corporation</a></h3>
           <p>Overland Park, Kansas</p>
           <ul>
             <li>Designed and conducted an incident response tabletop exercise using CISA resources and real-world cyber incident scenarios.</li>
@@ -74,7 +74,7 @@ import TerminalLayout from "../../layouts/TerminalLayout.astro";
 
       <article class="resume-entry">
         <div>
-          <h3>HackKU26 Director</h3>
+          <h3><a class="resume-text-link resume-row-link" href="https://hackku.org/" rel="noopener noreferrer">HackKU26 Director</a></h3>
           <ul>
             <li>Led a cross-functional team of 50+ students to plan and deliver Kansas' largest hackathon for 600+ participants.</li>
             <li>Managed sponsorships, partnerships, budget allocation, marketing, workshops, and competition judging.</li>
@@ -85,22 +85,26 @@ import TerminalLayout from "../../layouts/TerminalLayout.astro";
 
       <article class="resume-entry">
         <div>
-          <h3>President · Association of Computing Machinery at KU</h3>
+          <h3><a class="resume-text-link resume-row-link" href="https://acmatku.github.io/" rel="noopener noreferrer">President · Association of Computing Machinery at KU</a></h3>
           <ul>
             <li>Led the ACM chapter and executive team, organizing events, meetings, and workshops for KU's developer community.</li>
             <li>Built partnerships and opportunities with industry professionals, faculty, and students.</li>
           </ul>
         </div>
-        <time datetime="2024-04">April 2024 – Present</time>
+        <div class="resume-entry-dates" aria-label="President terms">
+          <time datetime="2024-04">April 2024 – April 2025</time>
+          <time datetime="2025-05">May 2025 – May 2026</time>
+        </div>
       </article>
 
       <article class="resume-entry">
         <div>
-          <h3>Student Tutor · Association of Computing Machinery at KU</h3>
+          <h3><a class="resume-text-link resume-row-link" href="https://acmatku.github.io/" rel="noopener noreferrer">Student Tutor · Association of Computing Machinery at KU</a></h3>
           <p>Tutored students in computer science and mathematics.</p>
         </div>
-        <time datetime="2023-09">September 2023 – Present</time>
+        <time datetime="2023-09">September 2023 – May 2026</time>
       </article>
+
     </section>
 
     <section box-="round" class="resume-card" aria-labelledby="projects-heading" style="--box-bg: var(--bg1)">
@@ -108,7 +112,7 @@ import TerminalLayout from "../../layouts/TerminalLayout.astro";
 
       <article class="resume-entry">
         <div>
-          <h3>Outstanding Presentation Award · Undergraduate Research Symposium</h3>
+          <h3><a class="resume-text-link resume-row-link" href="https://news.ku.edu/news/article/students-win-outstanding-presentation-awards-undergraduate-research-symposium" rel="noopener noreferrer">Outstanding Presentation Award · Undergraduate Research Symposium</a></h3>
           <p>KU Department of Biology · Coral Research · Python, PyTorch</p>
           <ul>
             <li>Designed a convolutional neural network for pixel-wise classification of coral imagery as alive, bleached, or dead.</li>
@@ -137,7 +141,7 @@ import TerminalLayout from "../../layouts/TerminalLayout.astro";
     <nav class="resume-nav" aria-label="Site navigation">
       <a href="/">Home</a>
       <a href="/projects">Projects</a>
-      <a href="/blog">Writing</a>
+      <a href="/blogs">Writing</a>
       <a href="/login">Admin login</a>
     </nav>
   </main>
@@ -197,10 +201,34 @@ import TerminalLayout from "../../layouts/TerminalLayout.astro";
 
   .resume-entry {
     border-top: 1px solid var(--bg3);
+    border-radius: 0.55rem;
     display: grid;
     gap: 0.5rem 1rem;
     grid-template-columns: minmax(0, 1fr) auto;
-    padding: 1rem 0;
+    margin-inline: -0.75rem;
+    padding: 1rem 0.75rem;
+    transition: background-color 140ms ease;
+  }
+
+  .resume-entry:hover,
+  .resume-entry:focus-within {
+    background: var(--bg2);
+  }
+
+  .resume-entry:has(.resume-row-link) {
+    cursor: pointer;
+    position: relative;
+  }
+
+  .resume-row-link::after {
+    content: "";
+    inset: 0;
+    position: absolute;
+  }
+
+  .resume-entry:has(.resume-row-link:focus-visible) {
+    outline: 3px solid var(--site-accent);
+    outline-offset: 3px;
   }
 
   .resume-entry:first-of-type {
@@ -216,6 +244,27 @@ import TerminalLayout from "../../layouts/TerminalLayout.astro";
   .resume-entry time {
     color: var(--yellow);
     white-space: nowrap;
+  }
+
+  .resume-entry-dates {
+    display: grid;
+    gap: 0.3rem;
+    text-align: right;
+  }
+
+  .resume-text-link,
+  .resume-company-link {
+    color: inherit;
+    text-decoration-color: var(--site-accent);
+    text-underline-offset: 0.18em;
+    transition: filter 140ms ease;
+  }
+
+  .resume-text-link:hover,
+  .resume-text-link:focus-visible,
+  .resume-company-link:hover,
+  .resume-company-link:focus-visible {
+    filter: brightness(1.2);
   }
 
   .resume-entry ul {
@@ -241,6 +290,11 @@ import TerminalLayout from "../../layouts/TerminalLayout.astro";
     .resume-entry time {
       grid-row: 1;
     }
+
+    .resume-entry-dates {
+      grid-row: 1;
+      text-align: left;
+    }
   }
 
   @media print {
@@ -263,6 +317,11 @@ import TerminalLayout from "../../layouts/TerminalLayout.astro";
       break-inside: avoid;
       color: #111 !important;
       padding: 0.6rem;
+    }
+
+    .resume-entry:hover,
+    .resume-entry:focus-within {
+      background: transparent !important;
     }
 
     .resume-card h2 {
