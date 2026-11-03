@@ -1,74 +1,82 @@
-# Database Implementation Plan (Better-auth)
+# Database and Authentication
 
-This document outlines the steps to connect the Gemini CLI website to a persistent database for authentication and user management, specifically focusing on using an external database server.
+This document describes the database and authentication setup that is present
+in the site. It replaces the earlier implementation plan, which described
+installing and configuring components that are already in the repository.
 
-## 0. What is an ORM?
-An **ORM (Object-Relational Mapper)** is a tool that allows you to interact with your database using TypeScript/JavaScript instead of writing raw SQL.
-- **Abstraction:** It maps database tables to code objects.
-- **Type Safety:** It ensures your queries match your schema at compile time, reducing runtime errors.
-- **Productivity:** It simplifies complex joins and migrations into readable code.
-- **Example:** Instead of `SELECT * FROM users`, you write `db.select().from(users)`.
+## Request and data flow
 
-## 1. Prerequisites
-- **Astro Output:** Change `output: "static"` to `output: "server"` or `output: "hybrid"` in `astro.config.mjs`.
-- **Hosting Adapter:** Install an adapter suitable for your environment (e.g., `@astrojs/node` or `@astrojs/cloudflare`).
-- **External DB Access:** Ensure your external server's firewall allows incoming connections on the DB port (e.g., 5432 for Postgres) from your hosting provider's IP.
-
-## 2. Recommended Stack
-- **ORM:** [Drizzle ORM](https://orm.drizzle.team/) (Type-safe and lightweight).
-- **Database:** PostgreSQL (Recommended for external servers) or MySQL.
-- **Driver:** `postgres.js` or `pg` for PostgreSQL.
-
-## 3. Implementation Steps
-
-### A. Install Dependencies
-```bash
-npm install drizzle-orm postgres @better-auth/drizzle-adapter
-npm install -D drizzle-kit
+```text
+Browser
+  -> Astro route / middleware on the Cloudflare Worker
+  -> Better Auth
+  -> Drizzle adapter and PostgreSQL driver
+  -> Cloudflare Hyperdrive
+  -> PostgreSQL database
 ```
 
-### B. Configure Database Connection
-Create `src/db/index.ts` to initialize your database client. For an external Postgres server:
-- will add music history, book plans, suggest book, etc. 
+- **Better Auth** implements email/password and GitHub sign-in, and manages
+  sessions.
+- **Drizzle ORM** maps the TypeScript schema to PostgreSQL tables.
+- **Hyperdrive** is Cloudflare's connection layer for the database. It provides
+  pooled connections between Workers and the existing PostgreSQL database; it
+  is not itself a database and does not create or migrate the database.
+- The Worker receives the Hyperdrive connection through the `HYPERDRIVE`
+  binding declared in [wrangler.jsonc](./wrangler.jsonc). The connection details
+  are configured in Cloudflare and should not be committed to the repository.
 
-```typescript
-import { drizzle } from 'drizzle-orm/postgres-js';
-import postgres from 'postgres';
+## Relevant files
 
-const connectionString = process.env.DATABASE_URL!;
-const client = postgres(connectionString, { prepare: false });
-export const db = drizzle(client);
-```
+- [src/auth.ts](./src/auth.ts) configures Better Auth, its Drizzle adapter,
+  database connection, and signup checks.
+- [src/middleware.ts](./src/middleware.ts) looks up the current session and
+  attaches the user and session to Astro locals.
+- [src/pages/api/auth/[...all].ts](./src/pages/api/auth/%5B...all%5D.ts) forwards
+  auth API requests to Better Auth.
+- [src/db/schema.ts](./src/db/schema.ts) defines the users, sessions, accounts,
+  and verification-token tables.
+- [drizzle.config.ts](./drizzle.config.ts) configures Drizzle Kit to use that
+  schema and read a direct PostgreSQL URL from `DATABASE_URL`.
+- `drizzle/` contains checked-in SQL migration files.
 
-### C. Update Better-auth Configuration (`src/auth.ts`)
-```typescript
-import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "@better-auth/drizzle-adapter";
-import * as schema from "./db/schema";
-import { db } from "./db";
+## Configuration
 
-export const auth = betterAuth({
-    database: drizzleAdapter(db, {
-        provider: "pg", // Use "pg" for PostgreSQL
-        schema: schema,
-    }),
-    emailAndPassword: {
-        enabled: true,
-    }
-});
-```
+In production, the Worker needs the Better Auth settings in Cloudflare
+**Settings > Variables and Secrets**:
 
-### D. Schema Management
-1. Use `npx better-auth migrate` to generate the initial authentication tables.
-2. Maintain your custom tables in `src/db/schema.ts`.
+- `BETTER_AUTH_URL` — the site's base URL, `https://d3llie.tech`.
+- `AUTH_SECRET` — a strong, private Better Auth secret.
+- `AUTH_GITHUB_ID` and `AUTH_GITHUB_SECRET` — GitHub OAuth app credentials.
+- `D3_EMAIL` — the admin email used by the current auth code.
+- `ALLOWED_EMAILS` — comma-separated signup allow-list.
 
-## 4. Environment Variables
-Ensure the following are set in your `.env` and production environment:
-- `DATABASE_URL`: `postgres://user:password@external-host:5432/database_name`
-- `BETTER_AUTH_SECRET`: A long random string.
-- `BETTER_AUTH_URL`: The base URL of your site.
+The Astro environment schema marks `D3_EMAIL` and `ALLOWED_EMAILS` optional,
+but the current auth module calls `.split()` on `ALLOWED_EMAILS` without a
+fallback. Set it for now; the auth code should be corrected before treating the
+allow-list as a security boundary.
 
-## 5. Security Notes
-- **SSL:** Use `?sslmode=require` in your connection string for external servers.
-- **Pooling:** For high traffic, consider a connection pooler like PgBouncer.
-- **Middleware:** Ensure `src/middleware.ts` is correctly verifying sessions on every server-side request.
+The app uses `HYPERDRIVE` first for database access, with `DATABASE_URL` as a
+fallback. Drizzle Kit separately requires `DATABASE_URL` for direct migration
+operations. Do not store either database credentials or auth secrets in source
+control.
+
+## Migrations
+
+The migration files are not run automatically during deployment. Before applying
+or generating migrations:
+
+1. Compare the SQL files in `drizzle/` against `src/db/schema.ts`. The initial
+   checked-in migration may be behind the current schema.
+2. Provide `DATABASE_URL` privately in the environment running Drizzle Kit.
+3. Review generated SQL and back up production data before applying a migration
+   to the production database.
+
+For deployment steps and the current Cloudflare Worker setup, see
+[deploy.md](./deploy.md).
+
+## Work in progress
+
+Authentication and admin access are not ready to be relied on as production
+security controls. In particular, the signup allow-list and admin check in
+`src/auth.ts` need correction and testing, and the dashboard should enforce
+authorization on the server rather than relying on a browser redirect.
