@@ -47,13 +47,14 @@ In production, the Worker needs the Better Auth settings in Cloudflare
 - `BETTER_AUTH_URL` — the site's base URL, `https://d3llie.tech`.
 - `AUTH_SECRET` — a strong, private Better Auth secret.
 - `AUTH_GITHUB_ID` and `AUTH_GITHUB_SECRET` — GitHub OAuth app credentials.
-- `D3_EMAIL` — the admin email used by the current auth code.
-- `ALLOWED_EMAILS` — comma-separated signup allow-list.
+- `D3_EMAIL` — the site owner's email address from the GitHub OAuth profile.
+  Account creation is denied unless this value is configured and matches.
 
-The Astro environment schema marks `D3_EMAIL` and `ALLOWED_EMAILS` optional,
-but the current auth module calls `.split()` on `ALLOWED_EMAILS` without a
-fallback. Set it for now; the auth code should be corrected before treating the
-allow-list as a security boundary.
+Authentication is GitHub-only; email/password sign-up and sign-in are disabled.
+The user-creation hook rejects new accounts unless GitHub supplies a verified
+email matching `D3_EMAIL`, and `/dashboard` checks the same owner email on the
+server for every request. Existing accounts that do not match cannot access
+the dashboard.
 
 The app uses `HYPERDRIVE` first for database access, with `DATABASE_URL` as a
 fallback. Drizzle Kit separately requires `DATABASE_URL` for direct migration
@@ -74,9 +75,10 @@ or generating migrations:
 For deployment steps and the current Cloudflare Worker setup, see
 [deploy.md](./deploy.md).
 
-## Work in progress
+## Local OAuth testing
 
-Authentication and admin access are not ready to be relied on as production
-security controls. In particular, the signup allow-list and admin check in
-`src/auth.ts` need correction and testing, and the dashboard should enforce
-authorization on the server rather than relying on a browser redirect.
+The local `.env` example uses placeholder GitHub OAuth credentials. To test the
+OAuth round trip, configure a separate GitHub OAuth App with a callback URL of
+`http://localhost:4321/api/auth/callback/github`, then set its credentials and
+the owner's email in the ignored local `.env`. Do not reuse production secrets
+for local testing.

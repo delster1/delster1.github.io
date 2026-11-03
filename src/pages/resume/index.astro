@@ -1,0 +1,267 @@
+---
+import TerminalLayout from "../../layouts/TerminalLayout.astro";
+---
+
+<TerminalLayout title="Resume | Dellie Wright">
+  <main class="resume-shell">
+    <header class="resume-header">
+      <div>
+        <p class="resume-kicker">d3llie@website ~ $ cat resume.md</p>
+        <h1>Delroy (Dellie) Wright</h1>
+        <p>Associate Software Developer · Commerce Bank DAP</p>
+      </div>
+      <div class="resume-actions">
+        <button id="print-resume" class="btn" variant-="yellow" type="button">Print / Save PDF</button>
+        <a href="/">Back home</a>
+      </div>
+    </header>
+
+    <section box-="round" class="resume-card" aria-labelledby="education-heading" style="--box-bg: var(--bg1)">
+      <h2 id="education-heading" is-="badge" variant-="yellow">Education</h2>
+      <div class="resume-entry">
+        <div>
+          <h3>Bachelor of Science in Computer Science</h3>
+          <p>University of Kansas · Lawrence, Kansas</p>
+          <p>University Honors Program</p>
+        </div>
+        <time datetime="2026-05">May 2026</time>
+      </div>
+    </section>
+
+    <section box-="round" class="resume-card" aria-labelledby="experience-heading" style="--box-bg: var(--bg1)">
+      <h2 id="experience-heading" is-="badge" variant-="yellow">Experience</h2>
+
+      <article class="resume-entry">
+        <div>
+          <h3>Associate Software Developer · Commerce Bank</h3>
+          <p>DAP Program · Integrations / APIs</p>
+          <ul>
+            <li>Support the bank's eventing system on the Integrations / APIs team.</li>
+            <li>Bring AI workflows into the environment, maintain systems, and help modernize legacy technologies.</li>
+          </ul>
+        </div>
+        <time datetime="2026-06">June 2026 – Present</time>
+      </article>
+
+      <article class="resume-entry">
+        <div>
+          <h3>Software Engineering Intern · Commerce Bank</h3>
+          <p>Lockbox Team · Kansas City, Missouri</p>
+          <ul>
+            <li>Developed a section-based healthcare report generation tool in C# using an external healthcare library's type system, allowing developers to include or exclude sections without redundant code while preserving report correctness.</li>
+            <li>Built an automated testing framework integrated with Visual Studio Test Explorer. It hashes output files and validates them against stored metadata, reducing developer testing time by 75% while avoiding high-cost directory storage.</li>
+          </ul>
+        </div>
+        <time datetime="2025-05">May 2025 – May 2026</time>
+      </article>
+
+      <article class="resume-entry">
+        <div>
+          <h3>Cyber Security Intern · Monolith Corporation</h3>
+          <p>Overland Park, Kansas</p>
+          <ul>
+            <li>Designed and conducted an incident response tabletop exercise using CISA resources and real-world cyber incident scenarios.</li>
+            <li>Presented recommendations to senior leadership to improve incident response and recovery.</li>
+            <li>Documented secure development standards with engineers using MITRE ATT&amp;CK and OWASP guidance.</li>
+          </ul>
+        </div>
+        <time datetime="2023-06">June 2023 – August 2023</time>
+      </article>
+    </section>
+
+    <section box-="round" class="resume-card" aria-labelledby="leadership-heading" style="--box-bg: var(--bg1)">
+      <h2 id="leadership-heading" is-="badge" variant-="yellow">Leadership</h2>
+
+      <article class="resume-entry">
+        <div>
+          <h3>HackKU26 Director</h3>
+          <ul>
+            <li>Led a cross-functional team of 50+ students to plan and deliver Kansas' largest hackathon for 600+ participants.</li>
+            <li>Managed sponsorships, partnerships, budget allocation, marketing, workshops, and competition judging.</li>
+          </ul>
+        </div>
+        <time datetime="2025-05">May 2025 – Present</time>
+      </article>
+
+      <article class="resume-entry">
+        <div>
+          <h3>President · Association of Computing Machinery at KU</h3>
+          <ul>
+            <li>Led the ACM chapter and executive team, organizing events, meetings, and workshops for KU's developer community.</li>
+            <li>Built partnerships and opportunities with industry professionals, faculty, and students.</li>
+          </ul>
+        </div>
+        <time datetime="2024-04">April 2024 – Present</time>
+      </article>
+
+      <article class="resume-entry">
+        <div>
+          <h3>Student Tutor · Association of Computing Machinery at KU</h3>
+          <p>Tutored students in computer science and mathematics.</p>
+        </div>
+        <time datetime="2023-09">September 2023 – Present</time>
+      </article>
+    </section>
+
+    <section box-="round" class="resume-card" aria-labelledby="projects-heading" style="--box-bg: var(--bg1)">
+      <h2 id="projects-heading" is-="badge" variant-="yellow">Projects &amp; Recognition</h2>
+
+      <article class="resume-entry">
+        <div>
+          <h3>Outstanding Presentation Award · Undergraduate Research Symposium</h3>
+          <p>KU Department of Biology · Coral Research · Python, PyTorch</p>
+          <ul>
+            <li>Designed a convolutional neural network for pixel-wise classification of coral imagery as alive, bleached, or dead.</li>
+            <li>Defined a method for creating regional segmentation masks to train the model on coral reef imagery.</li>
+          </ul>
+        </div>
+        <time datetime="2025">2025</time>
+      </article>
+
+      <article class="resume-entry">
+        <div>
+          <h3>DUZK · Best Use of Midnight, HackKU</h3>
+          <p>TypeScript, Docker, Pinata</p>
+          <p>Built a blockchain-based healthcare data security platform using zero-knowledge proofs and distributed storage to protect sensitive health data during processing and enable decentralized record storage.</p>
+        </div>
+      </article>
+    </section>
+
+    <section box-="round" class="resume-card" aria-labelledby="skills-heading" style="--box-bg: var(--bg1)">
+      <h2 id="skills-heading" is-="badge" variant-="yellow">Skills</h2>
+      <p><strong>Proficient:</strong> Python, JavaScript, C++, Bash, HTML, Java, CSS, Git, Linux CLI</p>
+      <p><strong>Familiar:</strong> GNU/Linux, C, Shell, Unity, SQL, Go, Rust, Azure AD, Nmap, Wireshark, Kali Linux, Redis</p>
+      <p><strong>Spoken languages:</strong> Mandarin (conversational fluency)</p>
+    </section>
+
+    <nav class="resume-nav" aria-label="Site navigation">
+      <a href="/">Home</a>
+      <a href="/projects">Projects</a>
+      <a href="/blog">Writing</a>
+      <a href="/login">Admin login</a>
+    </nav>
+  </main>
+</TerminalLayout>
+
+<script>
+  document.getElementById("print-resume")?.addEventListener("click", () => window.print());
+</script>
+
+<style>
+  .resume-shell {
+    display: grid;
+    gap: 1rem;
+    margin-inline: auto;
+    max-width: 62rem;
+    min-width: 0;
+  }
+
+  .resume-header {
+    align-items: start;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+  }
+
+  .resume-header h1 {
+    font-size: clamp(1.7rem, 5vw, 2.5rem);
+    margin: 0.4rem 0;
+  }
+
+  .resume-kicker,
+  .resume-header p {
+    margin: 0.25rem 0;
+  }
+
+  .resume-actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .resume-card {
+    min-width: 0;
+    padding: clamp(1rem, 2.5vw, 1.5rem);
+  }
+
+  .resume-card h2 {
+    margin: 0 0 1rem;
+  }
+
+  .resume-entry {
+    border-top: 1px solid var(--bg3);
+    display: grid;
+    gap: 0.5rem 1rem;
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding: 1rem 0;
+  }
+
+  .resume-entry:first-of-type {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .resume-entry h3,
+  .resume-entry p {
+    margin: 0.25rem 0 0.5rem;
+  }
+
+  .resume-entry time {
+    color: var(--yellow);
+    white-space: nowrap;
+  }
+
+  .resume-entry ul {
+    margin: 0.5rem 0 0;
+    padding-left: 1.25rem;
+  }
+
+  .resume-entry li {
+    margin-block: 0.4rem;
+  }
+
+  .resume-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  @media (max-width: 600px) {
+    .resume-entry {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .resume-entry time {
+      grid-row: 1;
+    }
+  }
+
+  @media print {
+    :global(body) {
+      background: white !important;
+      color: #111 !important;
+    }
+
+    .resume-shell {
+      max-width: none;
+    }
+
+    .resume-actions,
+    .resume-nav {
+      display: none;
+    }
+
+    .resume-card {
+      background: white !important;
+      break-inside: avoid;
+      color: #111 !important;
+      padding: 0.6rem;
+    }
+
+    .resume-entry time {
+      color: #333;
+    }
+  }
+</style>

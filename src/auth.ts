@@ -1,12 +1,12 @@
 import { betterAuth } from "better-auth";
-import { createAuthMiddleware, APIError } from "better-auth/api";
+import { APIError } from "better-auth/api";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import * as schema from "./db/schema";
+import { isAdminEmail } from "./lib/access-control";
 
 import {
-  ALLOWED_EMAILS,
   AUTH_GITHUB_ID,
   AUTH_GITHUB_SECRET,
   AUTH_SECRET,
@@ -14,36 +14,9 @@ import {
   D3_EMAIL,
 } from "astro:env/server";
 
-const adminEmail = D3_EMAIL;
-let adminUser = false;
-
-const allowedEmails = ALLOWED_EMAILS.split(',');
-
-console.log("ALLOWED:")
-allowedEmails.forEach(obj => console.log(obj))
-
-const isEmailAllowed = (email: string) => allowedEmails.has(email.toLowerCase() || isEmailAdmin(email) || email == "delsterone@gmail.com");
-
-export function isEmailAdmin(email: string) {
-  if (adminUser) return true;
-  if (email === adminEmail) {
-    adminUser = true;
-    return true;
-  }
-  return false;
-}
-
-export function createAuth(env: any) {
-  // Hyperdrive binding name from wrangler.jsonc is "HYPERDRIVE"
-  // Most commonly this is available as env.HYPERDRIVE.connectionString (or similar).
-  // We'll support both string and object forms defensively.
-
-  const hyper = env.HYPERDRIVE;
-
+export function createAuth(env: App.Locals["runtime"]["env"]) {
   const connectionString =
-    (typeof hyper === "string"
-      ? hyper
-      : hyper?.connectionString ?? hyper?.url ?? hyper?.connection_string) ||
+    env.HYPERDRIVE?.connectionString ||
     env.DATABASE_URL ||
     env.BETTER_AUTH_DATABASE_URL ||
     env.AUTH_DB;
@@ -73,7 +46,7 @@ export function createAuth(env: any) {
         verification: schema.verificationTokens,
       },
     }),
-    emailAndPassword: { enabled: true },
+    emailAndPassword: { enabled: false },
     baseURL: env?.BETTER_AUTH_URL || BETTER_AUTH_URL || "http://localhost:4321",
     secret: AUTH_SECRET,
     socialProviders: {
@@ -83,18 +56,19 @@ export function createAuth(env: any) {
       },
     },
     emailVerification: { sendOnSignUp: false },
-    hooks: {
-      before: createAuthMiddleware(async (ctx) => {
-        if (ctx.path !== "/sign-up/email") return;
-        const email = String(ctx.body?.email ?? "");
-        console.log(email)
-        if (!email || !isEmailAllowed(email)) {
-          throw new APIError("UNPROCESSABLE_ENTITY", {
-            message: "This email isn’t on the invite list.",
-          });
+    databaseHooks: {
+      user: {
+        create: {
+          before: async (user) => {
+            if (!user.emailVerified || !isAdminEmail(user.email, D3_EMAIL)) {
+              throw new APIError("FORBIDDEN", {
+                message: "Only the site owner can create an account.",
+              });
+            }
+            return { data: user };
+          },
         }
-      }),
+      },
     },
   });
 }
-

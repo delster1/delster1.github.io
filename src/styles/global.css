@@ -17,6 +17,21 @@
 /* Correct variable mapping */
 :root {}
 
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-width: 20rem;
+}
+
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible {
+    outline: 3px solid var(--yellow);
+    outline-offset: 3px;
+}
+
 @layer utils {
     .header {
         display: flex;

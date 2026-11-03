@@ -50,7 +50,6 @@ export default defineConfig({
       AUTH_GITHUB_ID: envField.string({ context: "server", access: "secret" }),
       AUTH_GITHUB_SECRET: envField.string({ context: "server", access: "secret" }),
       D3_EMAIL: envField.string({ context: "server", access: "secret", optional: true }),
-      ALLOWED_EMAILS: envField.string({ context: "server", access: "secret", optional: true }),
       DATABASE_URL: envField.string({ context: "server", access: "secret", optional: true }),
       DB_PASSWORD: envField.string({ context: "server", access: "secret", optional: true }),
       PGPASSWORD: envField.string({ context: "server", access: "secret", optional: true }),

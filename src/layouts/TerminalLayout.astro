@@ -12,7 +12,7 @@ const { title } = Astro.props;
     <style>
       body {
         margin: 0;
-        font: 21px/1.6  "Comic Mono";
+        font: clamp(0.95rem, 0.3vw + 0.9rem, 1.15rem)/1.6 "Comic Mono", monospace;
         color: var(--text);
       }
       a { color: var(--accent); text-decoration: none; }
@@ -28,4 +28,3 @@ const { title } = Astro.props;
     </div>
   </body>
 </html>
-

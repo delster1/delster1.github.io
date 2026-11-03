@@ -1,7 +1,6 @@
 ---
 import TerminalLayout from "../layouts/TerminalLayout.astro";
 import { XMLParser } from "fast-xml-parser";
-import figlet from "figlet";
 import { marked } from "marked";
 import { siteContent } from "../lib/site-content";
 
@@ -35,203 +34,251 @@ try {
 import banner from "../banner.txt?raw";
 ---
 
-<TerminalLayout title="d3llie terminal">
-    <div class="statusline mb-4" style="background: var(--red); color: var(--bg0); justify-content: center; font-weight: bold; font-size: 1rem;">
-        NOTE: THIS WEBSITE IS A WORK IN PROGRESS. THERE MAY BE BROKEN LINKS, WEIRD FORMATTING, ETC.
-    </div>
-    <div class="text-green-400">
-        <span class="text-yellow-300">d3llie@website</span>
-        <span class="text-blue-400"> ~ </span>
-        <span>$</span>
-        &nbsp;./website-tui
-    </div>
-    <div box-="round">
-<div box-="round" title="header" class="flex justify-center items-center" style="--box-bg: var(--bg1)">
-  <pre class="banner">{banner}</pre>
-</div>
-<style>
-  .banner {
-    font-family: "Comic Mono";
-    font-size: 18px;          /* tune this */
-    line-height: 1.0;         /* key for “Neovim” tightness */
-    letter-spacing: -0.02em;  /* subtle tighten */
-    padding: 18px 22px;
-    margin: 0;
-    white-space: pre;
-    color: var(--terminal-text);
-    background: var(--bg1);
-    border-radius: 12px;
-  }
-</style>
-    <div class="flex justify-center items-center">
-        <div box-="round" shear-="top" class="w-[40%]" style="--box-bg: var(--bg1)" id="about-btn">
-            <div class="header">
-                 <span is-="badge" variant-="yellow">About Me</span>
-            </div>
-            <div class="pl-3">
-            <h3 class="text-xl text-yellow-400"> ## Hey 👋 I'm Dellie — </h3>
-                CS student, nerd, and HackKU Director.<br />
-                Welcome to my personal terminal-style website powered by Astro + Tailwind.
-            </div>
-            <div box-="round" shear-="top" class="pl-3 hidden-about hidden" style="--box-bg: var(--bg1)">
+<TerminalLayout title="Dellie | Home">
+    <main class="home-shell">
+        <div class="terminal-prompt" aria-label="Terminal prompt">
+            <span class="text-yellow-300">d3llie@website</span>
+            <span class="text-blue-400"> ~ </span>
+            <span>$ ./website-tui</span>
+        </div>
+        <div box-="round" class="home-banner-frame" title="Dellie">
+            <pre class="banner" aria-label="Dellie ASCII banner">{banner}</pre>
+        </div>
+
+        <div class="home-grid">
+            <section box-="round" class="home-panel" aria-labelledby="about-heading" style="--box-bg: var(--bg1)">
                 <div class="header">
-                    <span is-="badge" variant-="blue">quote</span>
+                    <h1 id="about-heading" is-="badge" variant-="yellow">Hi, I'm Dellie</h1>
                 </div>
-                {quote}
-            </div>
-            <div box-="round" shear-="both" class="mt-4 hidden-about hidden" style="--box-bg: var(--bg1)">
-                <div class="header">
-                    <span is-="badge" variant-="blue">currently reading</span>
-                </div>
-                {books.length > 0 ? (
-                    <ul class="list-none p-0 m-0">
-                        {books.map((book) => (
-                            <li class="mt-2 flex items-start gap-4">
-                                {book.book_small_image_url && (
-                                    <img src={book.book_small_image_url} alt={book.title} class="w-12 h-auto border border-gray-700" />
-                                )}
-                                <div>
-                                    <a href={book.link} target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 transition-colors">
-                                        {book.title}
-                                    </a>
-                                    <div class="text-sm">
-                                        <span class="text-gray-400">by </span>
-                                        <span class="text-yellow-200">{book.author_name}</span>
+                <p class="home-intro">
+                    Software developer at Commerce Bank, working with integrations, APIs, and event-driven systems.
+                </p>
+                <blockquote class="home-quote">{quote}</blockquote>
+                <details class="home-details">
+                    <summary>Currently reading</summary>
+                    {books.length > 0 ? (
+                        <ul class="home-reading-list">
+                            {books.map((book) => (
+                                <li class="home-book">
+                                    {book.book_small_image_url && (
+                                        <img src={book.book_small_image_url} alt="" loading="lazy" />
+                                    )}
+                                    <div>
+                                        <a href={book.link} target="_blank" rel="noopener noreferrer">
+                                            {book.title}
+                                        </a>
+                                        <div class="text-sm">
+                                            <span class="text-gray-400">by </span>
+                                            <span class="text-yellow-200">{book.author_name}</span>
+                                        </div>
                                     </div>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <div class="text-gray-500">No books found or failed to load.</div>
-                )}
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p class="muted">Reading list is temporarily unavailable.</p>
+                    )}
+                    <a href="https://www.goodreads.com/user/show/134911869-delroy-wright" target="_blank" rel="noopener noreferrer">
+                        View my Goodreads
+                    </a>
+                </details>
+            </section>
+
+            <section box-="round" class="home-panel" id="now" aria-labelledby="now-heading" style="--box-bg: var(--bg1)">
                 <div class="header">
-                    <span></span>
-                    <a href="https://www.goodreads.com/user/show/134911869-delroy-wright" style="background: var(--bg-green)" >my goodreads!</a>
+                    <h2 id="now-heading" is-="badge" variant-="yellow">Now</h2>
                 </div>
-            </div>
+                <div class="now-content" set:html={nowContent} />
+                <a class="home-subtle-link" href="https://nownownow.com/about">What is a now page?</a>
+            </section>
         </div>
-        <div box-="round" shear-="both" class="w-[60%]" style="--box-bg: var(--bg1)" id="now" >
+        <section box-="round" class="home-links" aria-labelledby="links-heading" style="--box-bg: var(--bg1)">
             <div class="header">
-                 <span is-="badge" variant-="yellow">Now</span>
+                <h2 id="links-heading" is-="badge" variant-="yellow">Explore and connect</h2>
             </div>
-            <div class="p-3 text-xl now-content" set:html={nowContent} />
-            <div class="header">
-                <span></span>
-                <a style="background: var(--bg-green)" href="https://nownownow.com/about">About now pages </a>
+            <div class="home-link-grid">
+                <a class="home-link" box-="round" href="https://github.com/delster1" target="_blank" rel="noopener noreferrer">
+                    <span>GitHub</span>
+                    <span class="home-link-arrow" aria-hidden="true">↗</span>
+                </a>
+                <a class="home-link" box-="round" href="https://www.linkedin.com/in/delroy-wright-440b35210/" target="_blank" rel="noopener noreferrer">
+                    <span>LinkedIn</span>
+                    <span class="home-link-arrow" aria-hidden="true">↗</span>
+                </a>
+                <a class="home-link" box-="round" href="/about">
+                    <span>About</span>
+                    <span class="home-link-arrow" aria-hidden="true">→</span>
+                </a>
+                <a class="home-link" box-="round" href="/projects">
+                    <span>Projects</span>
+                    <span class="home-link-arrow" aria-hidden="true">→</span>
+                </a>
+                <a class="home-link" box-="round" href="/blog">
+                    <span>Writing</span>
+                    <span class="home-link-arrow" aria-hidden="true">→</span>
+                </a>
+                <a class="home-link" box-="round" href="/resume">
+                    <span>Resume</span>
+                    <span class="home-link-arrow" aria-hidden="true">→</span>
+                </a>
             </div>
-        </div>
-    </div>
-<style>
-  .banner {
-    font-family: "Comic Mono";
-    font-size: 18px;          /* tune this */
-    line-height: 1.0;         /* key for “Neovim” tightness */
-    letter-spacing: -0.02em;  /* subtle tighten */
-    padding: 18px 22px;
-    margin: 0;
-    white-space: pre;
-    color: var(--terminal-text);
-    background: var(--bg1);
-    border-radius: 12px;
-  }
-</style>
-    <script>
-        const btn = document.getElementById('about-btn');
-        const btnText = btn?.querySelector('.mt-2');
-        const hiddenLinks = document.querySelectorAll('.hidden-about');
-        
-        btn?.addEventListener('click', () => {
-            const isExpanded = !hiddenLinks[0].classList.contains('hidden');
-            
-            hiddenLinks.forEach(link => {
-                link.classList.toggle('hidden');
-            });
+        </section>
 
-        });
-    </script>
-    <div class="flex justify-center items-center w-[100%]">
-        <div box-="round" shear-="top" id="" class="w-[90%]" style="--box-bg: var(--bg1)">
-            <div class="header">
-                 <span is-="badge" variant-="yellow">My Links</span>
+        <nav class="statusline home-nav" aria-label="Site navigation">
+            <div class="status-left">
+                <a class="seg" href="/about">about</a>
+                <a class="seg" href="/projects">projects</a>
+                <a class="seg" href="/blog">blog</a>
+                <a class="seg" href="/resume">resume</a>
             </div>
-            <div class="mt-3 grid grid-cols-1 gap-6 sm:grid-cols-3" id="links-grid">
-              <a href="https://github.com/delster1" box-="round" shear-="top" class="p-3 text-center block hover:no-underline" style="--box-bg: var(--bg1)">
-                  <br>
-                  github
-              </a>
-
-              <a href="https://www.linkedin.com/in/delroy-wright-440b35210/" box-="round" shear-="top" class="p-3 block text-center hover:no-underline" style="--box-bg: var(--bg1)">
-                <div class="mt-2" >
-                    <br>
-                    linkedin
-                  <br>
-                </div>
-              </a>
-
-              <div box-="round" shear-="top" id="see-more-btn" class="p-3 text-center cursor-pointer block hover:no-underline" style="--box-bg: var(--bg1)">
-                  <br>
-                <div class="mt-2" >
-                    see more...
-                </div>
-              </div>
-
-              <!-- Hidden initially -->
-              <a href="/blog" class="hidden-link hidden p-3 text-center block hover:no-underline" box-="round" shear-="top" style="--box-bg: var(--bg1)">
-                <br>blog
-              </a>
-              <a href="#" class="hidden-link hidden p-3 text-center block hover:no-underline" box-="round" shear-="top" style="--box-bg: var(--bg1)">
-                <br>projects
-              </a>
-              <a href="#" class="hidden-link hidden p-3 text-center block hover:no-underline" box-="round" shear-="top" style="--box-bg: var(--bg1)">
-                <br>resume
-              </a>
-              <a href="#" class="hidden-link hidden p-3 text-center block hover:no-underline" box-="round" shear-="top" style="--box-bg: var(--bg1)">
-                <br>contact
-              </a>
-              <a href="#" class="hidden-link hidden p-3 text-center block hover:no-underline" box-="round" shear-="top" style="--box-bg: var(--bg1)">
-                <br>extra 1
-              </a>
-              <a href="#" class="hidden-link hidden p-3 text-center block hover:no-underline" box-="round" shear-="top" style="--box-bg: var(--bg1)">
-                <br>extra 2
-              </a>
+            <div class="status-right">
+                <a class="seg" href="/login">admin login</a>
             </div>
-        </div>
-    </div>
-
-
-    <script>
-        const btn = document.getElementById('see-more-btn');
-        const btnText = btn?.querySelector('.mt-2');
-        const hiddenLinks = document.querySelectorAll('.hidden-link');
-        
-        btn?.addEventListener('click', () => {
-            const isExpanded = !hiddenLinks[0].classList.contains('hidden');
-            
-            hiddenLinks.forEach(link => {
-                link.classList.toggle('hidden');
-            });
-
-            if (btnText) {
-                btnText.textContent = isExpanded ? 'see more...' : 'hide';
-            }
-        });
-    </script>
-
-    <div class="statusline">
-      <div class="status-left">
-        <a class="seg" style="background: var(--bg-red)" href="/about"> about </a>
-        <a class="seg" style="background: var(--bg-yellow)" href="/projects"> projects </a>
-        <a class="seg" style="background: var(--bg-green)" href="/blog"> blog </a>
-      </div>
-
-      <div class="status-right">
-        <div class="seg" style="background: var(--bg-red)"> admin: </div>
-        <a class="seg" style="background: var(--bg-blue)" href="/login"> login </a>
-        <a class="seg" style="background: var(--bg-yellow)" href="/dashboard"> dashboard </a>
-      </div>
-    </div>
-
-
-    </div>
+        </nav>
+    </main>
 </TerminalLayout>
+
+<style>
+    .home-shell {
+        display: grid;
+        gap: 1rem;
+        margin-inline: auto;
+        max-width: 74rem;
+        min-width: 0;
+        width: 100%;
+    }
+
+    .terminal-prompt {
+        font-size: clamp(0.9rem, 2vw, 1.15rem);
+        overflow-wrap: anywhere;
+    }
+
+    .home-banner-frame {
+        min-width: 0;
+        overflow-x: auto;
+    }
+
+    .banner {
+        background: var(--bg1);
+        border-radius: 0.5rem;
+        color: var(--terminal-text);
+        font-family: "Comic Mono", monospace;
+        font-size: clamp(0.42rem, 1.35vw, 1rem);
+        letter-spacing: -0.02em;
+        line-height: 1;
+        margin: 0;
+        padding: clamp(0.75rem, 2vw, 1.25rem);
+        white-space: pre;
+        width: max-content;
+    }
+
+    .home-grid {
+        align-items: start;
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    }
+
+    .home-panel,
+    .home-links {
+        min-width: 0;
+        padding: clamp(1rem, 2.5vw, 1.5rem);
+    }
+
+    .home-panel h1,
+    .home-panel h2,
+    .home-links h2 {
+        font-size: 1.1em;
+        margin: 0;
+    }
+
+    .home-intro {
+        margin: 1rem 0;
+    }
+
+    .home-quote {
+        border-inline-start: 3px solid var(--yellow);
+        color: var(--terminal-text, var(--text));
+        margin: 1.25rem 0;
+        padding: 0.25rem 0 0.25rem 1rem;
+    }
+
+    .home-details summary {
+        color: var(--blue);
+        cursor: pointer;
+        padding: 0.5rem 0;
+    }
+
+    .home-reading-list {
+        list-style: none;
+        margin: 0.75rem 0;
+        padding: 0;
+    }
+
+    .home-book {
+        align-items: start;
+        display: flex;
+        gap: 0.75rem;
+        margin-block: 0.75rem;
+        min-width: 0;
+    }
+
+    .home-book img {
+        border: 1px solid var(--bg3);
+        flex: 0 0 3rem;
+        height: auto;
+        width: 3rem;
+    }
+
+    .home-book > div {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .home-subtle-link {
+        display: inline-block;
+        margin-top: 0.75rem;
+    }
+
+    .home-link-grid {
+        display: grid;
+        gap: 0.75rem;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+        margin-top: 1rem;
+    }
+
+    .home-link {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+        min-height: 3.5rem;
+        padding: 0.85rem 1rem;
+        text-decoration: none;
+    }
+
+    .home-link-arrow {
+        color: var(--yellow);
+    }
+
+    .home-nav.statusline {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        overflow: visible;
+        white-space: normal;
+    }
+
+    .home-nav .status-left,
+    .home-nav .status-right {
+        flex-wrap: wrap;
+    }
+
+    @media (max-width: 700px) {
+        .home-grid {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .banner {
+            font-size: clamp(0.36rem, 1.6vw, 0.7rem);
+        }
+    }
+</style>

@@ -12,6 +12,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
+    "test": "tsx --test src/lib/access-control.test.ts",
     "db:dev:start": "docker compose -f docker-compose.dev.yml up -d postgres",
     "db:dev:stop": "docker compose -f docker-compose.dev.yml stop postgres",
     "db:dev:generate": "drizzle-kit generate",

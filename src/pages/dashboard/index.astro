@@ -2,36 +2,28 @@
 export const prerender = false;
 const session = Astro.locals.session ?? null;
 const user = Astro.locals.user ?? null;
-import { isEmailAdmin } from "../../auth";
+import { D3_EMAIL } from "astro:env/server";
+import { isAdminEmail } from "../../lib/access-control";
 
-const isAdmin = user ? isEmailAdmin(user.email) : false;
+if (!session || !user) return Astro.redirect("/login");
+if (!isAdminEmail(user.email, D3_EMAIL)) {
+  return new Response("Forbidden", { status: 403 });
+}
 ---
-<html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin dashboard</title>
+  </head>
   <body>
-      <h1 data-is-admin={isAdmin}>dashboard</h1>
-      {session && (
-      <>
-      {isAdmin && (
-        <div id="adminWelcome">
-            Welcome Dellie!
-        </div>
-        )}
-
-      {!isAdmin && (
-        <div id="adminWelcome">
-            User is not allowed, redirecting...
-        </div>
-      )}
-      </>
-      )}
-    <br>
-    <br>
-<script>
-    if(document.querySelector('h1')?.dataset.isAdmin !== "true"){
-        window.location.href = "/"
-    }
-</script>
-
+    <main>
+      <h1>Welcome back, Dellie.</h1>
+      <p>Signed in as {user.email}</p>
+      <p>This private dashboard is ready for future tools.</p>
+      <a href="/">Back to site</a>
+      <a href="/login">Account</a>
+    </main>
   </body>
 </html>
-

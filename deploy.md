@@ -88,8 +88,12 @@ file; never commit them.
 | `AUTH_SECRET` | Secret used by Better Auth to sign/encrypt auth data. Generate a strong random value. |
 | `AUTH_GITHUB_ID` | GitHub OAuth app client ID. |
 | `AUTH_GITHUB_SECRET` | GitHub OAuth app client secret. |
-| `D3_EMAIL` | Optional admin email used by the current auth code. |
-| `ALLOWED_EMAILS` | Comma-separated signup allow-list used by the current auth code. Although declared optional in the Astro schema, the code currently reads it as required. |
+| `D3_EMAIL` | Owner email returned by GitHub OAuth. New accounts and dashboard access are restricted to this email. |
+
+Authentication is GitHub-only. Email/password sign-up and sign-in are disabled;
+the server rejects account creation unless GitHub supplies a verified profile
+email matching `D3_EMAIL`, and checks the owner email server-side on each
+dashboard request. Configure `D3_EMAIL` before enabling owner sign-in.
 
 Set the GitHub OAuth callback URL to
 `https://d3llie.tech/api/auth/callback/github` for production. Configure any
