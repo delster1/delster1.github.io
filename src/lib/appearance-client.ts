@@ -58,6 +58,46 @@ function getWallpaper(choice: string) {
   return wallpapers.find((wallpaper) => wallpaper.id === id);
 }
 
+function updatePreview(choice: string) {
+  const preview = document.querySelector<HTMLElement>("[data-wallpaper-preview]");
+  if (!preview) return;
+
+  const image = preview.querySelector<HTMLImageElement>("[data-preview-image]");
+  const fallback = preview.querySelector<HTMLElement>("[data-preview-fallback]");
+  const name = preview.querySelector<HTMLElement>("[data-preview-name]");
+  const description = preview.querySelector<HTMLElement>("[data-preview-description]");
+  if (!image || !fallback || !name || !description) return;
+
+  const wallpaper = getWallpaper(choice);
+  preview.dataset.previewKind = wallpaper ? "image" : choice === noImage ? "none" : "default";
+  name.textContent = wallpaper?.name ?? (choice === noImage ? "No image" : "Site default");
+  description.textContent = wallpaper
+    ? choice === siteDefault
+      ? "The configured site background with its coordinated color theme."
+      : "Selected background with a coordinated color theme."
+    : choice === noImage
+      ? "A plain dark background with the default terminal color theme."
+      : "Site default colors without a configured background image.";
+
+  image.onerror = null;
+  if (!wallpaper) {
+    image.removeAttribute("src");
+    image.hidden = true;
+    fallback.hidden = false;
+    return;
+  }
+
+  const source = new URL(wallpaper.src, window.location.href).href;
+  image.onerror = () => {
+    if (image.src !== source) return;
+    image.hidden = true;
+    fallback.hidden = false;
+  };
+  image.src = source;
+  image.hidden = false;
+  fallback.hidden = true;
+}
+
 function imageUrl(source: string) {
   const url = new URL(source, window.location.href);
   if (url.protocol !== "http:" && url.protocol !== "https:") {
@@ -103,6 +143,7 @@ function loadImagePalette(source: string) {
 async function applyChoice(choice: string, persist: boolean) {
   const sequence = ++applySequence;
   const wallpaper = getWallpaper(choice);
+  updatePreview(choice);
 
   if (persist) {
     try {

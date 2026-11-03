@@ -1,30 +1,397 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-const identity = {
-firstName: "Dellie",
-lastName : "Wright",
-occupation: "Developer",
-hobbies: ["Snowboarding", "Golf", "Music", "Reading"]
-}
+import TerminalLayout from "../layouts/TerminalLayout.astro";
+import { goodreadsProfileUrl } from "../lib/goodreads";
 
-const skills = ["Communication","Presntation","Teaching","Technical Writing","Management","Leadership","Organization","Collaboration", "Cybersecurity"]
-const languages = ["HTML","CSS","Rust","C","C++","Javascript","Typescript","Go","C#","Haskell","Python","Lua"]
+const interests = ["One Piece", "Snowboarding", "Minecraft", "Golf", "Music", "Reading", "Cooking"];
+const technologies = ["Rust", "Go", "TypeScript", "JavaScript", "Python", "C++"];
+const onlineProfiles = [
+  {
+    name: "GitHub",
+    category: "CODE",
+    description: "Public projects, experiments, and the code behind my demos.",
+    href: "https://github.com/delster1",
+  },
+  {
+    name: "LinkedIn",
+    category: "PROFESSIONAL",
+    description: "My professional background and experience.",
+    href: "https://www.linkedin.com/in/delroy-wright-440b35210/",
+  },
+  {
+    name: "Spotify",
+    category: "MUSIC",
+    description: "What I am listening to on Spotify.",
+    href: "https://open.spotify.com/user/boysgymnastics123?si=29ca7138d8de444e",
+  },
+  {
+    name: "Last.fm",
+    category: "MUSIC",
+    description: "A running log of the music I listen to.",
+    href: "https://www.last.fm/user/delster1",
+  },
+  {
+    name: "Letterboxd",
+    category: "FILM",
+    description: "Films I have watched, rated, and want to see.",
+    href: "https://letterboxd.com/delster1/",
+  },
+  {
+    name: "Goodreads",
+    category: "READING",
+    description: "Books I have read and what I am currently reading.",
+    href: goodreadsProfileUrl,
+  },
+];
+const friendsSites = [
+  {
+    name: "Andrew",
+    domain: "andrewhuang2019.github.io",
+    description: "My HackKU successor! A great leader and truly in the league of legends of developers.",
+    href: "https://andrewhuang2019.github.io/",
+  },
+  {
+    name: "Evan",
+    domain: "evanalmloff.com",
+    description: "Evan is one of my coolest friends, check out what he's working on:",
+    href: "https://evanalmloff.com/",
+  },
+  {
+    name: "James Hurd",
+    domain: "jameshurd.net",
+    description: "My 🐐, a wonderful programmer and better person.",
+    href: "https://jameshurd.net/",
+  },
+  {
+    name: "Thomas",
+    domain: "thomas-writes.github.io",
+    description: "You'll see that Thomas and I share a love of the wonderful wonderful terminal! ❤️",
+    href: "https://thomas-writes.github.io/",
+  }
+];
 ---
 
-<BaseLayout title="About">
-  <h1>About Me :)</h1>
-  <p>
-    I'm Delroy (Dellie) Wright, a senior at KU and someone who loves writing cool code.
-  </p>
-<h3>My skills are:</h3>
-<ul>
-  {skills.map((skill) => <li>{skill}</li>)}
-</ul>
+<TerminalLayout title="About | Dellie">
+  <main class="about-shell">
+    <header class="about-topbar">
+      <p class="about-prompt">d3llie@website <span>~/about</span></p>
+      <a class="about-back" href="/">← Home</a>
+    </header>
 
-<h3>Here're some of my favorite / most-used languages!</h3>
-<ul>
-  {languages.map((language) => <li>{language}</li>)}
-</ul>
+    <section class="about-intro" aria-labelledby="about-heading">
+      <p class="about-kicker">PROFILE · DEVELOPER · LIFELONG LEARNER</p>
+      <h1 id="about-heading">Hi, I’m Dellie.</h1>
+      <p class="about-lede">
+        I’m Delroy “Dellie” Wright, a software developer who enjoys turning complex problems into
+        useful, dependable software.
+      </p>
+    </section>
 
-</BaseLayout>
+    <div class="about-grid">
+      <section class="about-card about-work" aria-labelledby="work-heading">
+        <p class="about-card-kicker">01 / WHAT I DO</p>
+        <h2 id="work-heading">Building thoughtful software</h2>
+        <p>
+          I work as a software developer at Commerce Bank, focusing on integrations, APIs, and
+          event-driven systems. I care about making the pieces between services work clearly and
+          reliably, and I like learning how a system fits together from end to end.
+        </p>
+        <p>
+          Outside of work, I use personal projects to explore ideas such as simulations, terminal
+          tools, and machine-learning experiments. I’m especially drawn to projects where I can
+          understand the underlying mechanics and make something people can interact with.
+        </p>
+        <a class="about-link" href="/projects/">Explore my project gallery <span aria-hidden="true">↗</span></a>
+      </section>
 
+      <section class="about-card" aria-labelledby="tools-heading">
+        <p class="about-card-kicker">02 / TOOLS I ENJOY</p>
+        <h2 id="tools-heading">Languages &amp; technologies</h2>
+        <ul class="about-tags" aria-label="Programming languages">
+          {technologies.map((technology) => <li>{technology}</li>)}
+        </ul>
+        <p class="about-note">
+          I enjoy picking the right tool for the problem and getting curious about what happens
+          beneath the abstractions.
+        </p>
+      </section>
+
+      <section class="about-card about-interests" aria-labelledby="interests-heading">
+        <p class="about-card-kicker">03 / OFF THE CLOCK</p>
+        <h2 id="interests-heading">Things I enjoy</h2>
+        <p>
+          When I’m away from a keyboard, you might find me snowboarding, catching up on
+          <em>One Piece</em>,           or relaxing with Minecraft. I also enjoy golf, music, reading, and cooking.
+        </p>
+        <ul class="about-tags" aria-label="Personal interests">
+          {interests.map((interest) => <li>{interest}</li>)}
+        </ul>
+      </section>
+    </div>
+
+    <div class="about-directory-grid">
+      <section class="about-card about-directory" aria-labelledby="online-heading">
+        <p class="about-card-kicker">04 / AROUND THE WEB</p>
+        <h2 id="online-heading">Find me online</h2>
+        <ul class="about-directory-list" aria-label="Dellie's online profiles">
+          {onlineProfiles.map((profile) => (
+            <li>
+              <div>
+                <p class="directory-category">{profile.category}</p>
+                <h3>{profile.name}</h3>
+                <p class="directory-description">{profile.description}</p>
+              </div>
+              <a href={profile.href} target="_blank" rel="noopener noreferrer">
+                Visit {profile.name} <span aria-hidden="true">↗</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="about-card about-directory" aria-labelledby="friends-heading">
+        <p class="about-card-kicker">05 / FRIENDS</p>
+        <h2 id="friends-heading">Friends’ sites</h2>
+        <p class="directory-intro">A few corners of the web made by people I know.</p>
+        <ul class="about-directory-list" aria-label="Friends' websites">
+          {friendsSites.map((site) => (
+            <li>
+              <div>
+                <p class="directory-category">PERSONAL WEBSITE</p>
+                <h3>{site.name}</h3>
+                <p class="directory-description">{site.description}</p>
+              </div>
+              <a href={site.href} target="_blank" rel="noopener noreferrer">
+                {site.domain} <span aria-hidden="true">↗</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </div>
+
+    <nav class="about-links" aria-label="More about Dellie">
+      <a href="/projects/">Project gallery</a>
+      <a href="/resume/">Resume</a>
+      <a href="/appearance/">Appearance settings</a>
+    </nav>
+  </main>
+</TerminalLayout>
+
+<style>
+  .about-shell {
+    width: min(100%, 980px);
+    margin: 0 auto;
+    padding: 1.5rem clamp(1rem, 3vw, 2rem) 4rem;
+    color: var(--terminal-text, var(--text));
+  }
+
+  .about-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: clamp(2.5rem, 7vw, 5rem);
+    font: 0.9rem/1.5 var(--font-terminal, ui-monospace, monospace);
+  }
+
+  .about-prompt {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .about-prompt span,
+  .about-kicker,
+  .about-card-kicker,
+  .about-link,
+  .about-links a {
+    color: var(--site-accent, var(--green));
+  }
+
+  .about-back {
+    color: var(--text);
+  }
+
+  .about-intro {
+    max-width: 760px;
+    margin-bottom: 2rem;
+  }
+
+  .about-kicker,
+  .about-card-kicker {
+    margin: 0 0 0.7rem;
+    font: 700 0.72rem/1.4 var(--font-terminal, ui-monospace, monospace);
+    letter-spacing: 0.1em;
+  }
+
+  .about-intro h1 {
+    margin: 0;
+    color: var(--text);
+    font-size: clamp(2.6rem, 7vw, 4.5rem);
+    line-height: 1.04;
+    letter-spacing: -0.05em;
+  }
+
+  .about-lede {
+    max-width: 62ch;
+    margin: 1rem 0 0;
+    color: var(--muted);
+    font-size: clamp(1.05rem, 2vw, 1.2rem);
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .about-directory-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .about-card {
+    min-width: 0;
+    padding: clamp(1.1rem, 2.5vw, 1.5rem);
+    border: 1px solid color-mix(in srgb, var(--bg2) 78%, transparent);
+    border-radius: 1rem;
+    background: color-mix(in srgb, var(--bg0, var(--bg1)) 82%, transparent);
+    box-shadow: 0 18px 48px rgb(0 0 0 / 14%);
+  }
+
+  .about-work {
+    grid-row: span 2;
+  }
+
+  .about-card h2 {
+    margin: 0 0 0.9rem;
+    color: var(--text);
+    font-size: clamp(1.2rem, 3vw, 1.6rem);
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+  }
+
+  .about-card p:not(.about-card-kicker) {
+    color: var(--muted);
+  }
+
+  .about-link {
+    display: inline-flex;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+    font: 0.88rem/1.5 var(--font-terminal, ui-monospace, monospace);
+  }
+
+  .about-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .about-tags li {
+    padding: 0.35rem 0.6rem;
+    border: 1px solid color-mix(in srgb, var(--site-accent, var(--green)) 35%, transparent);
+    border-radius: 999px;
+    color: var(--text);
+    background: color-mix(in srgb, var(--site-accent, var(--green)) 8%, transparent);
+    font-size: 0.8rem;
+  }
+
+  .about-tags li::before,
+  .about-directory-list li::before {
+    content: none;
+  }
+
+  .about-note {
+    margin-bottom: 0;
+  }
+
+  .about-directory h2 {
+    margin-bottom: 0.4rem;
+  }
+
+  .about-directory-list {
+    display: grid;
+    gap: 0;
+    margin: 0.75rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .about-directory-list li {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem 0;
+    border-top: 1px solid color-mix(in srgb, var(--bg2) 78%, transparent);
+  }
+
+  .directory-category {
+    margin: 0 0 0.2rem;
+    color: var(--site-accent, var(--green));
+    font: 700 0.65rem/1.4 var(--font-terminal, ui-monospace, monospace);
+    letter-spacing: 0.08em;
+  }
+
+  .about-directory-list h3 {
+    margin: 0;
+    color: var(--text);
+    font-size: 1rem;
+  }
+
+  .about-directory-list .directory-description {
+    margin: 0.25rem 0 0;
+    color: var(--muted);
+    font-size: 0.86rem;
+  }
+
+  .directory-intro {
+    margin: 0;
+  }
+
+  .about-directory-list a {
+    flex: 0 0 auto;
+    color: var(--site-accent, var(--green));
+    font: 0.78rem/1.5 var(--font-terminal, ui-monospace, monospace);
+    text-align: right;
+  }
+
+  .about-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.5rem;
+    margin-top: 1.5rem;
+    font: 0.85rem/1.5 var(--font-terminal, ui-monospace, monospace);
+  }
+
+  .about-shell a:focus-visible {
+    outline: 2px solid var(--site-accent, var(--green));
+    outline-offset: 4px;
+  }
+
+  @media (max-width: 700px) {
+    .about-grid,
+    .about-directory-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .about-work {
+      grid-row: auto;
+    }
+
+    .about-directory-list li {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .about-directory-list a {
+      text-align: left;
+    }
+  }
+</style>

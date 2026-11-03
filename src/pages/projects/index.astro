@@ -1,28 +1,412 @@
 ---
+import AnthillIsland from "../../components/anthill/AntHillIsland";
+import BoidsIsland from "../../components/boids/BoidsIsland";
 import TerminalLayout from "../../layouts/TerminalLayout.astro";
 ---
 
-<TerminalLayout title="d3llie's projects">
-    <div class="text-green-400">
-        <span class="text-yellow-300">d3llie@website</span>
-        <span class="text-blue-400"> ~ </span>
-        <span>$</span>
-        &nbsp;cd ~/projects && ./projects
-    </div>
+<TerminalLayout title="Projects | Dellie">
+  <main class="projects-shell">
+    <header class="projects-topbar">
+      <p class="projects-prompt"><span>d3llie@website</span> ~ $ cd ~/projects &amp;&amp; ./projects</p>
+      <a class="projects-back" href="/">← Home</a>
+    </header>
 
-    <div class="flex justify-center items-center mt-10">
-        <div box-="round" shear-="top" class="w-[80%]" style="--box-bg: var(--bg1)">
-            <div class="header">
-                 <span is-="badge" variant-="yellow">My Projects</span>
-            </div>
-            <div class="p-8 text-center">
-                <p class="text-xl text-gray-400 italic">"No projects pretty enough to publicize ... yet."</p>
-                <p class="mt-4 text-sm text-gray-500">My github has some though!</p>
-            </div>
+    <section class="projects-intro" aria-labelledby="projects-heading">
+      <p class="projects-kicker">~/projects · experiments, tools, and research</p>
+      <h1 id="projects-heading">My Project Gallery</h1>
+      <p>Two simulations run right here in WebAssembly. Other cards pair concise context with repository results where available.</p>
+    </section>
+
+    <section class="projects-grid" aria-label="Featured project demos">
+      <article class="project-card simulation-card" id="anthill">
+        <div class="project-heading">
+          <div>
+            <p class="project-kicker">SIMULATION · RUST + WEBASSEMBLY</p>
+            <h2>Anthill</h2>
+          </div>
+          <a class="project-source" href="https://github.com/delster1/anthill" target="_blank" rel="noopener noreferrer">Source ↗</a>
         </div>
-    </div>
+        <p class="project-description">A tiny ant colony explores a generated world, finds food, and lays pheromone trails back to its nest.</p>
+        <AnthillIsland client:load />
+      </article>
 
-    <div class="flex justify-center items-center mt-8">
-        <a class="text-blue-400 hover:underline" href="/">[ back to home ]</a>
-    </div>
+      <article class="project-card simulation-card" id="boids">
+        <div class="project-heading">
+          <div>
+            <p class="project-kicker">EMERGENT BEHAVIOR · RUST + WEBASSEMBLY</p>
+            <h2>Boids</h2>
+          </div>
+          <a class="project-source" href="https://github.com/delster1/boids" target="_blank" rel="noopener noreferrer">Source ↗</a>
+        </div>
+        <p class="project-description">A flocking simulation built from three simple rules: separation, alignment, and cohesion. Mouse-follow works too: move your cursor over the flock to guide it.</p>
+        <BoidsIsland client:visible />
+      </article>
+
+      <article class="project-card coral-card" id="coral-health-model">
+        <div class="project-heading">
+          <div>
+            <p class="project-kicker">COMPUTER VISION · PYTORCH</p>
+            <h2>Coral health model</h2>
+          </div>
+          <a class="project-source" href="https://github.com/delster1/coral_health_model" target="_blank" rel="noopener noreferrer">Source ↗</a>
+        </div>
+        <p class="project-description">A U-Net prototype for classifying coral imagery into healthy, healing, and bleached regions.</p>
+        <p class="coral-note">Saved example outputs from the project: input image, ground-truth mask, and model prediction. These are repository results, not live inference.</p>
+        <div class="coral-gallery">
+          <figure>
+            <img src="/projects/coral-health/out_1.png" alt="Coral image, annotated ground truth, and model prediction for sample one" loading="lazy" />
+            <figcaption>Sample 01</figcaption>
+          </figure>
+          <figure>
+            <img src="/projects/coral-health/out_2.png" alt="Coral image, annotated ground truth, and model prediction for sample two" loading="lazy" />
+            <figcaption>Sample 02</figcaption>
+          </figure>
+          <figure>
+            <img src="/projects/coral-health/out_3.png" alt="Coral image, annotated ground truth, and model prediction for sample three" loading="lazy" />
+            <figcaption>Sample 03</figcaption>
+          </figure>
+        </div>
+        <p class="coral-legend"><span>Healthy</span><span>Healing</span><span>Bleached</span><span>Background ignored</span></p>
+      </article>
+    </section>
+
+    <section class="hackathon-section" aria-labelledby="hackathon-heading">
+      <div class="other-projects-heading">
+        <p class="projects-kicker">AWARDS · 2022—2025</p>
+        <h2 id="hackathon-heading">Hackathon wins</h2>
+      </div>
+      <div class="hackathon-grid">
+        <article class="project-card hackathon-card">
+          <a class="hackathon-image" href="https://devpost.com/software/code-cortana" target="_blank" rel="noopener noreferrer">
+            <img src="/projects/hackathons/data-echo.jpg" alt="Data.Echo voice assistant project" loading="lazy" />
+          </a>
+          <div class="hackathon-copy">
+            <p class="project-kicker">HACK K-STATE · MANHATTAN, KANSAS · 2022</p>
+            <h3>Data.Echo</h3>
+            <p class="hackathon-award">Winner · Best Accessibility Hack, sponsored by Fidelity</p>
+            <p>A voice-guided computer-science Q&amp;A tool built with speech recognition and educational resources.</p>
+            <a class="project-source" href="https://devpost.com/software/code-cortana" target="_blank" rel="noopener noreferrer">View project on Devpost ↗</a>
+          </div>
+        </article>
+
+        <article class="project-card hackathon-card">
+          <a class="hackathon-image" href="https://devpost.com/software/ghost-protocol-3sdaz1" target="_blank" rel="noopener noreferrer">
+            <img src="/projects/hackathons/ghost-protocol.png" alt="Ghost Protocol security monitoring project" loading="lazy" />
+          </a>
+          <div class="hackathon-copy">
+            <p class="project-kicker">HACK K-STATE · MANHATTAN, KANSAS · 2023</p>
+            <h3>Ghost Protocol</h3>
+            <p class="hackathon-award">Winner · Most Creative Use of Redis Cloud and Cyber Defense Club — Most Secure Software Hack</p>
+            <p>A security-monitoring prototype combining video recognition, Redis-backed lists, and alerts.</p>
+            <a class="project-source" href="https://devpost.com/software/ghost-protocol-3sdaz1" target="_blank" rel="noopener noreferrer">View project on Devpost ↗</a>
+          </div>
+        </article>
+
+        <article class="project-card hackathon-card">
+          <a class="hackathon-image" href="https://devpost.com/software/duzk-guard" target="_blank" rel="noopener noreferrer">
+            <img src="/projects/hackathons/duzk-guard.png" alt="DUZK Guard privacy-focused medical records project" loading="lazy" />
+          </a>
+          <div class="hackathon-copy">
+            <p class="project-kicker">HACKKU25 · LAWRENCE, KANSAS · 2025</p>
+            <h3>DUZK Guard</h3>
+            <p class="hackathon-award">Winner · Best Use of Midnight</p>
+            <p>A privacy-focused medical-records concept using zero-knowledge proofs for confidential access.</p>
+            <p class="hackathon-prize">Prize: JBL Tune 510BT headphones</p>
+            <a class="project-source" href="https://devpost.com/software/duzk-guard" target="_blank" rel="noopener noreferrer">View project on Devpost ↗</a>
+          </div>
+        </article>
+
+        <article class="project-card hackathon-card">
+          <a class="hackathon-image" href="https://devpost.com/software/healthsense-0qxrs4" target="_blank" rel="noopener noreferrer">
+            <img src="/projects/hackathons/healthsense.png" alt="HealthSense sensor-driven health monitoring project" loading="lazy" />
+          </a>
+          <div class="hackathon-copy">
+            <p class="project-kicker">HACKUTD 2025: LOST IN THE PAGES · RICHARDSON, TEXAS · 2025</p>
+            <h3>HealthSense</h3>
+            <p class="hackathon-award">Winner · Best Use of Vultr</p>
+            <p>A sensor-based health-monitoring prototype connecting wearable signals, a Raspberry Pi, Redis, and an AI workflow.</p>
+            <a class="project-source" href="https://devpost.com/software/healthsense-0qxrs4" target="_blank" rel="noopener noreferrer">View project on Devpost ↗</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="other-projects" aria-labelledby="other-projects-heading">
+      <div class="other-projects-heading">
+        <p class="projects-kicker">MORE IN THE REPOSITORY</p>
+        <h2 id="other-projects-heading">Tools &amp; experiments</h2>
+      </div>
+      <div class="other-projects-grid">
+        <article class="project-card text-card">
+          <p class="project-kicker">TERMINAL UI · RUST</p>
+          <h3>Valentine's RS</h3>
+          <p>A keyboard-driven Ratatui app with an animated heart and a multi-step terminal interface.</p>
+          <a class="project-source" href="https://github.com/delster1/valentines_rs" target="_blank" rel="noopener noreferrer">View source ↗</a>
+        </article>
+        <article class="project-card text-card">
+          <p class="project-kicker">NETWORKING · RUST</p>
+          <h3>Tracers</h3>
+          <p>An IPv4 ICMP traceroute prototype. This portfolio does not run network probes; the repository contains the CLI implementation.</p>
+          <a class="project-source" href="https://github.com/delster1/tracers" target="_blank" rel="noopener noreferrer">View source ↗</a>
+        </article>
+        <article class="project-card text-card dotfiles-card">
+          <p class="project-kicker">WORKSTATION · ZSH + TMUX + STARSHIP</p>
+          <h3>Dotfiles</h3>
+          <p>A colorful, modular terminal setup with shell, prompt, and multiplexer configuration.</p>
+          <div class="prompt-preview" aria-label="Terminal prompt preview">
+            <span>d3llie</span><span>~/projects</span><span>git: main</span>
+          </div>
+          <a class="project-source" href="https://github.com/delster1/dotfiles" target="_blank" rel="noopener noreferrer">View source ↗</a>
+        </article>
+      </div>
+    </section>
+
+    <p class="projects-footer">More experiments are on <a href="https://github.com/delster1" target="_blank" rel="noopener noreferrer">GitHub ↗</a></p>
+  </main>
 </TerminalLayout>
+
+<style is:global>
+  .projects-shell {
+    width: min(1180px, 100%);
+    margin: 0 auto;
+    padding: 1.5rem clamp(1rem, 3vw, 2rem) 4rem;
+    color: var(--terminal-text, var(--text));
+  }
+
+  .projects-topbar,
+  .project-heading,
+  .anthill-toolbar,
+  .boids-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .projects-topbar {
+    margin-bottom: clamp(2rem, 5vw, 4rem);
+    font: 0.9rem/1.5 var(--font-terminal, ui-monospace, monospace);
+  }
+
+  .projects-prompt { margin: 0; color: var(--muted); }
+  .projects-prompt span { color: var(--site-accent, var(--green)); }
+  .projects-back, .project-source, .projects-footer a { color: var(--site-accent, var(--green)); }
+  .projects-back:focus-visible, .project-source:focus-visible, .projects-footer a:focus-visible,
+  .anthill-controls button:focus-visible, .boids-controls button:focus-visible,
+  .anthill-population-control input:focus-visible, .boids-population-control input:focus-visible {
+    outline: 2px solid var(--site-accent, var(--green));
+    outline-offset: 3px;
+  }
+
+  .projects-intro { max-width: 760px; margin-bottom: 2rem; }
+  .projects-kicker, .project-kicker {
+    margin: 0 0 0.65rem;
+    color: var(--site-accent, var(--green));
+    font: 700 0.72rem/1.4 var(--font-terminal, ui-monospace, monospace);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .projects-intro h1 {
+    margin: 0;
+    color: var(--text);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+  }
+  .projects-intro > p:last-child {
+    max-width: 62ch;
+    margin: 1rem 0 0;
+    color: var(--muted);
+    font-size: 1.05rem;
+  }
+
+  .projects-grid, .other-projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .project-card {
+    min-width: 0;
+    padding: clamp(1rem, 2.5vw, 1.5rem);
+    border: 1px solid color-mix(in srgb, var(--bg2) 78%, transparent);
+    border-radius: 1.1rem;
+    background: color-mix(in srgb, var(--bg0, var(--bg1)) 82%, transparent);
+    box-shadow: 0 18px 48px rgb(0 0 0 / 14%);
+  }
+  .project-heading { align-items: flex-start; }
+  .project-heading h2, .text-card h3, .other-projects-heading h2 {
+    margin: 0;
+    color: var(--text);
+    font-size: clamp(1.35rem, 3vw, 1.8rem);
+    line-height: 1.2;
+  }
+  .project-source {
+    flex: none;
+    font: 0.85rem/1.5 var(--font-terminal, ui-monospace, monospace);
+    text-decoration: none;
+  }
+  .project-source:hover, .projects-back:hover, .projects-footer a:hover { text-decoration: underline; }
+  .project-description, .text-card > p:not(.project-kicker), .coral-note {
+    color: var(--muted);
+    line-height: 1.65;
+  }
+  .simulation-card { display: flex; flex-direction: column; }
+  .anthill-demo, .boids-demo { margin-top: auto; }
+  .anthill-toolbar, .boids-toolbar {
+    min-height: 2.8rem;
+    margin: 0.75rem 0;
+    color: var(--muted);
+    font: 0.82rem/1.4 var(--font-terminal, ui-monospace, monospace);
+  }
+  .anthill-controls, .boids-controls { display: flex; gap: 0.5rem; }
+  .anthill-population-control, .boids-population-control {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr) 2.5rem;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0.75rem 0;
+    color: var(--muted);
+    font: 0.82rem/1.4 var(--font-terminal, ui-monospace, monospace);
+  }
+  .anthill-population-control input, .boids-population-control input {
+    width: 100%;
+    min-width: 0;
+    accent-color: var(--site-accent, var(--green));
+    cursor: pointer;
+  }
+  .anthill-population-control input:disabled, .boids-population-control input:disabled { cursor: wait; }
+  .anthill-population-control output, .boids-population-control output { color: var(--text); text-align: right; }
+  .anthill-controls button, .boids-controls button {
+    padding: 0.45rem 0.7rem;
+    border: 1px solid var(--bg2);
+    border-radius: 0.55rem;
+    background: var(--bg1);
+    color: var(--text);
+    font: inherit;
+    cursor: pointer;
+  }
+  .anthill-controls button:hover:not(:disabled), .boids-controls button:hover:not(:disabled) {
+    border-color: var(--site-accent, var(--green));
+  }
+  .anthill-controls button:disabled, .boids-controls button:disabled { opacity: 0.55; cursor: wait; }
+  .anthill-canvas, .boids-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    border: 1px solid var(--bg2);
+    border-radius: 0.75rem;
+    image-rendering: pixelated;
+  }
+  .anthill-canvas { background: #0b1512; }
+  .boids-canvas { background: #0b1512; filter: invert(1); }
+  .anthill-hint, .boids-hint {
+    margin: 0.7rem 0 0;
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+
+  .coral-card { grid-column: 1 / -1; }
+  .coral-note { margin: 0.6rem 0 1rem; font-size: 0.9rem; }
+  .coral-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+  .coral-gallery figure { min-width: 0; margin: 0; }
+  .coral-gallery img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--bg2);
+    border-radius: 0.7rem;
+    background: var(--bg1);
+  }
+  .coral-gallery figcaption { margin-top: 0.4rem; color: var(--muted); font-size: 0.8rem; }
+  .coral-legend { display: flex; flex-wrap: wrap; gap: 0.55rem; margin: 1rem 0 0; }
+  .coral-legend span {
+    padding: 0.3rem 0.55rem;
+    border: 1px solid var(--bg2);
+    border-radius: 999px;
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+
+  .other-projects { margin-top: 3rem; }
+  .other-projects-heading { margin-bottom: 1rem; }
+  .other-projects-heading h2 { font-size: 1.6rem; }
+  .other-projects-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .hackathon-section { margin-top: 3rem; }
+  .hackathon-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .hackathon-card { overflow: hidden; padding: 0; }
+  .hackathon-image { display: block; overflow: hidden; }
+  .hackathon-image img {
+    display: block;
+    width: 100%;
+    height: clamp(11rem, 24vw, 15rem);
+    object-fit: cover;
+    background: var(--bg1);
+    transition: transform 180ms ease;
+  }
+  .hackathon-image:hover img { transform: scale(1.025); }
+  .hackathon-copy {
+    display: flex;
+    min-height: 15rem;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: clamp(1rem, 2.5vw, 1.4rem);
+  }
+  .hackathon-copy h3 {
+    margin: 0;
+    color: var(--text);
+    font-size: 1.3rem;
+    line-height: 1.2;
+  }
+  .hackathon-copy > p:not(.project-kicker) { color: var(--muted); }
+  .hackathon-copy > .hackathon-award {
+    margin: 0.6rem 0 0;
+    color: var(--site-accent, var(--green));
+    font-size: 0.9rem;
+    font-weight: 650;
+  }
+  .hackathon-copy .hackathon-prize { margin-top: -0.5rem; font-size: 0.82rem; }
+  .hackathon-copy .project-source { margin-top: auto; padding-top: 0.8rem; }
+  .hackathon-image:focus-visible,
+  .hackathon-copy .project-source:focus-visible {
+    outline: 2px solid var(--site-accent, var(--green));
+    outline-offset: 3px;
+  }
+  .text-card { display: flex; flex-direction: column; align-items: flex-start; }
+  .text-card h3 { font-size: 1.25rem; }
+  .text-card .project-source { margin-top: auto; padding-top: 1rem; }
+  .prompt-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.25rem;
+    font: 0.75rem/1.4 var(--font-terminal, ui-monospace, monospace);
+  }
+  .prompt-preview span { padding: 0.3rem 0.5rem; border-radius: 0.35rem; background: var(--bg1); color: var(--site-accent, var(--green)); }
+  .projects-footer { margin: 2rem 0 0; color: var(--muted); text-align: center; }
+
+  @media (max-width: 800px) {
+    .projects-grid, .other-projects-grid, .hackathon-grid { grid-template-columns: 1fr; }
+    .coral-gallery { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 520px) {
+    .projects-topbar { align-items: flex-start; font-size: 0.75rem; }
+    .project-heading { gap: 0.6rem; }
+    .project-source { font-size: 0.75rem; }
+    .anthill-toolbar, .boids-toolbar { align-items: flex-start; flex-direction: column; }
+    .anthill-controls, .boids-controls { width: 100%; }
+    .anthill-controls button, .boids-controls button { flex: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hackathon-image img { transition: none; }
+  }
+</style>

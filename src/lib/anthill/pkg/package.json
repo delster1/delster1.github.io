@@ -1,0 +1,18 @@
+{
+  "name": "anthill",
+  "type": "module",
+  "collaborators": [
+    "delster3"
+  ],
+  "version": "0.1.0",
+  "files": [
+    "anthill_bg.wasm",
+    "anthill.js",
+    "anthill.d.ts"
+  ],
+  "main": "anthill.js",
+  "types": "anthill.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
