@@ -29,6 +29,26 @@ Obsidian checkout configured by `OBSIDIAN_NOTES_DIR` (default:
 Keep the notes checkout synced before building; restart the dev server or
 rebuild after changing either file.
 
+The home page reads the current book from the public Goodreads profile page.
+The old Goodreads shelf RSS endpoint returns 404, so no RSS/API key is needed.
+Keep the profile public in Goodreads Account Settings → Profile and Settings →
+Privacy. If Goodreads does not expose a current book in its public profile
+metadata, the site falls back to the profile link.
+
+## Background appearance
+
+The wallpaper gallery and site-wide default are maintained in
+[`src/data/wallpapers.ts`](./src/data/wallpapers.ts). Add each image there with
+a unique ID, display name, and public image URL; set `defaultWallpaperId` to
+choose the initial background. Visitors can choose a gallery image or turn the
+image off at `/appearance`; their choice is saved only in their browser.
+
+Palette accents are sampled in the browser when the image host allows CORS.
+For other hosts, add a `palette` to the wallpaper entry with `accent`,
+`accentInk`, `panelTint`, and `glow` values. The dark scrim, panel surfaces, and
+primary text colors stay constrained for readability. Keep images reasonably
+compressed because they are loaded by site visitors.
+
 Useful checks:
 
 ```sh

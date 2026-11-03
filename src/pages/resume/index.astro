@@ -17,7 +17,7 @@ import TerminalLayout from "../../layouts/TerminalLayout.astro";
     </header>
 
     <section box-="round" class="resume-card" aria-labelledby="education-heading" style="--box-bg: var(--bg1)">
-      <h2 id="education-heading" is-="badge" variant-="yellow">Education</h2>
+      <h2 id="education-heading">Education</h2>
       <div class="resume-entry">
         <div>
           <h3>Bachelor of Science in Computer Science</h3>
@@ -29,7 +29,7 @@ import TerminalLayout from "../../layouts/TerminalLayout.astro";
     </section>
 
     <section box-="round" class="resume-card" aria-labelledby="experience-heading" style="--box-bg: var(--bg1)">
-      <h2 id="experience-heading" is-="badge" variant-="yellow">Experience</h2>
+      <h2 id="experience-heading">Experience</h2>
 
       <article class="resume-entry">
         <div>
@@ -70,7 +70,7 @@ import TerminalLayout from "../../layouts/TerminalLayout.astro";
     </section>
 
     <section box-="round" class="resume-card" aria-labelledby="leadership-heading" style="--box-bg: var(--bg1)">
-      <h2 id="leadership-heading" is-="badge" variant-="yellow">Leadership</h2>
+      <h2 id="leadership-heading">Leadership</h2>
 
       <article class="resume-entry">
         <div>
@@ -104,7 +104,7 @@ import TerminalLayout from "../../layouts/TerminalLayout.astro";
     </section>
 
     <section box-="round" class="resume-card" aria-labelledby="projects-heading" style="--box-bg: var(--bg1)">
-      <h2 id="projects-heading" is-="badge" variant-="yellow">Projects &amp; Recognition</h2>
+      <h2 id="projects-heading">Projects &amp; Recognition</h2>
 
       <article class="resume-entry">
         <div>
@@ -128,7 +128,7 @@ import TerminalLayout from "../../layouts/TerminalLayout.astro";
     </section>
 
     <section box-="round" class="resume-card" aria-labelledby="skills-heading" style="--box-bg: var(--bg1)">
-      <h2 id="skills-heading" is-="badge" variant-="yellow">Skills</h2>
+      <h2 id="skills-heading">Skills</h2>
       <p><strong>Proficient:</strong> Python, JavaScript, C++, Bash, HTML, Java, CSS, Git, Linux CLI</p>
       <p><strong>Familiar:</strong> GNU/Linux, C, Shell, Unity, SQL, Go, Rust, Azure AD, Nmap, Wireshark, Kali Linux, Redis</p>
       <p><strong>Spoken languages:</strong> Mandarin (conversational fluency)</p>
@@ -187,7 +187,12 @@ import TerminalLayout from "../../layouts/TerminalLayout.astro";
   }
 
   .resume-card h2 {
+    background: var(--site-accent);
+    border-radius: 0.25rem;
+    color: var(--site-accent-ink);
+    display: inline-block;
     margin: 0 0 1rem;
+    padding: 0.2rem 0.55rem;
   }
 
   .resume-entry {
@@ -258,6 +263,11 @@ import TerminalLayout from "../../layouts/TerminalLayout.astro";
       break-inside: avoid;
       color: #111 !important;
       padding: 0.6rem;
+    }
+
+    .resume-card h2 {
+      background: #e5e7eb;
+      color: #111;
     }
 
     .resume-entry time {
