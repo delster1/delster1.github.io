@@ -4,10 +4,11 @@ This site is an Astro server-rendered application deployed as a **Cloudflare
 Worker**. It uses the Astro Cloudflare adapter and Wrangler; it is not currently
 configured as a Cloudflare Pages project.
 
-At the time this guide was updated, the Cloudflare dashboard showed the
-`delster1-github-io` production Worker serving `d3llie.tech`. Its deployments
-were manual Wrangler deployments, and preview deployments were disabled. A
-GitHub push alone should not be assumed to deploy the site.
+The Cloudflare dashboard shows the `delster1-github-io` production Worker
+serving `d3llie.tech`, connected to this GitHub repository's `main` branch.
+Worker Builds use `npm run build` followed by `npx wrangler deploy`, so a push
+to `main` triggers a production build and deployment. Check the Cloudflare
+build page if a push does not produce a new build.
 
 ## How deployment is configured
 
@@ -16,12 +17,14 @@ GitHub push alone should not be assumed to deploy the site.
 - [wrangler.jsonc](./wrangler.jsonc) identifies the generated Worker entry
   point (`dist/_worker.js/index.js`), serves assets from `dist`, and declares
   the `HYPERDRIVE` database binding.
-- `npm run build` creates the Worker and its assets. `npx wrangler deploy`
-  publishes them.
+- `npm run build` creates the Worker and its assets. Cloudflare Worker Builds
+  run `npx wrangler deploy` after a successful build.
 - `d3llie.tech` is configured as the production custom domain in Cloudflare.
-- The build reads the current “Now” note and quote list from the local Obsidian
-  checkout and bundles them into the Worker; the deployed site does not call
-  the old `minipc.d3llie.tech` content API.
+- The build reads the “Now” note and quote list from a local Obsidian checkout
+  when available. Cloudflare has no access to that private checkout, so its
+  build uses empty-content fallbacks unless public text is provided with the
+  `SITE_NOW_CONTENT` and `SITE_QUOTES_CONTENT` build variables. The deployed
+  site does not call the old `minipc.d3llie.tech` content API.
 
 The old Pages-specific instructions (`Connect to Git`, Pages build settings,
 and `wrangler pages dev`) do not describe the current setup.
@@ -69,12 +72,15 @@ already authenticated. Confirm the deployment in the Cloudflare dashboard and
 then visit `https://d3llie.tech`. Use the Worker logs in Cloudflare to diagnose
 runtime errors.
 
-Run the check and build on a machine that has the Obsidian checkout available.
-By default, the build reads `/home/d3/Documents/obsidiannotes`; set
-`OBSIDIAN_NOTES_DIR` in the local environment to use a different checkout.
-The source files are `global/public/now.md` and `global/quotes.md`. A GitHub
-Actions build cannot access this private repository unless a separate secure
-content-sync step is configured.
+For local development, the build reads
+`/home/d3/Documents/obsidiannotes/global/public/now.md` and
+`/home/d3/Documents/obsidiannotes/global/quotes.md` when they exist. Set
+`OBSIDIAN_NOTES_DIR` to use another local checkout. In Cloudflare, add
+`SITE_NOW_CONTENT` and `SITE_QUOTES_CONTENT` under the Worker Build settings'
+build variables if those public sections should be included. Build-variable
+content is bundled into the site and is public; do not put private notes there.
+Without those values, the build succeeds and the homepage displays its
+unavailable-content messages.
 
 ## Cloudflare bindings and secrets
 
@@ -85,15 +91,27 @@ file; never commit them.
 | Name | Purpose |
 | --- | --- |
 | `BETTER_AUTH_URL` | Public base URL for Better Auth; production value is `https://d3llie.tech`. |
-| `AUTH_SECRET` | Secret used by Better Auth to sign/encrypt auth data. Generate a strong random value. |
+| `AUTH_SECRET` | Strong secret used by Better Auth and to sign admin sessions; use at least 32 characters. |
 | `AUTH_GITHUB_ID` | GitHub OAuth app client ID. |
 | `AUTH_GITHUB_SECRET` | GitHub OAuth app client secret. |
-| `D3_EMAIL` | Owner email returned by GitHub OAuth. New accounts and dashboard access are restricted to this email. |
+| `D3_EMAIL` | Owner email allow-list for the legacy GitHub OAuth API; it does not grant dashboard access. |
+| `ADMIN_PASSWORD` | Secret password for the fixed admin username `delster1`; use at least 16 characters. |
 
-Authentication is GitHub-only. Email/password sign-up and sign-in are disabled;
-the server rejects account creation unless GitHub supplies a verified profile
-email matching `D3_EMAIL`, and checks the owner email server-side on each
-dashboard request. Configure `D3_EMAIL` before enabling owner sign-in.
+Set the admin password without putting it in a shell command or source file:
+
+```sh
+npx wrangler secret put AUTH_SECRET
+npx wrangler secret put ADMIN_PASSWORD
+```
+
+Wrangler prompts for each value. Set `AUTH_SECRET` to a separate, strong value
+of at least 32 characters; it signs the admin's 12-hour, HTTP-only session
+cookie. Set `ADMIN_PASSWORD` to a password of at least 16 characters for the
+fixed username `delster1`. You can also add both as secrets under the Worker's
+**Settings > Variables and Secrets** in Cloudflare. Never put either value in
+the build variables, repository, or chat. The legacy Better Auth GitHub API
+still uses the GitHub credentials and `D3_EMAIL`; it is not used for admin
+dashboard access.
 
 Set the GitHub OAuth callback URL to
 `https://d3llie.tech/api/auth/callback/github` for production. Configure any
@@ -119,13 +137,16 @@ operations. Keep that value private and provide it only in your local
 environment when generating or applying migrations. Do not use a production
 migration as an automatic step in every Worker deploy.
 
-## Current authentication caveat
+The admin background setting uses the `site_settings` table. Apply its checked-in
+migration to the production database before deploying the dashboard feature.
+Provide the production `DATABASE_URL` privately to Drizzle Kit (for example via
+an ignored local `.env` file), then run:
 
-Authentication is still a work in progress. The signup allow-list and admin
-checks in `src/auth.ts` have known implementation issues, and the dashboard
-route should not be treated as a protected admin area until those are fixed and
-verified. Successful deployment does not mean login or access control is
-working correctly.
+```sh
+npx drizzle-kit migrate
+```
+
+Do not pass the database URL or admin password as command-line arguments.
 
 For background on the database and auth components, see
 [db_implementation.md](./db_implementation.md).

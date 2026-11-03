@@ -14,11 +14,22 @@ const obsidianNotesDir = resolve(
   process.env.OBSIDIAN_NOTES_DIR || "/home/d3/Documents/obsidiannotes"
 );
 
-function readObsidianContent(relativePath) {
+function readObsidianContent(relativePath, contentVariable) {
+  if (process.env[contentVariable] !== undefined) {
+    return process.env[contentVariable];
+  }
+
   const filePath = resolve(obsidianNotesDir, relativePath);
   try {
     return readFileSync(filePath, "utf8");
   } catch (error) {
+    if (error?.code === "ENOENT") {
+      console.warn(
+        `${filePath} was not found; using empty content. Set ${contentVariable} to include public content in this build.`
+      );
+      return "";
+    }
+
     throw new Error(
       `Unable to read ${filePath}. Set OBSIDIAN_NOTES_DIR to the local Obsidian checkout.`,
       { cause: error }
@@ -27,8 +38,8 @@ function readObsidianContent(relativePath) {
 }
 
 const siteContent = {
-  now: readObsidianContent("global/public/now.md"),
-  quotes: readObsidianContent("global/quotes.md"),
+  now: readObsidianContent("global/public/now.md", "SITE_NOW_CONTENT"),
+  quotes: readObsidianContent("global/quotes.md", "SITE_QUOTES_CONTENT"),
   goodreads: await fetchGoodreadsCurrentlyReading(),
 };
 
@@ -52,6 +63,7 @@ export default defineConfig({
       AUTH_GITHUB_ID: envField.string({ context: "server", access: "secret" }),
       AUTH_GITHUB_SECRET: envField.string({ context: "server", access: "secret" }),
       D3_EMAIL: envField.string({ context: "server", access: "secret", optional: true }),
+      ADMIN_PASSWORD: envField.string({ context: "server", access: "secret", optional: true }),
       DATABASE_URL: envField.string({ context: "server", access: "secret", optional: true }),
       DB_PASSWORD: envField.string({ context: "server", access: "secret", optional: true }),
       PGPASSWORD: envField.string({ context: "server", access: "secret", optional: true }),

@@ -15,6 +15,13 @@
       "when": 1793732422504,
       "tag": "0001_gifted_texas_twister",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793749880176,
+      "tag": "0002_little_hydra",
+      "breakpoints": true
     }
   ]
 }

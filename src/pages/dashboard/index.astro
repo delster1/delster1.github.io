@@ -1,29 +1,143 @@
 ---
 export const prerender = false;
-const session = Astro.locals.session ?? null;
-const user = Astro.locals.user ?? null;
-import { D3_EMAIL } from "astro:env/server";
-import { isAdminEmail } from "../../lib/access-control";
+import TerminalLayout from "../../layouts/TerminalLayout.astro";
+import { defaultWallpaperId, wallpapers } from "../../data/wallpapers";
+import { getDefaultWallpaperId } from "../../lib/site-settings";
 
-if (!session || !user) return Astro.redirect("/login");
-if (!isAdminEmail(user.email, D3_EMAIL)) {
-  return new Response("Forbidden", { status: 403 });
+if (!Astro.locals.isAdmin) return Astro.redirect("/login");
+Astro.response.headers.set("Cache-Control", "no-store");
+
+let activeWallpaperId = defaultWallpaperId;
+let settingsLoadError = false;
+try {
+  activeWallpaperId = await getDefaultWallpaperId(Astro.locals.runtime.env);
+} catch (error) {
+  console.error("Failed to load the admin appearance setting.", error);
+  settingsLoadError = true;
 }
+
+const updated = Astro.url.searchParams.get("updated") === "1";
+const errorCode = Astro.url.searchParams.get("error");
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Admin dashboard</title>
-  </head>
-  <body>
-    <main>
-      <h1>Welcome back, Dellie.</h1>
-      <p>Signed in as {user.email}</p>
-      <p>This private dashboard is ready for future tools.</p>
+<TerminalLayout title="Admin dashboard | Dellie">
+  <main class="admin-dashboard">
+    <header>
+      <div>
+        <p class="admin-prompt">d3llie@website ~ $ admin --settings</p>
+        <h1>Site settings</h1>
+        <p>Signed in as <strong>delster1</strong>.</p>
+      </div>
+      <form action="/api/admin/logout" method="post">
+        <button class="btn" type="submit" variant-="yellow">Sign out</button>
+      </form>
+    </header>
+
+    <section box-="round" style="--box-bg: var(--bg1)" aria-labelledby="background-title">
+      <h2 id="background-title">Default background</h2>
+      <p>
+        Choose the background used by visitors who select “Site default.” Their own saved
+        appearance choices are not changed.
+      </p>
+
+      {settingsLoadError && (
+        <p class="admin-error" role="alert">
+          Could not load the saved setting. Check the database migration and connection before saving.
+        </p>
+      )}
+      {updated && <p class="admin-success" role="status">Default background updated.</p>}
+      {errorCode === "invalid" && (
+        <p class="admin-error" role="alert">Choose one of the available background options.</p>
+      )}
+      {errorCode === "save-failed" && (
+        <p class="admin-error" role="alert">Could not save the setting. Check the database connection.</p>
+      )}
+
+      <form action="/api/appearance/default" method="post" class="admin-setting-form">
+        <label for="wallpaperId">Site-wide default</label>
+        <select id="wallpaperId" name="wallpaperId" disabled={settingsLoadError}>
+          <option value="no-image" selected={activeWallpaperId === "no-image"}>No image</option>
+          {wallpapers.map((wallpaper) => (
+            <option value={wallpaper.id} selected={activeWallpaperId === wallpaper.id}>
+              {wallpaper.name}
+            </option>
+          ))}
+        </select>
+        <button class="btn" type="submit" variant-="yellow" disabled={settingsLoadError}>
+          Save default
+        </button>
+      </form>
+    </section>
+
+    <nav class="admin-links" aria-label="Admin navigation">
+      <a href="/appearance">Preview backgrounds</a>
       <a href="/">Back to site</a>
-      <a href="/login">Account</a>
-    </main>
-  </body>
-</html>
+    </nav>
+  </main>
+</TerminalLayout>
+
+<style>
+  .admin-dashboard {
+    display: grid;
+    gap: 1.25rem;
+    margin: 0 auto;
+    max-width: 48rem;
+    padding: clamp(1.25rem, 4vw, 3rem) 0;
+  }
+
+  .admin-dashboard header,
+  .admin-setting-form,
+  .admin-links {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem 1rem;
+    justify-content: space-between;
+  }
+
+  .admin-dashboard h1 {
+    margin: 0.3rem 0;
+  }
+
+  .admin-dashboard h2 {
+    margin-top: 0;
+  }
+
+  .admin-prompt {
+    color: var(--site-accent);
+    font-family: var(--font-terminal);
+    font-size: 0.8rem;
+    margin: 0;
+  }
+
+  .admin-setting-form {
+    justify-content: start;
+    margin-top: 1.25rem;
+  }
+
+  .admin-setting-form label {
+    flex-basis: 100%;
+  }
+
+  .admin-setting-form select {
+    background: var(--bg0);
+    border: 1px solid var(--bg3);
+    border-radius: 0.35rem;
+    color: var(--text);
+    flex: 1 1 15rem;
+    min-height: 2.75rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .admin-error {
+    color: #ff9a9a;
+  }
+
+  .admin-success {
+    color: var(--site-accent);
+  }
+
+  .admin-links {
+    justify-content: start;
+  }
+</style>

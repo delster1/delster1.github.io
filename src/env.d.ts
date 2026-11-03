@@ -4,6 +4,8 @@
 declare namespace App {
     type SiteRuntime = import("@astrojs/cloudflare").Runtime<{
         HYPERDRIVE?: { connectionString: string };
+        ADMIN_PASSWORD?: string;
+        AUTH_SECRET?: string;
         DATABASE_URL?: string;
         BETTER_AUTH_DATABASE_URL?: string;
         AUTH_DB?: string;
@@ -11,7 +13,6 @@ declare namespace App {
     }>;
 
     interface Locals extends SiteRuntime {
-        user: import("better-auth").User | null;
-        session: import("better-auth").Session | null;
+        isAdmin: boolean;
     }
 }

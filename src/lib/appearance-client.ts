@@ -4,6 +4,7 @@ import { deriveImagePalette } from "./image-palette";
 const preferenceKey = "d3llie.wallpaper.preference";
 const siteDefault = "site-default";
 const noImage = "no-image";
+let siteDefaultWallpaperId = defaultWallpaperId;
 const fallbackPalette = {
   accent: "hsl(105 42% 76%)",
   accentInk: "#101714",
@@ -53,9 +54,33 @@ function readChoice() {
 }
 
 function getWallpaper(choice: string) {
-  const id = choice === siteDefault ? defaultWallpaperId : choice;
+  const id = choice === siteDefault ? siteDefaultWallpaperId : choice;
   if (!id || choice === noImage) return undefined;
   return wallpapers.find((wallpaper) => wallpaper.id === id);
+}
+
+async function loadSiteDefaultWallpaper() {
+  const response = await fetch("/api/appearance/default", {
+    cache: "no-store",
+    headers: { Accept: "application/json" },
+  });
+  if (!response.ok) {
+    throw new Error(`Could not load the site default wallpaper (${response.status}).`);
+  }
+
+  const setting: unknown = await response.json();
+  if (
+    !setting ||
+    typeof setting !== "object" ||
+    !("wallpaperId" in setting) ||
+    typeof setting.wallpaperId !== "string" ||
+    (setting.wallpaperId !== noImage &&
+      !wallpapers.some((wallpaper) => wallpaper.id === setting.wallpaperId))
+  ) {
+    throw new Error("The site returned an invalid default wallpaper setting.");
+  }
+
+  siteDefaultWallpaperId = setting.wallpaperId;
 }
 
 function updatePreview(choice: string) {
@@ -184,7 +209,7 @@ export function initializeAppearance() {
   const controls = Array.from(
     document.querySelectorAll<HTMLButtonElement>("[data-wallpaper-choice]")
   );
-  const choice = readChoice();
+  let choice = readChoice();
 
   for (const control of controls) {
     control.setAttribute("aria-pressed", String(control.dataset.wallpaperChoice === choice));
@@ -198,9 +223,17 @@ export function initializeAppearance() {
           String(candidate.dataset.wallpaperChoice === selectedChoice)
         );
       }
+      choice = selectedChoice;
       void applyChoice(selectedChoice, true);
     });
   }
 
   void applyChoice(choice, false);
+  void loadSiteDefaultWallpaper()
+    .then(() => {
+      if (choice === siteDefault) void applyChoice(choice, false);
+    })
+    .catch((error) => {
+      console.error("Could not load the site default appearance.", error);
+    });
 }

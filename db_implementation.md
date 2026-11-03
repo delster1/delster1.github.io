@@ -9,14 +9,16 @@ installing and configuring components that are already in the repository.
 ```text
 Browser
   -> Astro route / middleware on the Cloudflare Worker
-  -> Better Auth
-  -> Drizzle adapter and PostgreSQL driver
+  -> Astro middleware / admin API
+  -> PostgreSQL driver for persisted site settings
   -> Cloudflare Hyperdrive
   -> PostgreSQL database
 ```
 
-- **Better Auth** implements email/password and GitHub sign-in, and manages
-  sessions.
+- **Better Auth** provides the legacy GitHub OAuth API.
+- The protected admin dashboard uses an owner-only password flow. Its password
+  is a Cloudflare secret, and its signed 12-hour session is an HTTP-only cookie
+  protected with `AUTH_SECRET`.
 - **Drizzle ORM** maps the TypeScript schema to PostgreSQL tables.
 - **Hyperdrive** is Cloudflare's connection layer for the database. It provides
   pooled connections between Workers and the existing PostgreSQL database; it
@@ -29,12 +31,11 @@ Browser
 
 - [src/auth.ts](./src/auth.ts) configures Better Auth, its Drizzle adapter,
   database connection, and signup checks.
-- [src/middleware.ts](./src/middleware.ts) looks up the current session and
-  attaches the user and session to Astro locals.
+- [src/middleware.ts](./src/middleware.ts) verifies the signed admin cookie.
 - [src/pages/api/auth/[...all].ts](./src/pages/api/auth/%5B...all%5D.ts) forwards
   auth API requests to Better Auth.
-- [src/db/schema.ts](./src/db/schema.ts) defines the users, sessions, accounts,
-  and verification-token tables.
+- [src/db/schema.ts](./src/db/schema.ts) defines the auth tables and
+  `site_settings`.
 - [drizzle.config.ts](./drizzle.config.ts) configures Drizzle Kit to use that
   schema and read a direct PostgreSQL URL from `DATABASE_URL`.
 - `drizzle/` contains checked-in SQL migration files.
@@ -49,12 +50,15 @@ In production, the Worker needs the Better Auth settings in Cloudflare
 - `AUTH_GITHUB_ID` and `AUTH_GITHUB_SECRET` — GitHub OAuth app credentials.
 - `D3_EMAIL` — the site owner's email address from the GitHub OAuth profile.
   Account creation is denied unless this value is configured and matches.
+- `ADMIN_PASSWORD` — the admin password for username `delster1`; set it as a
+  Worker secret and use at least 16 characters.
 
-Authentication is GitHub-only; email/password sign-up and sign-in are disabled.
-The user-creation hook rejects new accounts unless GitHub supplies a verified
-email matching `D3_EMAIL`, and `/dashboard` checks the same owner email on the
-server for every request. Existing accounts that do not match cannot access
-the dashboard.
+The middleware verifies the admin cookie on every request. `/dashboard` and
+the default-wallpaper update endpoint both require that session. The password
+is not stored in PostgreSQL. The default wallpaper ID is stored in
+`site_settings`; visitor-selected appearance preferences remain browser-local.
+The legacy Better Auth GitHub endpoint still checks verified emails against
+`D3_EMAIL`, but it does not grant admin access.
 
 The app uses `HYPERDRIVE` first for database access, with `DATABASE_URL` as a
 fallback. Drizzle Kit separately requires `DATABASE_URL` for direct migration
@@ -75,10 +79,8 @@ or generating migrations:
 For deployment steps and the current Cloudflare Worker setup, see
 [deploy.md](./deploy.md).
 
-## Local OAuth testing
+## Local admin testing
 
-The local `.env` example uses placeholder GitHub OAuth credentials. To test the
-OAuth round trip, configure a separate GitHub OAuth App with a callback URL of
-`http://localhost:4321/api/auth/callback/github`, then set its credentials and
-the owner's email in the ignored local `.env`. Do not reuse production secrets
-for local testing.
+Set `ADMIN_PASSWORD` in the ignored local `.env` file and use the local
+`AUTH_SECRET` from `.env.example`. The password must be at least 16 characters.
+Do not reuse production secrets for local testing.

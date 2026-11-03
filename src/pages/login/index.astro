@@ -1,12 +1,12 @@
 ---
 export const prerender = false;
-import { D3_EMAIL } from "astro:env/server";
 import TerminalLayout from "../../layouts/TerminalLayout.astro";
-import { isAdminEmail } from "../../lib/access-control";
+import { isAdminLoginConfigured } from "../../lib/admin-auth";
 
-const session = Astro.locals.session ?? null;
-const user = Astro.locals.user ?? null;
-const isAdmin = user ? isAdminEmail(user.email, D3_EMAIL) : false;
+const isAdmin = Astro.locals.isAdmin;
+const loginConfigured = isAdminLoginConfigured(Astro.locals.runtime.env);
+const loginError = Astro.url.searchParams.get("error");
+Astro.response.headers.set("Cache-Control", "no-store");
 ---
 
 <TerminalLayout title="d3llie - login">
@@ -30,29 +30,57 @@ const isAdmin = user ? isAdminEmail(user.email, D3_EMAIL) : false;
       </div>
       <div class="space-y-4 p-5 text-center">
         <h1 id="login-title" class="text-xl">Sign in</h1>
-        {session && user ? (
+        {isAdmin ? (
           <>
-            <p>Signed in as <span class="text-blue-400">{user.email}</span></p>
-            {isAdmin ? (
-              <>
-                <p class="text-yellow-300">Welcome back, Dellie.</p>
-                <a class="btn inline-block" href="/dashboard">Open dashboard</a>
-              </>
-            ) : (
-              <p role="alert">This account does not have owner access.</p>
-            )}
-            <button id="sign-out" class="btn w-full" type="button" variant-="yellow">
-              Sign out
-            </button>
-            <p id="auth-feedback" role="status" aria-live="polite"></p>
+            <p>Signed in as <span class="text-blue-400">delster1</span></p>
+            <p class="text-yellow-300">Welcome back, Dellie.</p>
+            <a class="btn inline-block" href="/dashboard">Open dashboard</a>
+            <form action="/api/admin/logout" method="post">
+              <button class="btn w-full" type="submit" variant-="yellow">Sign out</button>
+            </form>
           </>
         ) : (
           <>
-            <p>Owner sign-in is available through the site’s GitHub account.</p>
-            <button id="github-sign-in" class="btn w-full" type="button" variant-="yellow">
-              Continue with GitHub
-            </button>
-            <p id="auth-feedback" role="status" aria-live="polite"></p>
+            <p>Sign in to manage the site’s default background.</p>
+            {!loginConfigured && (
+              <p class="text-red-300" role="alert">
+                Admin sign-in is not configured. Set ADMIN_PASSWORD and AUTH_SECRET in your deployment environment.
+              </p>
+            )}
+            {loginError === "invalid" && (
+              <p class="text-red-300" role="alert">Incorrect username or password.</p>
+            )}
+            {loginError === "unavailable" && loginConfigured && (
+              <p class="text-red-300" role="alert">
+                Admin sign-in is not configured. Set ADMIN_PASSWORD and AUTH_SECRET in your deployment environment.
+              </p>
+            )}
+            <form action="/api/admin/login" method="post" class="space-y-4 text-left">
+              <label class="block" for="username">
+                <span class="mb-1 block">Username</span>
+                <input
+                  class="w-full"
+                  id="username"
+                  name="username"
+                  type="text"
+                  value="delster1"
+                  autocomplete="username"
+                  required
+                />
+              </label>
+              <label class="block" for="password">
+                <span class="mb-1 block">Password</span>
+                <input
+                  class="w-full"
+                  id="password"
+                  name="password"
+                  type="password"
+                  autocomplete="current-password"
+                  required
+                />
+              </label>
+              <button class="btn w-full" type="submit" variant-="yellow">Sign in</button>
+            </form>
           </>
         )}
       </div>
@@ -62,44 +90,4 @@ const isAdmin = user ? isAdminEmail(user.email, D3_EMAIL) : false;
       <a href="/" class="hover:underline">← Back to home</a>
     </p>
   </main>
-
-  <script>
-    import { authClient } from "../../lib/auth-client";
-
-    const feedback = document.getElementById("auth-feedback");
-    const signInButton = document.getElementById("github-sign-in");
-    const signOutButton = document.getElementById("sign-out");
-
-    signInButton?.addEventListener("click", async () => {
-      if (feedback) feedback.textContent = "";
-      try {
-        const { error } = await authClient.signIn.social({
-          provider: "github",
-          callbackURL: "/dashboard",
-        });
-        if (error && feedback) feedback.textContent = error.message ?? "GitHub sign-in failed.";
-      } catch (error) {
-        if (feedback) {
-          feedback.textContent =
-            error instanceof Error ? error.message : "Unable to start GitHub sign-in.";
-        }
-      }
-    });
-
-    signOutButton?.addEventListener("click", async () => {
-      try {
-        const { error } = await authClient.signOut({
-          fetchOptions: {
-            onSuccess: () => window.location.assign("/"),
-          },
-        });
-        if (error && feedback) feedback.textContent = error.message ?? "Sign out failed.";
-      } catch (error) {
-        if (feedback) {
-          feedback.textContent =
-            error instanceof Error ? error.message : "Unable to sign out.";
-        }
-      }
-    });
-  </script>
 </TerminalLayout>
