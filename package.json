@@ -12,6 +12,10 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
+    "db:dev:start": "docker compose -f docker-compose.dev.yml up -d postgres",
+    "db:dev:stop": "docker compose -f docker-compose.dev.yml stop postgres",
+    "db:dev:generate": "drizzle-kit generate",
+    "db:dev:migrate": "drizzle-kit migrate",
     "format": "prettier --write ."
   },
   "repository": {

@@ -10,8 +10,18 @@ Requirements: Node.js 18.17 or newer and npm.
 
 ```sh
 npm ci
+npm run db:dev:start
+cp -n .env.example .env
+npm run db:dev:generate
+npm run db:dev:migrate
 npm run dev
 ```
+
+The local PostgreSQL container listens only on `127.0.0.1:55432` and uses its
+own persistent Docker volume. It is separate from the production database and
+any other local PostgreSQL service. The example credentials and auth secrets
+are for local development only. Stop the container when finished with
+`npm run db:dev:stop`.
 
 Useful checks:
 
