@@ -36,7 +36,7 @@
     "@tailwindcss/vite": "^4.3.4",
     "@webtui/css": "^0.1.5",
     "@webtui/plugin-nf": "^0.1.1",
-    "@webtui/theme-everforest": "^0.0.3",
+    "@webtui/theme-everforest": "^0.0.5",
     "@webtui/theme-nord": "^0.0.2",
     "astro": "^7.4.5",
     "better-auth": "^1.7.16",
