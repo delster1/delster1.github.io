@@ -75,12 +75,13 @@ runtime errors.
 For local development, the build reads
 `/home/d3/Documents/obsidiannotes/global/public/now.md` and
 `/home/d3/Documents/obsidiannotes/global/quotes.md` when they exist. Set
-`OBSIDIAN_NOTES_DIR` to use another local checkout. In Cloudflare, add
-`SITE_NOW_CONTENT` and `SITE_QUOTES_CONTENT` under the Worker Build settings'
-build variables if those public sections should be included. Build-variable
-content is bundled into the site and is public; do not put private notes there.
-Without those values, the build succeeds and the homepage displays its
-unavailable-content messages.
+`OBSIDIAN_NOTES_DIR` to use another local checkout. In production, the Worker
+fetches those two files directly from the private
+`delster1/obsidianNotes` repository using a `GITHUB_CONTENT_TOKEN` secret. It
+refreshes the in-memory copy every five minutes; the token is never sent to
+visitors or included in build output. If the secret is not configured or GitHub
+is unavailable, the Worker logs the fetch failure and falls back to bundled
+content.
 
 ## Cloudflare bindings and secrets
 
@@ -94,6 +95,7 @@ file; never commit them.
 | `AUTH_SECRET` | Strong secret used by Better Auth and to sign admin sessions; use at least 32 characters. |
 | `AUTH_GITHUB_ID` | GitHub OAuth app client ID. |
 | `AUTH_GITHUB_SECRET` | GitHub OAuth app client secret. |
+| `GITHUB_CONTENT_TOKEN` | Fine-grained GitHub token with read-only Contents access to `delster1/obsidianNotes`; used only to fetch the public Now and quote files. |
 | `D3_EMAIL` | Owner email allow-list for the legacy GitHub OAuth API; it does not grant dashboard access. |
 | `ADMIN_PASSWORD` | Secret password for the fixed admin username `delster1`; use at least 16 characters. |
 
@@ -102,6 +104,7 @@ Set the admin password without putting it in a shell command or source file:
 ```sh
 npx wrangler secret put AUTH_SECRET
 npx wrangler secret put ADMIN_PASSWORD
+npx wrangler secret put GITHUB_CONTENT_TOKEN
 ```
 
 Wrangler prompts for each value. Set `AUTH_SECRET` to a separate, strong value
@@ -112,6 +115,11 @@ fixed username `delster1`. You can also add both as secrets under the Worker's
 the build variables, repository, or chat. The legacy Better Auth GitHub API
 still uses the GitHub credentials and `D3_EMAIL`; it is not used for admin
 dashboard access.
+
+Create `GITHUB_CONTENT_TOKEN` in GitHub as a fine-grained personal access token
+limited to the `obsidianNotes` repository, with **Contents: Read-only** access
+and no other permissions. Enter it only at the Wrangler prompt or in the
+Cloudflare secret form. Do not reuse your general-purpose GitHub CLI token.
 
 Set the GitHub OAuth callback URL to
 `https://d3llie.tech/api/auth/callback/github` for production. Configure any

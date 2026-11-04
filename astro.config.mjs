@@ -25,7 +25,7 @@ function readObsidianContent(relativePath, contentVariable) {
   } catch (error) {
     if (error?.code === "ENOENT") {
       console.warn(
-        `${filePath} was not found; using empty content. Set ${contentVariable} to include public content in this build.`
+        `${filePath} was not found; using empty build-time content. Set GITHUB_CONTENT_TOKEN on the Worker to fetch the live public content.`
       );
       return "";
     }
@@ -62,6 +62,7 @@ export default defineConfig({
       AUTH_SECRET: envField.string({ context: "server", access: "secret" }),
       AUTH_GITHUB_ID: envField.string({ context: "server", access: "secret" }),
       AUTH_GITHUB_SECRET: envField.string({ context: "server", access: "secret" }),
+      GITHUB_CONTENT_TOKEN: envField.string({ context: "server", access: "secret", optional: true }),
       D3_EMAIL: envField.string({ context: "server", access: "secret", optional: true }),
       ADMIN_PASSWORD: envField.string({ context: "server", access: "secret", optional: true }),
       DATABASE_URL: envField.string({ context: "server", access: "secret", optional: true }),

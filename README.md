@@ -23,13 +23,12 @@ any other local PostgreSQL service. The example credentials and auth secrets
 are for local development only. Stop the container when finished with
 `npm run db:dev:stop`.
 
-When available, the build reads `global/public/now.md` and `global/quotes.md`
-from the local Obsidian checkout configured by `OBSIDIAN_NOTES_DIR` (default:
-`/home/d3/Documents/obsidiannotes`). Cloudflare builds do not have that private
-checkout, so they use empty-content fallbacks unless `SITE_NOW_CONTENT` and
-`SITE_QUOTES_CONTENT` are set as build variables. Those values are bundled into
-the public site; only put public content there. Restart the dev server or
-rebuild after changing either source.
+When available, local builds read `global/public/now.md` and `global/quotes.md`
+from the Obsidian checkout configured by `OBSIDIAN_NOTES_DIR` (default:
+`/home/d3/Documents/obsidiannotes`). The deployed Worker can read those same
+files from the private `delster1/obsidianNotes` repository using the
+`GITHUB_CONTENT_TOKEN` secret. It fetches only those two public-content paths
+and refreshes its in-memory copy every five minutes.
 
 The build reads the current book from the public Goodreads profile and bundles
 it into the site. Goodreads returns HTTP 403 to Cloudflare Workers, so the
