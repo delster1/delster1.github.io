@@ -3,12 +3,17 @@ import { test } from "node:test";
 import { createGitHubSiteContentFetcher } from "./github-site-content";
 
 test("fetches only the public Now and quote files from the private repository", async () => {
-  const requests: { url: string; authorization: string | null }[] = [];
+  const requests: {
+    url: string;
+    authorization: string | null;
+    userAgent: string | null;
+  }[] = [];
   const fetchContent = createGitHubSiteContentFetcher(async (input, init) => {
     const url = String(input);
     requests.push({
       url,
       authorization: new Headers(init?.headers).get("Authorization"),
+      userAgent: new Headers(init?.headers).get("User-Agent"),
     });
     return new Response(url.includes("now.md") ? "# Now" : "A quote", { status: 200 });
   });
@@ -18,6 +23,7 @@ test("fetches only the public Now and quote files from the private repository", 
   assert.deepEqual(content, { now: "# Now", quotes: "A quote" });
   assert.equal(requests.length, 2);
   assert.ok(requests.every(({ authorization }) => authorization === "Bearer read-only-token"));
+  assert.ok(requests.every(({ userAgent }) => userAgent === "delster1-website"));
   assert.ok(requests.some(({ url }) => url.endsWith("/global/public/now.md?ref=main")));
   assert.ok(requests.some(({ url }) => url.endsWith("/global/quotes.md?ref=main")));
 });

@@ -22,6 +22,7 @@ async function fetchFile(
     headers: {
       Accept: "application/vnd.github.raw+json",
       Authorization: `Bearer ${token}`,
+      "User-Agent": "delster1-website",
       "X-GitHub-Api-Version": "2022-11-28",
     },
     signal: AbortSignal.timeout(10_000),
