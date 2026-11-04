@@ -12,6 +12,7 @@ Requirements: Node.js 22.23.4 or newer and npm (Node.js 24 LTS recommended).
 npm ci
 npm run db:dev:start
 cp -n .env.example .env
+cp -n .env.example .dev.vars
 npm run db:dev:generate
 npm run db:dev:migrate
 npm run dev

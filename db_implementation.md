@@ -56,14 +56,24 @@ The middleware verifies the admin cookie on every request. `/dashboard` and
 the default-wallpaper update endpoint both require that session. The password
 is not stored in PostgreSQL. The default wallpaper ID is stored in
 `site_settings`; visitor-selected appearance preferences remain browser-local.
-The legacy Better Auth GitHub endpoint still checks verified emails against
-`D3_EMAIL`, but it does not grant admin access.
+The legacy Better Auth GitHub endpoint is disabled unless `ENABLE_LEGACY_AUTH`
+is explicitly `"true"`. When enabled, it checks verified emails against
+`D3_EMAIL`, but does not grant admin access.
 
 The site settings code uses `SITE_SETTINGS_DB` in production and `DATABASE_URL`
 as a local direct-connection fallback. Better Auth continues to use
 `HYPERDRIVE`; the settings code does not fall back to the auth database.
 Drizzle Kit separately requires `DATABASE_URL` for direct migration operations.
 Do not store either database credentials or auth secrets in source control.
+
+The production `site_settings_worker` role has only database CONNECT, schema
+USAGE, and table SELECT/INSERT/UPDATE privileges. It cannot create schema
+objects, delete/truncate settings, or own the database/table. The separate
+`site_settings_app` administrator owns them and must perform migrations.
+Worker sessions have a 10-second statement timeout, a 2-second lock timeout,
+and a 15-second idle-in-transaction timeout. Bootstrap default privileges
+grant the Worker only those three table operations on new administrator-owned
+tables in this settings-only database.
 
 ## Migrations
 
@@ -72,7 +82,8 @@ or generating migrations:
 
 1. Compare the SQL files in `drizzle/` against `src/db/schema.ts`. The initial
    checked-in migration may be behind the current schema.
-2. Provide `DATABASE_URL` privately in the environment running Drizzle Kit.
+2. Provide an administrator `DATABASE_URL` privately in the environment running
+   Drizzle Kit; do not use the restricted Worker login for schema migrations.
 3. Review generated SQL and back up production data before applying a migration
    to the production database.
 
@@ -81,6 +92,7 @@ For deployment steps and the current Cloudflare Worker setup, see
 
 ## Local admin testing
 
-Set `ADMIN_PASSWORD` in the ignored local `.env` file and use the local
-`AUTH_SECRET` from `.env.example`. The password must be at least 16 characters.
+Set runtime `ADMIN_PASSWORD` and `AUTH_SECRET` in the ignored local `.dev.vars`
+file. The password must be at least 16 characters, and the signing secret must
+be at least 32 characters. `.env` remains the local build/Drizzle configuration.
 Do not reuse production secrets for local testing.
