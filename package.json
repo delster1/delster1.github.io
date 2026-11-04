@@ -9,6 +9,7 @@
   },
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "npm audit --omit=dev --audit-level=high && npm run check && npm test",
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",

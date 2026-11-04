@@ -10,6 +10,10 @@ Worker Builds use `npm run build` followed by `npx wrangler deploy`, so a push
 to `main` triggers a production build and deployment. Check the Cloudflare
 build page if a push does not produce a new build.
 
+The npm `prebuild` hook blocks every normal build/deployment on high or
+critical dependency advisories, type errors, or failing tests. Hosted builds
+must use `npm run build`, not call `astro build` directly.
+
 ## How deployment is configured
 
 - [astro.config.mjs](./astro.config.mjs) enables server rendering and the

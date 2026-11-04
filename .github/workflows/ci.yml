@@ -26,9 +26,6 @@ jobs:
             echo "::error::Credential-bearing files must not be tracked."
             exit 1
           fi
-      - run: npm audit --omit=dev --audit-level=high
-      - run: npm run check
-      - run: npm test
       - run: npm run build
         env:
           BETTER_AUTH_URL: https://d3llie.tech
