@@ -29,7 +29,7 @@
   "homepage": "https://delster1.github.io",
   "dependencies": {
     "@astrojs/check": "^0.9.5",
-    "@astrojs/cloudflare": "^12.6.12",
+    "@astrojs/cloudflare": "^14.4.4",
     "@astrojs/mdx": "^4.3.7",
     "@astrojs/react": "^4.0.0",
     "@auth/core": "^0.34.2",
