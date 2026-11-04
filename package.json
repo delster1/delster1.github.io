@@ -57,7 +57,7 @@
     "drizzle-kit": "^0.31.9",
     "prettier": "^3.3.3",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "typescript": "^7.0.2"
   },
   "allowScripts": {
     "esbuild@0.18.20": true,
