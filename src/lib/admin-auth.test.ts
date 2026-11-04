@@ -54,6 +54,15 @@ test("admin sessions are signed, scoped, and tamper-resistant", async () => {
   assert.equal(await isAdminRequest(tampered, authSecret), false);
 });
 
+test("admin cookies isolate HTTPS sessions from insecure development cookies", async () => {
+  const cookie = await createAdminSessionCookie(authSecret, "http://localhost:4321/login");
+  assert.match(cookie, /^d3llie_admin_session=/);
+  assert.doesNotMatch(cookie, /; Secure/);
+  const headers = { cookie: cookie.split(";")[0] };
+  assert.equal(await isAdminRequest(new Request("http://localhost:4321/dashboard", { headers }), authSecret), true);
+  assert.equal(await isAdminRequest(new Request("https://d3llie.tech/dashboard", { headers }), authSecret), false);
+});
+
 test("admin form requests must come from the same origin", () => {
   assert.equal(
     isSameOriginRequest(

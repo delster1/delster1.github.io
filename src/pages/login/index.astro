@@ -1,10 +1,11 @@
 ---
 export const prerender = false;
 import TerminalLayout from "../../layouts/TerminalLayout.astro";
+import { env } from "cloudflare:workers";
 import { isAdminLoginConfigured } from "../../lib/admin-auth";
 
 const isAdmin = Astro.locals.isAdmin;
-const loginConfigured = isAdminLoginConfigured(Astro.locals.runtime.env);
+const loginConfigured = isAdminLoginConfigured(env);
 const loginError = Astro.url.searchParams.get("error");
 Astro.response.headers.set("Cache-Control", "no-store");
 ---

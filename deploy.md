@@ -14,9 +14,11 @@ build page if a push does not produce a new build.
 
 - [astro.config.mjs](./astro.config.mjs) enables server rendering and the
   Cloudflare adapter.
-- [wrangler.jsonc](./wrangler.jsonc) identifies the generated Worker entry
-  point (`dist/_worker.js/index.js`), serves assets from `dist`, and declares
-  the `HYPERDRIVE` database binding.
+- [wrangler.jsonc](./wrangler.jsonc) declares separate `HYPERDRIVE` and
+  `SITE_SETTINGS_DB` bindings and the `ADMIN_LOGIN_LIMITER` binding.
+  Astro 7 generates the deploy configuration in `dist/server/wrangler.json`;
+  Wrangler automatically follows `.wrangler/deploy/config.json` after a build.
+  Do not restore the obsolete `dist/_worker.js/index.js` entry point.
 - `npm run build` creates the Worker and its assets. Cloudflare Worker Builds
   run `npx wrangler deploy` after a successful build.
 - `d3llie.tech` is configured as the production custom domain in Cloudflare.
@@ -31,7 +33,7 @@ and `wrangler pages dev`) do not describe the current setup.
 
 ## Prerequisites
 
-- Node.js 18.17 or newer and npm.
+- Node.js 22.23.4 or newer and npm; use Node.js 24 LTS for hosted builds.
 - Access to this repository and a Cloudflare account authorized to deploy the
   `delster1-github-io` Worker.
 - A configured Cloudflare Hyperdrive resource for the PostgreSQL database if
@@ -116,6 +118,48 @@ the build variables, repository, or chat. The legacy Better Auth GitHub API
 still uses the GitHub credentials and `D3_EMAIL`; it is not used for admin
 dashboard access.
 
+### Credential exposure containment
+
+A real `.dev.vars` file was previously tracked in this public repository.
+Removing it from the current tree does not remove copies in Git history or
+forks. Treat its former OAuth client secret, session signing secret, and
+database passwords as compromised; revoke/rotate them at their issuers.
+Never reuse them. Do not rewrite repository history without coordinating
+with other checkouts.
+
+The legacy `/api/auth/*` routes now fail closed with HTTP 503 unless the
+runtime variable `ENABLE_LEGACY_AUTH` is explicitly set to `"true"`.
+Leave it unset until the GitHub OAuth app secret and the old database
+credentials have been replaced and the legacy database connection verified.
+Admin password login and the dedicated settings database do not depend on
+these legacy routes.
+
+`AUTH_SECRET` rotation invalidates existing admin and Better Auth sessions.
+Keep `ADMIN_PASSWORD` unchanged unless it too was exposed, so the owner can
+sign in again. Database credentials belong in Hyperdrive, not in standalone
+`DB_PASSWORD` or `PGPASSWORD` Worker secrets.
+
+Admin login fails closed if `ADMIN_LOGIN_LIMITER` is missing. Its configured
+limit is five attempts per client IP per 60 seconds at each Cloudflare
+location, using Cloudflare's best-effort counters rather than a globally exact
+counter (a small burst can exceed five requests). A throttled client receives HTTP 429
+and `Retry-After: 60`. This complements, rather than replaces, strong
+passwords and Cloudflare access controls. Preview URLs are disabled.
+
+The CI workflow installs the lockfile, rejects tracked credential files,
+checks high/critical dependency advisories, runs diagnostics/tests, and
+builds without production secrets. Dependabot checks npm dependencies and
+pinned GitHub Actions weekly. Four moderate audit entries currently trace
+to Drizzle Kit's development-only esbuild loader; do not expose its dev
+server, and do not accept npm's suggested breaking downgrade blindly.
+
+The server-only Vite output uses `node:module`'s native `createRequire("/")`
+instead of Rolldown's `import.meta.url`-based helper. This avoids the
+[Workers upload-validation regression](https://github.com/cloudflare/workers-sdk/issues/16552)
+without replacing Node built-ins or injecting server shims into browser chunks.
+The `SESSION` KV namespace is explicitly declared so a retry does not attempt
+to provision the same namespace twice.
+
 Create `GITHUB_CONTENT_TOKEN` in GitHub as a fine-grained personal access token
 limited to the `obsidianNotes` repository, with **Contents: Read-only** access
 and no other permissions. Enter it only at the Wrangler prompt or in the
@@ -125,12 +169,13 @@ Set the GitHub OAuth callback URL to
 `https://d3llie.tech/api/auth/callback/github` for production. Configure any
 local or preview callback URLs separately if those environments are used.
 
-The Worker’s `HYPERDRIVE` binding is declared in [wrangler.jsonc](./wrangler.jsonc)
-and points to a Hyperdrive resource configured in Cloudflare. The database
-connection string and credentials belong in that Cloudflare resource, not in
-this repository. `DATABASE_URL` is an optional direct-connection fallback in
-the application and is also read by [drizzle.config.ts](./drizzle.config.ts)
-when running Drizzle Kit migrations.
+The Worker’s `HYPERDRIVE` binding connects the legacy Better Auth database.
+`SITE_SETTINGS_DB` connects the separate PostgreSQL database for persisted site
+settings. Both bindings point to Hyperdrive resources configured in Cloudflare;
+credentials belong in those resources, not in this repository. `DATABASE_URL`
+is a local direct-connection fallback for the site settings code and is also
+read by [drizzle.config.ts](./drizzle.config.ts) when running Drizzle Kit
+migrations.
 
 ## Database migrations
 
@@ -145,10 +190,12 @@ operations. Keep that value private and provide it only in your local
 environment when generating or applying migrations. Do not use a production
 migration as an automatic step in every Worker deploy.
 
-The admin background setting uses the `site_settings` table. Apply its checked-in
-migration to the production database before deploying the dashboard feature.
-Provide the production `DATABASE_URL` privately to Drizzle Kit (for example via
-an ignored local `.env` file), then run:
+The admin background setting uses the `site_settings` table in the dedicated
+settings database. Its checked-in `drizzle/0002_little_hydra.sql` migration is
+already applied there. Do not apply the Better Auth migrations to that
+settings-only database. For other migration work, provide the database URL
+privately to Drizzle Kit (for example via an ignored local `.env` file), then
+run:
 
 ```sh
 npx drizzle-kit migrate

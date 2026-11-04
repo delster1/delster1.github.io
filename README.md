@@ -6,7 +6,7 @@ a Cloudflare Worker.
 
 ## Local development
 
-Requirements: Node.js 18.17 or newer and npm.
+Requirements: Node.js 22.23.4 or newer and npm (Node.js 24 LTS recommended).
 
 ```sh
 npm ci
@@ -67,9 +67,17 @@ npm run build
 - [Database and authentication](./db_implementation.md) — Better Auth,
   PostgreSQL, Drizzle, Hyperdrive, and migration notes.
 
-The current deployment uses the `HYPERDRIVE` binding in [wrangler.jsonc](./wrangler.jsonc)
-to connect the Worker to PostgreSQL. Do not commit credentials or secrets.
+The current deployment uses separate `HYPERDRIVE` and `SITE_SETTINGS_DB`
+bindings in [wrangler.jsonc](./wrangler.jsonc) for Better Auth and site settings,
+respectively. Do not commit credentials or secrets.
 
 Admin access uses the fixed username `delster1` and a password provided through
 the `ADMIN_PASSWORD` deployment secret. See the [deployment guide](./deploy.md)
 for secure configuration and the required database migration.
+
+Production admin login is limited to five attempts per minute per client IP
+at each Cloudflare location. HTTPS sessions use host-only `__Host-` cookies;
+upgrading from older cookies requires signing in again. The legacy OAuth API
+is disabled by default until its previously exposed credentials are revoked
+and replaced. Never track `.dev.vars` or real environment files, even when
+an ignore rule already exists.

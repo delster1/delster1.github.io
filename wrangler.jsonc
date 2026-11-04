@@ -1,17 +1,42 @@
 {
-  "main": "dist/_worker.js/index.js",
-  "name": "delster1-github-io",
-  "compatibility_date": "2026-02-13",
-  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
-  "assets": {
-    "binding": "ASSETS",
-    "directory": "./dist",
-  },
-  "observability": { "enabled": true },
-  "hyperdrive": [
-    {
-      "binding": "HYPERDRIVE",
-      "id": "79b5426459b74b8ea883f56448f7a90d",
-    },
-  ],
+	"name": "delster1-github-io",
+	"preview_urls": false,
+	"compatibility_date": "2026-02-13",
+	"compatibility_flags": [
+		"nodejs_compat",
+		"global_fetch_strictly_public"
+	],
+	"assets": {
+		"binding": "ASSETS",
+		"directory": "./dist",
+	},
+	"observability": {
+		"enabled": true
+	},
+	"kv_namespaces": [
+		{
+			"binding": "SESSION",
+			"id": "4a02e7ba0ac745e3b06a91ff618ca0b0"
+		}
+	],
+	"hyperdrive": [
+		{
+			"binding": "HYPERDRIVE",
+			"id": "79b5426459b74b8ea883f56448f7a90d",
+		},
+		{
+			"binding": "SITE_SETTINGS_DB",
+			"id": "997c4e3816ff4b4db6308638976e932e"
+		},
+	],
+	"ratelimits": [
+		{
+			"name": "ADMIN_LOGIN_LIMITER",
+			"namespace_id": "982716453",
+			"simple": {
+				"limit": 5,
+				"period": 60
+			}
+		}
+	],
 }

@@ -1,6 +1,7 @@
 export const ADMIN_USERNAME = "delster1";
-export const ADMIN_SESSION_COOKIE = "d3llie_admin_session";
+export const ADMIN_SESSION_COOKIE = "__Host-d3llie_admin_session";
 export const ADMIN_SESSION_TTL_SECONDS = 60 * 60 * 12;
+const LOCAL_ADMIN_SESSION_COOKIE = "d3llie_admin_session";
 
 const encoder = new TextEncoder();
 
@@ -58,11 +59,15 @@ function isAdminSession(value: unknown): value is AdminSession {
 function readSessionCookie(request: Request) {
   const cookieHeader = request.headers.get("cookie");
   if (!cookieHeader) return null;
+  const cookieName =
+    new URL(request.url).protocol === "https:"
+      ? ADMIN_SESSION_COOKIE
+      : LOCAL_ADMIN_SESSION_COOKIE;
 
   for (const cookie of cookieHeader.split(";")) {
     const separator = cookie.indexOf("=");
     if (separator < 0) continue;
-    if (cookie.slice(0, separator).trim() === ADMIN_SESSION_COOKIE) {
+    if (cookie.slice(0, separator).trim() === cookieName) {
       return cookie.slice(separator + 1).trim();
     }
   }
@@ -101,9 +106,11 @@ export async function createAdminSessionCookie(secret: string, requestUrl: strin
   };
   const payload = encodeBase64Url(encoder.encode(JSON.stringify(session)));
   const signature = encodeBase64Url(await sign(payload, secret));
-  const secure = new URL(requestUrl).protocol === "https:" ? "; Secure" : "";
+  const isSecure = new URL(requestUrl).protocol === "https:";
+  const cookieName = isSecure ? ADMIN_SESSION_COOKIE : LOCAL_ADMIN_SESSION_COOKIE;
+  const secure = isSecure ? "; Secure" : "";
 
-  return `${ADMIN_SESSION_COOKIE}=${payload}.${signature}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${ADMIN_SESSION_TTL_SECONDS}${secure}`;
+  return `${cookieName}=${payload}.${signature}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${ADMIN_SESSION_TTL_SECONDS}${secure}`;
 }
 
 export async function isAdminRequest(request: Request, secret?: string) {
@@ -127,8 +134,10 @@ export async function isAdminRequest(request: Request, secret?: string) {
 }
 
 export function clearAdminSessionCookie(requestUrl: string) {
-  const secure = new URL(requestUrl).protocol === "https:" ? "; Secure" : "";
-  return `${ADMIN_SESSION_COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${secure}`;
+  const isSecure = new URL(requestUrl).protocol === "https:";
+  const cookieName = isSecure ? ADMIN_SESSION_COOKIE : LOCAL_ADMIN_SESSION_COOKIE;
+  const secure = isSecure ? "; Secure" : "";
+  return `${cookieName}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${secure}`;
 }
 
 export function isSameOriginRequest(request: Request) {

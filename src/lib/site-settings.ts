@@ -1,31 +1,38 @@
-import { Pool } from "pg";
+import { Client } from "pg";
 import { defaultWallpaperId, wallpapers } from "../data/wallpapers";
 
 const defaultWallpaperKey = "default_wallpaper_id";
 const noImageChoice = "no-image";
 
-type RuntimeEnv = App.Locals["runtime"]["env"];
+type RuntimeEnv = App.Environment;
 
-let pool: Pool | undefined;
-let poolConnectionString: string | undefined;
-
-function getPool(environment: RuntimeEnv) {
+function getConnectionString(environment: RuntimeEnv) {
   const connectionString =
-    environment.HYPERDRIVE?.connectionString ||
-    environment.DATABASE_URL ||
-    environment.BETTER_AUTH_DATABASE_URL ||
-    environment.AUTH_DB;
+    environment.SITE_SETTINGS_DB?.connectionString || environment.DATABASE_URL;
 
   if (!connectionString) {
-    throw new Error("Database connection missing for site settings.");
+    throw new Error(
+      "Settings database connection missing. Configure SITE_SETTINGS_DB or DATABASE_URL."
+    );
   }
 
-  if (!pool || poolConnectionString !== connectionString) {
-    pool = new Pool({ connectionString, max: 1, connectionTimeoutMillis: 10_000 });
-    poolConnectionString = connectionString;
-  }
+  return connectionString;
+}
 
-  return pool;
+async function withClient<T>(
+  environment: RuntimeEnv,
+  operation: (client: Client) => Promise<T>
+) {
+  const client = new Client({
+    connectionString: getConnectionString(environment),
+    connectionTimeoutMillis: 10_000,
+  });
+  await client.connect();
+  try {
+    return await operation(client);
+  } finally {
+    await client.end();
+  }
 }
 
 export function isWallpaperChoice(value: string): boolean {
@@ -33,11 +40,13 @@ export function isWallpaperChoice(value: string): boolean {
 }
 
 export async function getDefaultWallpaperId(environment: RuntimeEnv) {
-  const result = await getPool(environment).query<{ value: string }>(
-    'SELECT "value" FROM "site_settings" WHERE "key" = $1 LIMIT 1',
-    [defaultWallpaperKey]
-  );
-  const configuredId = result.rows[0]?.value;
+  const configuredId = await withClient(environment, async (client) => {
+    const result = await client.query<{ value: string }>(
+      'SELECT "value" FROM "site_settings" WHERE "key" = $1 LIMIT 1',
+      [defaultWallpaperKey]
+    );
+    return result.rows[0]?.value;
+  });
 
   if (!configuredId) return defaultWallpaperId;
   if (isWallpaperChoice(configuredId)) return configuredId;
@@ -51,11 +60,13 @@ export async function saveDefaultWallpaperId(environment: RuntimeEnv, wallpaperI
     throw new Error("Unsupported wallpaper choice.");
   }
 
-  await getPool(environment).query(
-    `INSERT INTO "site_settings" ("key", "value", "updated_at")
-     VALUES ($1, $2, NOW())
-     ON CONFLICT ("key") DO UPDATE
-     SET "value" = EXCLUDED."value", "updated_at" = NOW()`,
-    [defaultWallpaperKey, wallpaperId]
+  await withClient(environment, (client) =>
+    client.query(
+      `INSERT INTO "site_settings" ("key", "value", "updated_at")
+       VALUES ($1, $2, NOW())
+       ON CONFLICT ("key") DO UPDATE
+       SET "value" = EXCLUDED."value", "updated_at" = NOW()`,
+      [defaultWallpaperKey, wallpaperId]
+    )
   );
 }

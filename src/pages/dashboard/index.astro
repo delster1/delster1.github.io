@@ -1,6 +1,7 @@
 ---
 export const prerender = false;
 import TerminalLayout from "../../layouts/TerminalLayout.astro";
+import { env } from "cloudflare:workers";
 import { defaultWallpaperId, wallpapers } from "../../data/wallpapers";
 import { getDefaultWallpaperId } from "../../lib/site-settings";
 
@@ -10,7 +11,7 @@ Astro.response.headers.set("Cache-Control", "no-store");
 let activeWallpaperId = defaultWallpaperId;
 let settingsLoadError = false;
 try {
-  activeWallpaperId = await getDefaultWallpaperId(Astro.locals.runtime.env);
+  activeWallpaperId = await getDefaultWallpaperId(env);
 } catch (error) {
   console.error("Failed to load the admin appearance setting.", error);
   settingsLoadError = true;

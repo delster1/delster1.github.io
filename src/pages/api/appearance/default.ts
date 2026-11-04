@@ -1,4 +1,5 @@
 import type { APIRoute } from "astro";
+import { env } from "cloudflare:workers";
 import { defaultWallpaperId, wallpapers } from "../../../data/wallpapers";
 import { isSameOriginRequest } from "../../../lib/admin-auth";
 import {
@@ -9,9 +10,9 @@ import {
 
 export const prerender = false;
 
-export const GET: APIRoute = async ({ locals }) => {
+export const GET: APIRoute = async () => {
   try {
-    const wallpaperId = await getDefaultWallpaperId(locals.runtime.env);
+    const wallpaperId = await getDefaultWallpaperId(env);
     const wallpaperName =
       wallpaperId === "no-image"
         ? "No image"
@@ -56,7 +57,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   }
 
   try {
-    await saveDefaultWallpaperId(locals.runtime.env, wallpaperId);
+    await saveDefaultWallpaperId(env, wallpaperId);
   } catch (error) {
     console.error("Failed to save the site default wallpaper.", error);
     return new Response(null, {

@@ -43,6 +43,13 @@ const siteContent = {
   goodreads: await fetchGoodreadsCurrentlyReading(),
 };
 
+// Workers does not provide import.meta.url during upload validation.
+// Use its native built-in-module require instead of Rolldown's URL-based shim.
+const workerOutput = {
+  polyfillRequire: false,
+  banner: 'import { createRequire as __workerCreateRequire } from "node:module"; const require = __workerCreateRequire("/"); globalThis.process ??= {}; globalThis.process.env ??= {};',
+};
+
 export default defineConfig({
   // if you later use a custom domain, update this
   site: "https://d3llie.tech",
@@ -66,12 +73,14 @@ export default defineConfig({
       D3_EMAIL: envField.string({ context: "server", access: "secret", optional: true }),
       ADMIN_PASSWORD: envField.string({ context: "server", access: "secret", optional: true }),
       DATABASE_URL: envField.string({ context: "server", access: "secret", optional: true }),
-      DB_PASSWORD: envField.string({ context: "server", access: "secret", optional: true }),
-      PGPASSWORD: envField.string({ context: "server", access: "secret", optional: true }),
     },
   },
 
   vite: {
+    environments: {
+      ssr: { build: { rolldownOptions: { output: workerOutput } } },
+      prerender: { build: { rolldownOptions: { output: workerOutput } } },
+    },
     define: {
       __SITE_CONTENT__: JSON.stringify(siteContent),
     },

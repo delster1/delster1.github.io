@@ -1,12 +1,13 @@
 ---
 import TerminalLayout from "../layouts/TerminalLayout.astro";
+import { env } from "cloudflare:workers";
 import { marked } from "marked";
 import { siteContent } from "../lib/site-content";
 import { fetchGitHubSiteContent } from "../lib/github-site-content";
 import { goodreadsProfileUrl } from "../lib/goodreads";
 
 let pageContent = siteContent;
-const githubContentToken = Astro.locals.runtime?.env?.GITHUB_CONTENT_TOKEN;
+const githubContentToken = env.GITHUB_CONTENT_TOKEN;
 if (githubContentToken) {
   try {
     pageContent = {

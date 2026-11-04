@@ -14,7 +14,7 @@ import {
   D3_EMAIL,
 } from "astro:env/server";
 
-export function createAuth(env: App.Locals["runtime"]["env"]) {
+export function createAuth(env: App.Environment) {
   const connectionString =
     env.HYPERDRIVE?.connectionString ||
     env.DATABASE_URL ||
@@ -27,12 +27,7 @@ export function createAuth(env: App.Locals["runtime"]["env"]) {
     );
   }
 
-  const pool = new Pool({
-    connectionString,
-    // Hyperdrive-managed TLS often works without forcing ssl,
-    // but if you hit TLS errors, uncomment:
-    // ssl: { rejectUnauthorized: false },
-  });
+  const pool = new Pool({ connectionString });
 
   const db = drizzle(pool);
 

@@ -9,10 +9,8 @@ installing and configuring components that are already in the repository.
 ```text
 Browser
   -> Astro route / middleware on the Cloudflare Worker
-  -> Astro middleware / admin API
-  -> PostgreSQL driver for persisted site settings
-  -> Cloudflare Hyperdrive
-  -> PostgreSQL database
+  -> Site settings API -> pg Client -> SITE_SETTINGS_DB -> settings PostgreSQL
+  -> Better Auth API -> HYPERDRIVE -> legacy auth PostgreSQL
 ```
 
 - **Better Auth** provides the legacy GitHub OAuth API.
@@ -20,12 +18,13 @@ Browser
   is a Cloudflare secret, and its signed 12-hour session is an HTTP-only cookie
   protected with `AUTH_SECRET`.
 - **Drizzle ORM** maps the TypeScript schema to PostgreSQL tables.
-- **Hyperdrive** is Cloudflare's connection layer for the database. It provides
-  pooled connections between Workers and the existing PostgreSQL database; it
-  is not itself a database and does not create or migrate the database.
-- The Worker receives the Hyperdrive connection through the `HYPERDRIVE`
-  binding declared in [wrangler.jsonc](./wrangler.jsonc). The connection details
-  are configured in Cloudflare and should not be committed to the repository.
+- **Hyperdrive** is Cloudflare's connection layer for PostgreSQL. It provides
+  pooled connections between Workers and the database; it is not itself a
+  database and does not create or migrate one.
+- The Worker receives separate bindings from [wrangler.jsonc](./wrangler.jsonc):
+  `HYPERDRIVE` remains dedicated to Better Auth, and `SITE_SETTINGS_DB` connects
+  the settings-only database. Connection credentials are configured in
+  Cloudflare and should not be committed to the repository.
 
 ## Relevant files
 
@@ -60,10 +59,11 @@ is not stored in PostgreSQL. The default wallpaper ID is stored in
 The legacy Better Auth GitHub endpoint still checks verified emails against
 `D3_EMAIL`, but it does not grant admin access.
 
-The app uses `HYPERDRIVE` first for database access, with `DATABASE_URL` as a
-fallback. Drizzle Kit separately requires `DATABASE_URL` for direct migration
-operations. Do not store either database credentials or auth secrets in source
-control.
+The site settings code uses `SITE_SETTINGS_DB` in production and `DATABASE_URL`
+as a local direct-connection fallback. Better Auth continues to use
+`HYPERDRIVE`; the settings code does not fall back to the auth database.
+Drizzle Kit separately requires `DATABASE_URL` for direct migration operations.
+Do not store either database credentials or auth secrets in source control.
 
 ## Migrations
 
