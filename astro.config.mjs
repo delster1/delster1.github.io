@@ -78,7 +78,10 @@ export default defineConfig({
 
   vite: {
     environments: {
-      ssr: { build: { rolldownOptions: { output: workerOutput } } },
+      ssr: {
+        build: { rolldownOptions: { output: workerOutput } },
+        optimizeDeps: { entries: ["!**/*.d.{ts,mts,cts}", "!**/*.test.{ts,tsx}"] },
+      },
       prerender: { build: { rolldownOptions: { output: workerOutput } } },
     },
     define: {

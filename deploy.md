@@ -154,7 +154,7 @@ The CI workflow installs the lockfile, rejects tracked credential files,
 checks high/critical dependency advisories, runs diagnostics/tests, and
 builds without production secrets. Dependabot checks npm dependencies and
 pinned GitHub Actions weekly. Four moderate audit entries currently trace
-to Drizzle Kit's development-only esbuild loader; do not expose its dev
+to Drizzle Kit's development-only esbuild tooling; do not expose its dev
 server, and do not accept npm's suggested breaking downgrade blindly.
 
 The server-only Vite output uses `node:module`'s native `createRequire("/")`
@@ -163,6 +163,11 @@ instead of Rolldown's `import.meta.url`-based helper. This avoids the
 without replacing Node built-ins or injecting server shims into browser chunks.
 The `SESSION` KV namespace is explicitly declared so a retry does not attempt
 to provision the same namespace twice.
+
+The Tailwind integration must support Vite 8 so the Cloudflare development
+plugin and Astro share the same Vite runtime. Keep those dependencies
+deduplicated in the lockfile. The SSR dependency scan excludes TypeScript
+declaration files and tests, which are not executable application entry points.
 
 Create `GITHUB_CONTENT_TOKEN` in GitHub as a fine-grained personal access token
 limited to the `obsidianNotes` repository, with **Contents: Read-only** access
