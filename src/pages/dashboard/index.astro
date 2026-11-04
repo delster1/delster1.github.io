@@ -4,6 +4,7 @@ import TerminalLayout from "../../layouts/TerminalLayout.astro";
 import { env } from "cloudflare:workers";
 import { defaultWallpaperId, wallpapers } from "../../data/wallpapers";
 import { getDefaultWallpaperId } from "../../lib/site-settings";
+import { fetchServiceInventory, type ServiceInventory } from "../../lib/service-inventory";
 
 if (!Astro.locals.isAdmin) return Astro.redirect("/login");
 Astro.response.headers.set("Cache-Control", "no-store");
@@ -19,6 +20,13 @@ try {
 
 const updated = Astro.url.searchParams.get("updated") === "1";
 const errorCode = Astro.url.searchParams.get("error");
+let inventory: ServiceInventory | undefined;
+try {
+  inventory = await fetchServiceInventory(env.GITHUB_CONTENT_TOKEN ?? "");
+} catch (error) {
+  console.error("Failed to load the private service inventory.", error);
+}
+const serviceGroups = inventory?.groups ?? [];
 ---
 
 <TerminalLayout title="Admin dashboard | Dellie">
@@ -70,6 +78,71 @@ const errorCode = Astro.url.searchParams.get("error");
       </form>
     </section>
 
+    <section class="service-section" box-="round" style="--box-bg: var(--bg1)" aria-labelledby="services-title">
+      <header>
+        <h2 id="services-title">Service shortcuts</h2>
+        <p>Links and documented container states from the private Obsidian service inventory.</p>
+      </header>
+      {!inventory && (
+        <p class="admin-error" role="alert">
+          Could not load the service inventory. Check the notes repository and GITHUB_CONTENT_TOKEN access.
+        </p>
+      )}
+      {inventory && (
+        <p>
+          Last verified: {inventory.verified}. This is a documented snapshot, not live monitoring.
+          Notes refresh within five minutes.
+        </p>
+      )}
+      <div class="service-groups">
+        {serviceGroups.map((group) => (
+          <section aria-label={group.title}>
+            <h3>{group.title}</h3>
+            <ul>
+              {group.services.map((service) => (
+                <li>
+                  <a href={service.url} target="_blank" rel="noopener noreferrer">
+                    <span>{service.name}</span>
+                    <small>{new URL(service.url).hostname}</small>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+      {inventory && (
+        <div class="service-inventory" tabindex="0" role="region" aria-label="Documented running containers">
+          <table>
+            <caption>Documented running containers ({inventory.services.length})</caption>
+            <thead>
+              <tr><th scope="col">Container</th><th scope="col">Role</th><th scope="col">Recorded state</th></tr>
+            </thead>
+            <tbody>
+              {inventory.services.map((service) => (
+                <tr>
+                  <th scope="row">{service.name}<small>{service.group}</small></th>
+                  <td>{service.role}</td>
+                  <td class:list={{ "admin-error": /unhealthy/i.test(service.state) }}>{service.state}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      <nav class="service-tools" aria-label="Website management tools">
+        <a href="https://github.com/delster1/obsidianNotes/blob/main/global/homelab/SERVICES.md" target="_blank" rel="noopener noreferrer">
+          Service inventory in private notes
+        </a>
+        <a href="https://github.com/delster1/delster1.github.io" target="_blank" rel="noopener noreferrer">
+          Website source on GitHub
+        </a>
+        <a href="https://dash.cloudflare.com" target="_blank" rel="noopener noreferrer">
+          Cloudflare dashboard
+        </a>
+      </nav>
+    </section>
+
     <nav class="admin-links" aria-label="Admin navigation">
       <a href="/appearance">Preview backgrounds</a>
       <a href="/">Back to site</a>
@@ -102,6 +175,87 @@ const errorCode = Astro.url.searchParams.get("error");
 
   .admin-dashboard h2 {
     margin-top: 0;
+  }
+
+  .service-section > header p {
+    margin-bottom: 0;
+  }
+
+  .service-groups {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    margin-top: 1rem;
+  }
+
+  .service-groups h3 {
+    font-size: 1rem;
+    margin: 0 0 0.6rem;
+  }
+
+  .service-groups ul {
+    display: grid;
+    gap: 0.45rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .service-groups a {
+    align-items: baseline;
+    border: 1px solid var(--bg3);
+    border-radius: 0.35rem;
+    color: var(--text);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.6rem;
+    justify-content: space-between;
+    padding: 0.55rem 0.7rem;
+    text-decoration: none;
+  }
+
+  .service-groups a:hover,
+  .service-tools a:hover {
+    border-color: var(--site-accent);
+    color: var(--site-accent);
+  }
+
+  .service-groups small {
+    font-size: 0.72rem;
+    opacity: 0.75;
+  }
+
+  .service-tools {
+    border-top: 1px solid var(--bg3);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem 1rem;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+  }
+
+  .service-inventory {
+    margin-top: 1.5rem;
+    overflow-x: auto;
+  }
+
+  .service-inventory table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  .service-inventory th,
+  .service-inventory td {
+    border-bottom: 1px solid var(--bg3);
+    padding: 0.6rem;
+    text-align: left;
+    vertical-align: top;
+    overflow-wrap: anywhere;
+  }
+
+  .service-inventory small {
+    display: block;
+    font-weight: normal;
   }
 
   .admin-prompt {

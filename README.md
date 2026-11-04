@@ -82,3 +82,20 @@ upgrading from older cookies requires signing in again. The legacy OAuth API
 is disabled by default until its previously exposed credentials are revoked
 and replaced. Never track `.dev.vars` or real environment files, even when
 an ignore rule already exists.
+
+## Private service dashboard
+
+The authenticated `/dashboard` reads `global/homelab/SERVICES.md` from the
+private Obsidian notes repository using the existing read-only
+`GITHUB_CONTENT_TOKEN`. It displays the `Dashboard links` table and the
+`Live Docker services` inventory, including recorded unhealthy states and the
+verification date. Results refresh within five minutes; this is a documented
+snapshot, not a live health probe. Missing repository access produces an
+explicit dashboard error without affecting background settings.
+
+Edit the canonical Obsidian note and commit/push it to update the dashboard.
+The host's `~/code/SERVICES.md` is already a symlink to that note. Keep the
+note as a regular tracked file inside the notes repository so GitHub and
+Obsidian can read its contents. Inventory is fetched only after admin
+authentication, never bundled into public pages or exposed by the public
+Now/quotes content loader.

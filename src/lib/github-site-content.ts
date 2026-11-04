@@ -12,7 +12,7 @@ const CONTENT_API_BASE =
 const REF = "main";
 const CACHE_DURATION_MS = 5 * 60 * 1000;
 
-async function fetchFile(
+export async function fetchFile(
   path: string,
   token: string,
   fetcher: typeof fetch
